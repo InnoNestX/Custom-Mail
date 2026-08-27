@@ -865,13 +865,7 @@ export function renderAppHtml(opts: {
       width: auto;
       padding: 8px 14px;
     }
-    .hist-layout {
-      grid-template-rows: minmax(160px, 32vh) minmax(0, 1fr);
-      height: min(520px, calc(100dvh - 200px));
-    }
-    .hist-list { padding: 12px 14px; }
-    .hist-detail-pane { padding: 14px 16px 18px; }
-    .hist-detail-pane .kv div { grid-template-columns: 52px 1fr; }
+    #historyPanel .workspace-head .secondary { width: auto; }
     textarea { min-height: 120px; }
     .app-brand p { display: none; }
     #composePanel .workspace-foot {
@@ -1040,10 +1034,152 @@ export function renderAppHtml(opts: {
   }
   @media (max-width: 859px) {
     .hist-layout {
-      grid-template-rows: minmax(160px, 34vh) minmax(0, 1fr);
+      grid-template-rows: minmax(0, 1fr);
+      flex: 1;
+      min-height: 0;
+      height: auto;
+      max-height: none;
     }
     .hist-detail-pane {
       border-top: 1px solid var(--line);
+    }
+    #historyPanel:not(.hist-mobile-detail) .hist-detail-pane {
+      display: none !important;
+    }
+    #historyPanel.workspace {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    #historyPanel .workspace-head.hist-list-head {
+      flex-shrink: 0;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px 8px;
+    }
+    #historyPanel .hist-list-head h2 {
+      margin: 0;
+      font-size: 16px;
+    }
+    .hist-head-sub {
+      margin: 2px 0 0;
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+    .hist-head-title { flex: 1; min-width: 0; }
+    .hist-refresh-btn {
+      flex: 0 0 auto;
+      width: auto;
+      min-height: 36px;
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+    .hist-detail-bar {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--line);
+      flex-shrink: 0;
+      background: rgba(255,252,247,.94);
+    }
+    #historyPanel.hist-mobile-detail .hist-detail-bar {
+      display: flex;
+    }
+    #historyPanel.hist-mobile-detail .hist-list-head {
+      display: none;
+    }
+    #historyPanel.hist-mobile-detail .hist-list {
+      display: none;
+    }
+    #historyPanel.hist-mobile-detail .hist-layout {
+      grid-template-rows: minmax(0, 1fr);
+    }
+    #historyPanel.hist-mobile-detail .hist-detail-pane {
+      display: flex !important;
+      flex-direction: column;
+      border-top: 0;
+      padding: 10px 14px max(12px, env(safe-area-inset-bottom, 0px));
+    }
+    .hist-back-btn {
+      flex: 0 0 auto;
+      width: 40px;
+      height: 40px;
+      min-height: 40px;
+      padding: 0;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 10px;
+      font-size: 18px;
+      line-height: 1;
+      color: var(--ink-soft);
+    }
+    .hist-detail-bar-meta { flex: 1; min-width: 0; }
+    .hist-detail-bar-subject {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.35;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .hist-detail-bar-sub {
+      margin-top: 2px;
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.35;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .hist-row { padding: 10px 12px; }
+    .hist-list { padding: 10px 12px 14px; }
+    .hist-meta-fold {
+      margin-bottom: 10px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      overflow: hidden;
+    }
+    .hist-meta-fold summary {
+      padding: 10px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink-soft);
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .hist-meta-fold summary::-webkit-details-marker { display: none; }
+    .hist-meta-fold summary::before {
+      content: "▸";
+      font-size: 11px;
+      color: var(--muted);
+      transition: transform .15s;
+    }
+    .hist-meta-fold[open] summary::before { transform: rotate(90deg); }
+    .hist-meta-fold .kv {
+      margin: 0;
+      padding: 0 12px 10px;
+      border-top: 1px solid var(--line);
+    }
+    .hist-body-label {
+      margin: 0 0 8px;
+      flex-shrink: 0;
+    }
+    .hist-body-pre {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    #appView.hist-mobile-detail-mode .app-header {
+      display: none;
     }
   }
   .hist-list {
@@ -1110,6 +1246,7 @@ export function renderAppHtml(opts: {
   .hist-empty strong, .hist-detail-empty strong {
     display: block; color: var(--ink-soft); font-size: 14px; margin-bottom: 4px;
   }
+  .hist-detail-bar { display: none; }
   .preview-overlay {
     position: fixed; inset: 0; z-index: 200;
     background: rgba(26, 28, 25, .42);
@@ -1363,16 +1500,23 @@ export function renderAppHtml(opts: {
       </div>
 
       <div id="historyPanel" class="card workspace hidden">
-        <div class="workspace-head">
-          <div>
+        <div class="workspace-head hist-list-head" id="historyListHead">
+          <div class="hist-head-title">
             <h2>发送记录</h2>
-            <p>最近 10 条 · 点击条目查看详情</p>
+            <p class="hist-head-sub">最近 10 条 · 点击查看详情</p>
           </div>
-          <button class="secondary" id="refreshHistoryBtn" type="button">刷新</button>
+          <button class="secondary hist-refresh-btn" id="refreshHistoryBtn" type="button">刷新</button>
         </div>
-        <div class="hist-layout">
+        <div class="hist-detail-bar" id="historyDetailBar">
+          <button type="button" class="hist-back-btn" id="historyBackBtn" aria-label="返回列表">←</button>
+          <div class="hist-detail-bar-meta">
+            <div class="hist-detail-bar-subject" id="historyDetailBarSubject"></div>
+            <div class="hist-detail-bar-sub" id="historyDetailBarSub"></div>
+          </div>
+        </div>
+        <div class="hist-layout" id="historyLayout">
           <div id="historyList" class="hist-list"></div>
-          <div id="historyDetail" class="hist-detail-pane">
+          <div id="historyDetail" class="hist-detail-pane hidden">
             <div class="hist-detail-empty"><strong>选择一条记录</strong>在左侧列表中点击，查看收件人、正文与附件</div>
           </div>
         </div>
@@ -1432,6 +1576,8 @@ export function renderAppHtml(opts: {
   const attachDrop = $("attachDrop");
   const historyListEl = $("historyList");
   const historyDetailEl = $("historyDetail");
+  const historyDetailBarSubject = $("historyDetailBarSubject");
+  const historyDetailBarSub = $("historyDetailBarSub");
   const previewOverlay = $("previewOverlay");
   const previewMeta = $("previewMeta");
   const previewFrame = $("previewFrame");
@@ -1501,7 +1647,31 @@ export function renderAppHtml(opts: {
     if (on) setLoginMessage("");
   }
 
+  const mobileComposeMq = window.matchMedia("(max-width: 860px)");
+  const mobileHistMq = window.matchMedia("(max-width: 859px)");
+
+  function isMobileHist() {
+    return mobileHistMq.matches;
+  }
+
+  function setHistMobileDetail(on) {
+    const active = on && isMobileHist();
+    historyPanel.classList.toggle("hist-mobile-detail", active);
+    appView.classList.toggle("hist-mobile-detail-mode", active);
+  }
+
+  function showHistListMobile() {
+    setHistMobileDetail(false);
+    historyDetailEl.classList.add("hidden");
+    historyDetailEl.innerHTML = "";
+    for (const el of historyListEl.querySelectorAll(".hist-row")) el.classList.remove("active");
+  }
+
   function resetHistoryDetail() {
+    if (isMobileHist()) {
+      showHistListMobile();
+      return;
+    }
     historyDetailEl.classList.remove("hidden");
     historyDetailEl.innerHTML = '<div class="hist-detail-empty"><strong>选择一条记录</strong>在左侧列表中点击，查看收件人、正文与附件</div>';
   }
@@ -1530,8 +1700,10 @@ export function renderAppHtml(opts: {
     composePanel.classList.toggle("hidden", !compose);
     historyPanel.classList.toggle("hidden", compose);
     if (!compose) {
-      resetHistoryDetail();
+      showHistListMobile();
       loadHistory();
+    } else {
+      setHistMobileDetail(false);
     }
   }
 
@@ -1700,6 +1872,14 @@ export function renderAppHtml(opts: {
   $("tabCompose").onclick = () => switchTab("compose");
   $("tabHistory").onclick = () => switchTab("history");
   $("refreshHistoryBtn").onclick = () => loadHistory();
+  $("historyBackBtn").onclick = () => showHistListMobile();
+
+  mobileHistMq.addEventListener("change", () => {
+    if (!mobileHistMq.matches) {
+      setHistMobileDetail(false);
+      if (!historyPanel.classList.contains("hidden")) resetHistoryDetail();
+    }
+  });
 
   $("logoutBtn").onclick = async () => {
     await api("/api/logout", {});
@@ -1743,7 +1923,6 @@ export function renderAppHtml(opts: {
 
   const composeFocusHint = $("composeFocusHint");
   const composeFields = document.querySelectorAll(".compose-field[data-field]");
-  const mobileComposeMq = window.matchMedia("(max-width: 860px)");
 
   function updateComposeFocusHint(label) {
     if (!composeFocusHint) return;
@@ -1859,6 +2038,13 @@ export function renderAppHtml(opts: {
   async function showHistoryDetail(id, rowEl) {
     for (const el of historyListEl.querySelectorAll(".hist-row")) el.classList.remove("active");
     rowEl.classList.add("active");
+    if (isMobileHist()) {
+      setHistMobileDetail(true);
+      const subjectEl = rowEl.querySelector(".hist-subject");
+      const metaEl = rowEl.querySelector(".hist-meta");
+      historyDetailBarSubject.textContent = subjectEl ? subjectEl.textContent : "";
+      historyDetailBarSub.textContent = metaEl ? metaEl.textContent : "";
+    }
     historyDetailEl.classList.remove("hidden");
     historyDetailEl.innerHTML = '<div class="hist-detail-empty">加载详情…</div>';
     const { res, data } = await api("/api/history/detail", { id });
@@ -1870,8 +2056,7 @@ export function renderAppHtml(opts: {
     const attachLine = e.attachmentNames?.length
       ? e.attachmentNames.map((n, i) => n + " (" + formatSize(e.attachmentSizes?.[i] || 0) + ")").join(", ")
       : "无";
-    historyDetailEl.innerHTML =
-      "<h4>详情</h4>" +
+    const kvHtml =
       '<div class="kv">' +
       "<div><strong>时间</strong><span>" + escapeText(formatTime(e.createdAt)) + "</span></div>" +
       "<div><strong>From</strong><span>" + escapeText(e.fromName) + " &lt;" + escapeText(e.fromEmail) + "&gt;</span></div>" +
@@ -1879,8 +2064,18 @@ export function renderAppHtml(opts: {
       "<div><strong>状态</strong><span>" + (e.ok ? "成功" : ("失败" + (e.error ? " · " + escapeText(e.error) : ""))) + "</span></div>" +
       (e.messageId ? "<div><strong>ID</strong><span>" + escapeText(e.messageId) + "</span></div>" : "") +
       "<div><strong>附件</strong><span>" + escapeText(attachLine) + "</span></div>" +
-      "</div>" +
-      "<h4>正文</h4><pre>" + escapeText(e.body || "(无正文)") + "</pre>";
+      "</div>";
+    if (isMobileHist()) {
+      historyDetailEl.innerHTML =
+        '<details class="hist-meta-fold">' +
+        "<summary>收件与状态</summary>" + kvHtml + "</details>" +
+        '<h4 class="hist-body-label">正文</h4>' +
+        '<pre class="hist-body-pre">' + escapeText(e.body || "(无正文)") + "</pre>";
+    } else {
+      historyDetailEl.innerHTML =
+        "<h4>详情</h4>" + kvHtml +
+        "<h4>正文</h4><pre>" + escapeText(e.body || "(无正文)") + "</pre>";
+    }
   }
 
   function collectComposePayload() {
