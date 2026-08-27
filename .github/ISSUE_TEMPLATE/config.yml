@@ -1,7 +1,7 @@
 blank_issues_enabled: false
 contact_links:
   - name: Custom Mail docs
-    url: https://github.com/InnoNestX/Custom-Mail/tree/main/docs
+    url: https://innonestx.github.io/Custom-Mail/
     about: Configuration, deploy, and FAQ for Custom Mail.
   - name: Discussions
     url: https://github.com/InnoNestX/Custom-Mail/discussions
