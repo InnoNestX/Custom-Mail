@@ -1,0 +1,40 @@
+name: Bug report
+description: Report a problem with Custom Mail.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for the report. Do not include passwords, API keys, or full email bodies.
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      placeholder: tag, commit SHA, or deploy date
+  - type: dropdown
+    id: runtime
+    attributes:
+      label: Environment
+      options:
+        - Cloudflare Workers (production)
+        - Local wrangler dev
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or screenshots
+      render: shell
