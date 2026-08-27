@@ -74,10 +74,10 @@ Open **http://localhost:8790** and sign in with `ADMIN_PASSWORD`.
 
 ## Docker (lightweight local)
 
-Images (linux/amd64):
+Images:
 
-- `xuxuclassmate/custom-mail:latest` (Docker Hub)
-- `ghcr.io/innonestx/custom-mail:latest` (GHCR)
+- Docker Hub: `xuxuclassmate/custom-mail:latest`
+- GHCR: `ghcr.io/innonestx/custom-mail:latest`
 
 ```bash
 docker run --rm -p 8787:8787 \
@@ -86,8 +86,9 @@ docker run --rm -p 8787:8787 \
   xuxuclassmate/custom-mail:latest
 ```
 
-Open **http://127.0.0.1:8787**. Or: `docker compose up` (see `docker-compose.yml`).
+Open **http://127.0.0.1:8787**. Or: `docker compose up`.
 
+OpenClaw skill: `clawhub install custom-mail`
 ## Configuration
 
 All product copy and mail defaults live in **`config/mail.json`**. Full reference on the docs site:
