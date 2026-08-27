@@ -28,7 +28,7 @@
 
 ---
 
-**Custom Mail** is a self-hosted outbound mail workspace. Run it on your own Cloudflare account, brand it with JSON config, and send through **Brevo** without maintaining a mail server.
+**Custom Mail** is a self-hosted outbound mail workspace written in **Rust** (`workers-rs`). Run it on your own Cloudflare account, brand it with JSON config, and send through **Brevo** without maintaining a mail server.
 
 **Docs:** [English](https://innonestx.github.io/Custom-Mail/) · [中文](https://innonestx.github.io/Custom-Mail/zh/)  
 **Docs URL:** https://innonestx.github.io/Custom-Mail/
@@ -58,19 +58,22 @@
 | Preview | HTML preview modal before confirm send |
 | History | List + detail; mobile full-screen detail layout |
 | Security | HttpOnly session cookie, login rate limit, secrets on Worker |
-| CI | Typecheck on every push; CodeQL security scanning |
+| CI | Rust tests + wasm check on every push; CodeQL scanning |
+| Runtime | Cloudflare Workers via `workers-rs` (Rust → WASM) |
 
 ## Quick start
 
 ```bash
 git clone https://github.com/InnoNestX/Custom-Mail.git
 cd Custom-Mail
+# Rust + wasm32-unknown-unknown + worker-build required
+cargo test --lib
 npm install
 cp .dev.vars.example .dev.vars   # ADMIN_PASSWORD, BREVO_API_KEY
 npm run dev
 ```
 
-Open **http://localhost:8790** and sign in with `ADMIN_PASSWORD`.
+Open **http://localhost:8790** and sign in with `ADMIN_PASSWORD`. Health reports `"runtime":"rust"`.
 
 ## Docker (lightweight local)
 

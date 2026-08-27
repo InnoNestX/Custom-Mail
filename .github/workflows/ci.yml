@@ -18,9 +18,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: dtolnay/rust-toolchain@stable
         with:
-          node-version: "22"
-          cache: npm
-      - run: npm ci
-      - run: npm run typecheck
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo test --lib
+      - run: cargo check --lib --target wasm32-unknown-unknown
+      - run: cargo install worker-build --locked --version 0.8.5
+      - run: worker-build --release --no-panic-recovery

@@ -8,9 +8,12 @@ on:
       - Dockerfile
       - docker/**
       - wrangler.docker.jsonc
+      - Cargo.toml
+      - Cargo.lock
       - src/**
-      - public/**
+      - templates/**
       - config/**
+      - public/**
       - .github/workflows/docker.yml
 
 permissions:
