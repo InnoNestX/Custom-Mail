@@ -74,15 +74,15 @@ body {
 }
 
 .cm-btn--primary {
-  background: var(--cm-forest);
-  border-color: var(--cm-forest);
-  color: #fff;
+  background: var(--cm-forest) !important;
+  border-color: var(--cm-forest) !important;
+  color: #fff !important;
 }
 
 .cm-btn--primary:hover {
-  background: #114f40;
-  border-color: #114f40;
-  color: #fff;
+  background: #114f40 !important;
+  border-color: #114f40 !important;
+  color: #fff !important;
 }
 
 .cm-btn--ghost {
