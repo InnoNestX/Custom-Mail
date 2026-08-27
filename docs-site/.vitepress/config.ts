@@ -16,6 +16,9 @@ export default defineConfig({
   cleanUrls: false,
   ignoreDeadLinks: true,
   lastUpdated: true,
+  // Site chrome is designed for the light paper look. Disable appearance
+  // toggle so OS / leftover localStorage dark mode cannot wash out nav text.
+  appearance: false,
   sitemap: {
     hostname: siteUrl,
   },
@@ -56,7 +59,7 @@ export default defineConfig({
   themeConfig: {
     logo: {
       src: '/images/logo.svg',
-      alt: 'Custom Mail',
+      alt: '',
     },
     siteTitle: 'Custom Mail',
     nav: [
@@ -100,10 +103,6 @@ export default defineConfig({
     },
     search: {
       provider: 'local',
-    },
-    appearance: {
-      // Keep the calm light paper look as default
-      defaultTheme: 'light',
     },
     socialLinks: [
       { icon: 'github', link: 'https://github.com/InnoNestX/Custom-Mail' },
