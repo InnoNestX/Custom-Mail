@@ -101,6 +101,10 @@ export default defineConfig({
     search: {
       provider: 'local',
     },
+    appearance: {
+      // Keep the calm light paper look as default
+      defaultTheme: 'light',
+    },
     socialLinks: [
       { icon: 'github', link: 'https://github.com/InnoNestX/Custom-Mail' },
     ],

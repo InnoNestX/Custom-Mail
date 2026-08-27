@@ -19,7 +19,36 @@
 
 html,
 body {
-  background: var(--cm-paper);
+  background:
+    radial-gradient(1200px 600px at 85% -10%, rgba(47, 158, 123, 0.18), transparent 55%),
+    radial-gradient(900px 500px at -10% 30%, rgba(21, 98, 79, 0.1), transparent 50%),
+    linear-gradient(180deg, #f4faf7 0%, var(--cm-paper) 42%, #f2f7f4 100%);
+  background-attachment: fixed;
+}
+
+/* Quiet down default VitePress chrome on custom landings */
+.Layout:has(.cm-home) .VPNavBarTitle .title,
+.Layout:has(.cm-gate) .VPNavBarTitle .title {
+  font-weight: 700;
+}
+
+.Layout:has(.cm-home) .VPHome,
+.Layout:has(.cm-gate) .VPHome {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.Layout:has(.cm-home) .VPHomeHero,
+.Layout:has(.cm-gate) .VPHomeHero,
+.Layout:has(.cm-home) .VPHomeFeatures,
+.Layout:has(.cm-gate) .VPHomeFeatures {
+  display: none !important;
+}
+
+.Layout:has(.cm-home) .VPFooter,
+.Layout:has(.cm-gate) .VPFooter {
+  border-top-color: var(--cm-line);
+  background: transparent;
 }
 
 .cm-btn {
@@ -144,10 +173,11 @@ body {
 /* —— Home landing —— */
 .cm-home {
   position: relative;
-  max-width: 920px;
+  max-width: 960px;
   margin: 0 auto;
-  padding: 1.5rem 1.25rem 4rem;
+  padding: 1.25rem 1.25rem 3.5rem;
   overflow: hidden;
+  min-height: calc(100vh - 120px);
 }
 
 .cm-home__atmosphere {
@@ -165,37 +195,47 @@ body {
 }
 
 .cm-orb--a {
-  top: -4rem;
-  right: -3rem;
-  width: 18rem;
-  height: 18rem;
-  background: rgba(47, 158, 123, 0.22);
-  animation: cm-breathe 9s ease-in-out infinite;
+  top: -2rem;
+  right: -2rem;
+  width: 22rem;
+  height: 22rem;
+  background: rgba(47, 158, 123, 0.32);
+  animation: cm-pulse 9s ease-in-out infinite;
 }
 
 .cm-orb--b {
-  top: 12rem;
-  left: -6rem;
-  width: 14rem;
-  height: 14rem;
-  background: rgba(21, 98, 79, 0.12);
-  animation: cm-breathe 11s ease-in-out infinite reverse;
+  top: 14rem;
+  left: -5rem;
+  width: 16rem;
+  height: 16rem;
+  background: rgba(21, 98, 79, 0.18);
+  animation: cm-pulse 11s ease-in-out infinite reverse;
 }
 
 .cm-envelope {
   position: absolute;
-  top: 5.5rem;
-  right: 8%;
-  width: min(220px, 36vw);
-  height: min(150px, 24vw);
-  border: 1.5px solid rgba(21, 98, 79, 0.22);
-  border-radius: 18px;
+  top: 4.5rem;
+  right: 4%;
+  width: min(280px, 42vw);
+  height: min(190px, 28vw);
+  border: 1.5px solid rgba(21, 98, 79, 0.28);
+  border-radius: 22px;
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.75), rgba(238, 246, 242, 0.4)),
-    linear-gradient(155deg, transparent 42%, rgba(21, 98, 79, 0.12) 42%, rgba(21, 98, 79, 0.12) 58%, transparent 58%);
-  box-shadow: 0 24px 60px rgba(18, 36, 31, 0.08);
+    linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(238, 246, 242, 0.55)),
+    linear-gradient(155deg, transparent 42%, rgba(21, 98, 79, 0.16) 42%, rgba(21, 98, 79, 0.16) 58%, transparent 58%);
+  box-shadow:
+    0 30px 70px rgba(18, 36, 31, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
   transform: rotate(8deg);
   animation: cm-float 6.5s ease-in-out infinite;
+}
+
+.cm-envelope::after {
+  content: '';
+  position: absolute;
+  inset: 18% 14% auto;
+  height: 1px;
+  background: rgba(21, 98, 79, 0.18);
 }
 
 .cm-home__nav,
