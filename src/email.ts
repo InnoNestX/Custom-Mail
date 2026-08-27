@@ -6,6 +6,8 @@ export interface Env {
   ADMIN_PASSWORD: string;
   MAIL_LOG_KV?: KVNamespace;
   ASSETS?: Fetcher;
+  /** When "1", skip Host allowlist (Docker / local demos). */
+  ALLOW_ANY_HOST?: string;
 }
 
 export type { AddressBookEntry } from "./config";

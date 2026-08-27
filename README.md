@@ -14,7 +14,8 @@
   <a href="https://innonestx.github.io/Custom-Mail/"><img src="https://img.shields.io/badge/docs-GitHub%20Pages-15624f?style=flat-square" alt="Docs" /></a>
   <a href="https://mail.xuxuclassmate.com"><img src="https://img.shields.io/badge/demo-mail.xuxuclassmate.com-2f9e7b?style=flat-square" alt="Live demo" /></a>
   <a href="https://workers.cloudflare.com/"><img src="https://img.shields.io/badge/runtime-Cloudflare%20Workers-f38020?style=flat-square" alt="Workers" /></a>
-  <a href="https://github.com/InnoNestX/Custom-Mail/releases"><img src="https://img.shields.io/github/v/release/InnoNestX/Custom-Mail?style=flat-square" alt="Release" /></a>
+  <a href="https://hub.docker.com/r/xuxuclassmate/custom-mail"><img src="https://img.shields.io/docker/v/xuxuclassmate/custom-mail?sort=semver&style=flat-square&label=docker" alt="Docker Hub" /></a>
+  <a href="https://github.com/InnoNestX/Custom-Mail/pkgs/container/custom-mail"><img src="https://img.shields.io/badge/ghcr-innonestx%2Fcustom-mail-15624f?style=flat-square" alt="GHCR" /></a>
 </p>
 
 <p align="center">
@@ -70,6 +71,22 @@ npm run dev
 ```
 
 Open **http://localhost:8790** and sign in with `ADMIN_PASSWORD`.
+
+## Docker (lightweight local)
+
+Images (linux/amd64):
+
+- `xuxuclassmate/custom-mail:latest` (Docker Hub)
+- `ghcr.io/innonestx/custom-mail:latest` (GHCR)
+
+```bash
+docker run --rm -p 8787:8787 \
+  -e ADMIN_PASSWORD='your-password' \
+  -e BREVO_API_KEY='xkeysib-...' \
+  xuxuclassmate/custom-mail:latest
+```
+
+Open **http://127.0.0.1:8787**. Or: `docker compose up` (see `docker-compose.yml`).
 
 ## Configuration
 

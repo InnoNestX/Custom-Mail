@@ -38,7 +38,8 @@ function json(data: unknown, status = 200, extraHeaders?: Record<string, string>
   });
 }
 
-function assertAllowedHost(request: Request): void {
+function assertAllowedHost(request: Request, env: Env): void {
+  if (env.ALLOW_ANY_HOST === "1") return;
   const raw = request.headers.get("Host") || new URL(request.url).host;
   const host = raw.split(":")[0]?.toLowerCase() ?? "";
   if (host !== mailConfig.host) {
@@ -114,7 +115,7 @@ function parseAttachments(raw: unknown): EmailAttachment[] {
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     try {
-      assertAllowedHost(request);
+      assertAllowedHost(request, env);
       const url = new URL(request.url);
       const fromName = resolveFromName();
 
