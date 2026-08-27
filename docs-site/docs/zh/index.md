@@ -4,8 +4,9 @@
 
 | | |
 |---|---|
-| **在线演示** | [mail.xuxuclassmate.com](https://mail.xuxuclassmate.com) |
-| **代码仓库** | [InnoNestX/Custom-Mail](https://github.com/InnoNestX/Custom-Mail) |
+| **本文档站** | https://innonestx.github.io/Custom-Mail/ |
+| **在线演示** | https://mail.xuxuclassmate.com |
+| **代码仓库** | https://github.com/InnoNestX/Custom-Mail |
 | **许可证** | MIT |
 
 ## 为什么用 Custom Mail
