@@ -11,6 +11,7 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-15624f?style=flat-square" alt="MIT" /></a>
+  <a href="https://innonestx.github.io/Custom-Mail/"><img src="https://img.shields.io/badge/docs-GitHub%20Pages-15624f?style=flat-square" alt="Docs" /></a>
   <a href="https://mail.xuxuclassmate.com"><img src="https://img.shields.io/badge/demo-mail.xuxuclassmate.com-2f9e7b?style=flat-square" alt="Live demo" /></a>
   <a href="https://workers.cloudflare.com/"><img src="https://img.shields.io/badge/runtime-Cloudflare%20Workers-f38020?style=flat-square" alt="Workers" /></a>
   <a href="https://github.com/InnoNestX/Custom-Mail/releases"><img src="https://img.shields.io/github/v/release/InnoNestX/Custom-Mail?style=flat-square" alt="Release" /></a>
@@ -19,7 +20,7 @@
 <p align="center">
   <a href="#features">Features</a> ·
   <a href="#quick-start">Quick start</a> ·
-  <a href="docs/README.md">Documentation</a> ·
+  <a href="https://innonestx.github.io/Custom-Mail/">Documentation</a> ·
   <a href="#deploy">Deploy</a> ·
   <a href="#community">Community</a>
 </p>
@@ -32,7 +33,7 @@
 |---|---|
 | **Live example** | [mail.xuxuclassmate.com](https://mail.xuxuclassmate.com) |
 | **Org** | Part of [InnoNestX](https://github.com/InnoNestX) |
-| **Docs** | [docs/](docs/README.md) — configuration, deploy, FAQ |
+| **Docs** | [Documentation site](https://innonestx.github.io/Custom-Mail/) · [repo docs/](docs/README.md) |
 
 ## Why use it
 

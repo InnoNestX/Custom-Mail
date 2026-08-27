@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- 图形Logo部分 -->
+    <g transform="translate(2, 2) scale(1.2)">
+        <!-- 主要几何形状 -->
+        <path d="M8 8L16 0L24 8L16 16L8 8Z" fill="#4E89FE"/>
+        <path d="M24 8L32 16L24 24L16 16L24 8Z" fill="#4E89FE" fill-opacity="0.7"/>
+        <path d="M16 16L8 24L0 16L8 8L16 16Z" fill="#4E89FE" fill-opacity="0.4"/>
+    </g>
+</svg> 

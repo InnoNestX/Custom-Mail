@@ -1,6 +1,6 @@
-# Custom Mail — Documentation
+Welcome to the Custom Mail docs. Prefer the published site: **[innonestx.github.io/Custom-Mail](https://innonestx.github.io/Custom-Mail/)**.
 
-Welcome to the Custom Mail docs. Start here if you are deploying your own instance or customizing branding.
+Source Markdown also lives under `docs/` and `docs-site/docs/`.
 
 ## Guides
 
@@ -12,6 +12,7 @@ Welcome to the Custom Mail docs. Start here if you are deploying your own instan
 
 ## Quick links
 
+- [Published docs](https://innonestx.github.io/Custom-Mail/)
 - [Repository README](../README.md)
 - [Live demo](https://mail.xuxuclassmate.com)
 - [InnoNestX organization](https://github.com/InnoNestX)

@@ -1,0 +1,43 @@
+# 常见问题
+
+## 密码正确但无法登录
+
+- **生产：** 确认在 Worker `custom-mail` 上执行了 `wrangler secret put ADMIN_PASSWORD`。
+- **本地：** 检查 `.dev.vars` 并重启 `npm run dev`。
+- 尝试次数过多会临时锁定，稍后再试。
+
+## 发送失败 / Brevo 报错
+
+- 确认 Worker 上有正确的 `BREVO_API_KEY`。
+- `mail.json` 中的 `fromEmail` 须在 Brevo 授权。
+- 在 Brevo 控制台查看限额或域名验证状态。
+
+## CI 部署失败
+
+- `check` 任务须通过（typecheck）。
+- Deploy workflow 需要 `CLOUDFLARE_API_TOKEN` 与 `CLOUDFLARE_ACCOUNT_ID`。
+- 本地使用 Node 22+ 与 CI 对齐。
+
+## 发送记录为空
+
+仅成功发送会写入 KV。失败发送可能以错误状态部分记录。
+
+## 移动端布局
+
+窄屏上发送记录为「列表 → 全屏详情」；桌面为左右分栏。
+
+## 能否换成非 Brevo 的邮件服务？
+
+发信逻辑在 `src/email.ts` 针对 Brevo 实现。可 Fork 后改成其他 ESP。
+
+## 安全提示
+
+- 不要在公网暴露弱密码控制台。
+- 会话 Cookie 为 HttpOnly、Secure、SameSite=Strict。
+- 不要提交 `.dev.vars` 或 API Token。
+
+## 获取帮助
+
+- [GitHub Discussions](https://github.com/InnoNestX/Custom-Mail/discussions)
+- [InnoNestX Discussions](https://github.com/InnoNestX/.github/discussions)
+- 安全问题：[私密 Advisory](https://github.com/InnoNestX/Custom-Mail/security/advisories/new)

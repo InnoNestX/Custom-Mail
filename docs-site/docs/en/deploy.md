@@ -1,0 +1,87 @@
+# Deploy
+
+Custom Mail runs as a single **Cloudflare Worker** with **KV** and **Workers Assets**.
+
+## Prerequisites
+
+- Cloudflare account with Workers enabled
+- [Brevo](https://www.brevo.com/) account and verified sender domain
+- Node.js 22+ and `npm`
+
+## 1. Configure product
+
+Edit `config/mail.json`:
+
+- Set `host` to your mail subdomain
+- Set `mail.fromEmail` to a Brevo-authorized address
+- Customize `app`, `brand`, `addressBook`
+
+Edit `wrangler.jsonc`:
+
+- `name` — Worker script name (e.g. `custom-mail`)
+- `routes` — same host as `config/mail.json`
+- `kv_namespaces` — your KV namespace ID
+
+```bash
+npx wrangler kv namespace create MAIL_LOG_KV
+```
+
+Paste the returned `id` into `wrangler.jsonc`.
+
+## 2. Secrets
+
+**Local** — `.dev.vars`:
+
+```bash
+cp .dev.vars.example .dev.vars
+```
+
+**Production**:
+
+```bash
+npx wrangler secret put ADMIN_PASSWORD
+npx wrangler secret put BREVO_API_KEY
+```
+
+## 3. Deploy
+
+```bash
+npm run typecheck
+npm run deploy
+```
+
+Visit `https://<host>` and sign in.
+
+## Custom domain
+
+```jsonc
+"routes": [
+  { "pattern": "mail.example.com", "custom_domain": true }
+]
+```
+
+## GitHub Actions
+
+| Workflow | Trigger | Purpose |
+|----------|---------|---------|
+| CI | push / PR to `main` | typecheck |
+| CodeQL | push / PR / weekly | security scan |
+| Docs | push to `docs-site/**` | GitHub Pages |
+| Deploy to Cloudflare Workers | **Manual only** | `wrangler deploy` |
+
+### Required GitHub secrets (Cloudflare deploy)
+
+| Secret | Scope |
+|--------|--------|
+| `CLOUDFLARE_API_TOKEN` | Workers Scripts write |
+| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare account ID |
+
+Worker secrets stay on Cloudflare — not in GitHub.
+
+## Checklist
+
+- [ ] `host` in `mail.json` matches `wrangler.jsonc` route
+- [ ] KV namespace ID is real
+- [ ] `ADMIN_PASSWORD` and `BREVO_API_KEY` on Worker
+- [ ] Brevo sender verified for `fromEmail`
+- [ ] CI `check` passes on `main`
