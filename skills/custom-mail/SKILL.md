@@ -1,7 +1,7 @@
 ---
 name: custom-mail
-description: Run Custom Mail (private Brevo webmail console) via the lightweight Docker image from Docker Hub or GHCR.
-version: 1.0.0
+description: Run Custom Mail (Rust Cloudflare Worker mail console) via Docker Hub or GHCR, or deploy with wrangler.
+version: 1.1.0
 metadata:
   openclaw:
     requires:
@@ -19,16 +19,16 @@ metadata:
     homepage: https://github.com/InnoNestX/Custom-Mail
 ---
 
-# Custom Mail (Docker)
+# Custom Mail (Rust / Docker)
 
-Lightweight local run of [Custom Mail](https://github.com/InnoNestX/Custom-Mail) — Cloudflare Workers mail console, packaged for Docker.
+[Custom Mail](https://github.com/InnoNestX/Custom-Mail) is a private Brevo webmail console. Runtime is a **Rust** Cloudflare Worker (`workers-rs`).
 
 ## Images
 
 - Docker Hub: `xuxuclassmate/custom-mail:latest`
 - GHCR: `ghcr.io/innonestx/custom-mail:latest`
 
-## Run
+## Run (local demo)
 
 ```bash
 docker run --rm -p 8787:8787 \
@@ -37,17 +37,16 @@ docker run --rm -p 8787:8787 \
   xuxuclassmate/custom-mail:latest
 ```
 
-Open http://127.0.0.1:8787
+Open http://127.0.0.1:8787 — health check includes `"runtime":"rust"`.
 
-Or compose (repo root):
+## Deploy (Cloudflare)
 
 ```bash
-ADMIN_PASSWORD=your-password BREVO_API_KEY=xkeysib-... docker compose up
+git clone https://github.com/InnoNestX/Custom-Mail.git
+cd Custom-Mail
+cargo test --lib
+npm install
+npm run deploy
 ```
 
-## Notes
-
-- Image runs `wrangler dev --local` (no Cloudflare account needed for UI).
-- Persist KV/session data with a volume on `/app/.wrangler`.
-- Production deploy remains `npm run deploy` to Cloudflare Workers — Docker is for local/demo.
-- Branding/config lives in `config/mail.json` inside the image; mount a file over it if you need a custom brand.
+Requires Rust (`wasm32-unknown-unknown`), `worker-build`, and Wrangler secrets `ADMIN_PASSWORD` / `BREVO_API_KEY`.

@@ -1,14 +1,16 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "custom-mail",
-  "main": "src/index.ts",
+  "main": "build/worker/shim.mjs",
   "compatibility_date": "2026-08-25",
-  "compatibility_flags": ["nodejs_compat"],
   "workers_dev": false,
   "preview_urls": false,
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1
+  },
+  "build": {
+    "command": "worker-build --release --no-panic-recovery"
   },
   "kv_namespaces": [
     {
@@ -23,7 +25,6 @@
     }
   ],
   "assets": {
-    "directory": "./public",
-    "binding": "ASSETS"
+    "directory": "./public"
   }
 }

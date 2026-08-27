@@ -1,28 +1,30 @@
-FROM node:22-bookworm-slim
+# syntax=docker/dockerfile:1
 
+FROM rust:1-bookworm AS build
 WORKDIR /app
-
-# Minimal install — only wrangler (+ platform workerd)
-RUN npm init -y >/dev/null \
-  && npm install --no-audit --no-fund wrangler@4.125.0 \
-  && npm cache clean --force \
-  && rm -rf /tmp/* /root/.npm \
-  && test -x node_modules/.bin/wrangler
-
-COPY wrangler.docker.jsonc ./wrangler.jsonc
-COPY tsconfig.json ./
+RUN rustup target add wasm32-unknown-unknown \
+  && cargo install worker-build --locked --version 0.8.5
+COPY Cargo.toml ./
+COPY .cargo ./.cargo
 COPY src ./src
-COPY public ./public
 COPY config ./config
-COPY docker/entrypoint.sh /entrypoint.sh
+COPY templates ./templates
+# Generate lock on first build if missing
+RUN cargo generate-lockfile \
+  && worker-build --release --no-panic-recovery
 
+FROM node:22-bookworm-slim
+WORKDIR /app
+RUN npm install -g wrangler@4.125.0 && npm cache clean --force
+COPY --from=build /app/build ./build
+COPY wrangler.docker.jsonc ./wrangler.jsonc
+COPY config ./config
+COPY public ./public
+COPY docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh \
   && useradd -u 10001 -m cmail \
   && chown -R cmail:cmail /app
-
 USER cmail
-ENV PATH="/app/node_modules/.bin:${PATH}"
 ENV PORT=8787
 EXPOSE 8787
-
 ENTRYPOINT ["/entrypoint.sh"]
