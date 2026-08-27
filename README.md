@@ -36,7 +36,7 @@ npm run deploy
 
 ### GitHub → Cloudflare 自动部署
 
-推送到 `main` 分支后，GitHub Actions 会自动 `wrangler deploy`。
+推送到 `main` 会运行 **CI**（typecheck）。**部署 Worker** 在 Actions 里手动触发：`Deploy to Cloudflare Workers` → Run workflow。
 
 在仓库 **Settings → Secrets and variables → Actions** 配置：
 
