@@ -37,9 +37,6 @@
 |---|---|
 | **Live demo** | https://mail.xuxuclassmate.com |
 | **Documentation** | https://innonestx.github.io/Custom-Mail/ |
-| **English** | https://innonestx.github.io/Custom-Mail/ |
-| **中文** | https://innonestx.github.io/Custom-Mail/zh/ |
-| **Org** | [InnoNestX](https://github.com/InnoNestX) |
 
 ## Why use it
 
@@ -97,7 +94,6 @@ OpenClaw skill: `clawhub install custom-mail`
 All product copy and mail defaults live in **`config/mail.json`**. Full reference on the docs site:
 
 - https://innonestx.github.io/Custom-Mail/config.html
-- https://innonestx.github.io/Custom-Mail/zh/config.html
 
 Also in-repo: [docs/CONFIG.md](docs/CONFIG.md) · [docs/DEPLOY.md](docs/DEPLOY.md) · [docs/FAQ.md](docs/FAQ.md)
 
