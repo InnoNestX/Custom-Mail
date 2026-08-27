@@ -32,6 +32,37 @@ body {
   font-weight: 700;
 }
 
+/* Nav readability on mint paper (incl. external links + icons) */
+.VPNavBar .VPNavBarMenuLink,
+.VPNavBar .VPNavBarMenuLink span {
+  color: var(--cm-ink) !important;
+}
+
+.VPNavBar .VPNavBarMenuLink.active,
+.VPNavBar .VPNavBarMenuLink.active span,
+.VPNavBar .VPNavBarMenuLink:hover,
+.VPNavBar .VPNavBarMenuLink:hover span {
+  color: var(--cm-forest) !important;
+}
+
+.VPNavBar .vp-external-link-icon:after {
+  color: var(--cm-muted) !important;
+  background-color: var(--cm-muted) !important;
+}
+
+.VPNavBar .VPSocialLink,
+.VPNavBar .vpi-languages,
+.VPNavBar .vpi-chevron-down,
+.VPNavBar .VPSwitchAppearance .icon {
+  color: var(--cm-ink) !important;
+  opacity: 1 !important;
+}
+
+.VPNavBar .VPImage.logo {
+  height: 28px;
+  width: 28px;
+}
+
 .Layout:has(.cm-home) .VPHome,
 .Layout:has(.cm-gate) .VPHome {
   margin-bottom: 0 !important;
