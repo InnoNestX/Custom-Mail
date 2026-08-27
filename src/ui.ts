@@ -1623,7 +1623,7 @@ export function renderAppHtml(opts: {
 
   function clearLegacyAuth() {
     try {
-      localStorage.removeItem("xuxu_mail_token");
+      localStorage.removeItem("custom_mail_token");
     } catch {}
   }
 

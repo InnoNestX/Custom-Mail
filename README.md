@@ -1,4 +1,4 @@
-# XuXu Mail
+# Custom Mail
 
 独立的网页发信服务：**Cloudflare Workers** + **Brevo**，部署在 `mail.xuxuclassmate.com`。
 

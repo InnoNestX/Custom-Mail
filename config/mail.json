@@ -1,7 +1,7 @@
 {
   "host": "mail.xuxuclassmate.com",
   "app": {
-    "title": "XuXu Mail",
+    "title": "Custom Mail",
     "subtitle": "私有网页发信 · 仅本域可用",
     "loginTagline": "Private web mail",
     "loginHeadlineBefore": "A quiet place to",
@@ -19,7 +19,7 @@
     "fromEmail": "noreply@xuxuclassmate.com",
     "fromNameDefault": "XuXuClassMate Inc Notice",
     "contactEmail": "mail@xuxuclassmate.com",
-    "brevoTag": "xuxu-mail"
+    "brevoTag": "custom-mail"
   },
   "site": {
     "url": "https://www.xuxuclassmate.com",

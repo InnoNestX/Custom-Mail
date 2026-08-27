@@ -1,4 +1,4 @@
-/** XuXu Mail brand mark — envelope on green tile */
+/** Custom Mail brand mark — envelope on green tile */
 
 import { mailConfig } from "./config";
 
