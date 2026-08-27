@@ -1,0 +1,13 @@
+.git
+.github
+.wrangler
+.dev.vars
+node_modules
+docs
+docs-site
+skills
+*.md
+!README.md
+.DS_Store
+*.log
+custom-mail-*.png

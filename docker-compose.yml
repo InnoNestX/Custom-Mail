@@ -1,0 +1,14 @@
+services:
+  mail:
+    image: xuxuclassmate/custom-mail:latest
+    build: .
+    ports:
+      - "8787:8787"
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-changeme}
+      BREVO_API_KEY: ${BREVO_API_KEY:-}
+    volumes:
+      - mail-data:/app/.wrangler
+
+volumes:
+  mail-data:
