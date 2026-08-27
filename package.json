@@ -1,12 +1,12 @@
 {
-  "name": "pulse-mail",
+  "name": "xuxu-mail",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "description": "XuXu Mail — private web mail composer on Cloudflare Workers (Brevo)",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/XuXuClassMate/pulse-mail.git"
+    "url": "git+https://github.com/XuXuClassMate/xuxu-mail.git"
   },
   "scripts": {
     "dev": "wrangler dev --port 8790",

@@ -1478,7 +1478,6 @@ export function renderAppHtml(opts: {
   function clearLegacyAuth() {
     try {
       localStorage.removeItem("xuxu_mail_token");
-      localStorage.removeItem("pulse_mail_token");
     } catch {}
   }
 
