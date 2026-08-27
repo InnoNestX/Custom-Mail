@@ -4,7 +4,7 @@
 
 | Language | URL |
 |----------|-----|
-| English | https://innonestx.github.io/Custom-Mail/en/ |
+| English | https://innonestx.github.io/Custom-Mail/ |
 | 中文 | https://innonestx.github.io/Custom-Mail/zh/ |
 
 Source Markdown also lives under `docs/` (this folder) and `docs-site/docs/` (VitePress).

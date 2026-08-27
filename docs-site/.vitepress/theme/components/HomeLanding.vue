@@ -10,7 +10,6 @@ const props = withDefaults(
 
 const isZh = props.lang === 'zh'
 const logo = withBase('/images/logo.svg')
-const base = '/Custom-Mail'
 
 const copy = isZh
   ? {
@@ -19,14 +18,16 @@ const copy = isZh
       headline: '安静的发信控制台',
       lede: '撰写、预览、发送。跑在边缘，不需要邮件服务器。',
       start: '快速开始',
-      startHref: `${base}/zh/quick-start.html`,
+      startHref: withBase('/zh/quick-start.html'),
       config: '配置',
-      configHref: `${base}/zh/config.html`,
+      configHref: withBase('/zh/config.html'),
       deploy: '部署',
-      deployHref: `${base}/zh/deploy.html`,
+      deployHref: withBase('/zh/deploy.html'),
+      faqHref: withBase('/zh/faq.html'),
       demo: '在线演示',
       alt: 'English',
-      altHref: `${base}/en/`,
+      altHref: withBase('/'),
+      homeHref: withBase('/zh/'),
       stepsTitle: '三步上手',
       steps: [
         ['克隆仓库', '安装依赖，复制 .dev.vars'],
@@ -43,14 +44,16 @@ const copy = isZh
       headline: 'A quiet place to send mail',
       lede: 'Compose, preview, and deliver. Edge-hosted — no mail server to run.',
       start: 'Quick start',
-      startHref: `${base}/en/quick-start.html`,
+      startHref: withBase('/quick-start.html'),
       config: 'Configure',
-      configHref: `${base}/en/config.html`,
+      configHref: withBase('/config.html'),
       deploy: 'Deploy',
-      deployHref: `${base}/en/deploy.html`,
+      deployHref: withBase('/deploy.html'),
+      faqHref: withBase('/faq.html'),
       demo: 'Live demo',
       alt: '中文',
-      altHref: `${base}/zh/`,
+      altHref: withBase('/zh/'),
+      homeHref: withBase('/'),
       stepsTitle: 'Three steps',
       steps: [
         ['Clone the repo', 'Install deps, copy .dev.vars'],
@@ -72,7 +75,7 @@ const copy = isZh
     </div>
 
     <header class="cm-home__nav">
-      <a class="cm-home__brand" :href="withBase(isZh ? '/zh/' : '/en/')">
+      <a class="cm-home__brand" :href="copy.homeHref">
         <img :src="logo" width="36" height="36" alt="" />
         <span>Custom Mail</span>
       </a>
@@ -109,7 +112,7 @@ const copy = isZh
       </ol>
       <div class="cm-home__links">
         <a :href="copy.deployHref">{{ copy.deploy }} →</a>
-        <a :href="withBase(isZh ? '/zh/faq.html' : '/en/faq.html')">FAQ →</a>
+        <a :href="copy.faqHref">FAQ →</a>
       </div>
     </section>
 

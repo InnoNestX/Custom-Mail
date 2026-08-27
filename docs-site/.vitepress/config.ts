@@ -63,20 +63,20 @@ export default defineConfig({
     },
     siteTitle: 'Custom Mail',
     nav: [
-      { text: 'Docs', link: '/en/' },
+      { text: 'Docs', link: '/' },
       { text: 'Live demo', link: 'https://mail.xuxuclassmate.com' },
       { text: 'GitHub', link: 'https://github.com/InnoNestX/Custom-Mail' },
     ],
     sidebar: {
-      '/en/': [
+      '/': [
         {
           text: 'Guide',
           items: [
-            { text: 'Overview', link: '/en/' },
-            { text: 'Quick start', link: '/en/quick-start' },
-            { text: 'Configuration', link: '/en/config' },
-            { text: 'Deploy', link: '/en/deploy' },
-            { text: 'FAQ', link: '/en/faq' },
+            { text: 'Overview', link: '/' },
+            { text: 'Quick start', link: '/quick-start' },
+            { text: 'Configuration', link: '/config' },
+            { text: 'Deploy', link: '/deploy' },
+            { text: 'FAQ', link: '/faq' },
           ],
         },
       ],
@@ -110,13 +110,8 @@ export default defineConfig({
   },
   locales: {
     root: {
-      label: 'Language',
-      lang: 'en-US',
-    },
-    en: {
       label: 'English',
       lang: 'en-US',
-      link: '/en/',
       title: 'Custom Mail',
       description:
         'Private web mail console on Cloudflare Workers. Compose, preview, attachments, and send history via Brevo.',
@@ -133,6 +128,18 @@ export default defineConfig({
           { text: '文档', link: '/zh/' },
           { text: '在线演示', link: 'https://mail.xuxuclassmate.com' },
           { text: 'GitHub', link: 'https://github.com/InnoNestX/Custom-Mail' },
+        ],
+        sidebar: [
+          {
+            text: '指南',
+            items: [
+              { text: '概览', link: '/zh/' },
+              { text: '快速开始', link: '/zh/quick-start' },
+              { text: '配置说明', link: '/zh/config' },
+              { text: '部署', link: '/zh/deploy' },
+              { text: '常见问题', link: '/zh/faq' },
+            ],
+          },
         ],
         editLink: {
           pattern: 'https://github.com/InnoNestX/Custom-Mail/edit/main/docs-site/docs/:path',
