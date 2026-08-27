@@ -14,6 +14,7 @@ npm run dev
 
 Open <http://localhost:8790> and set `ADMIN_PASSWORD` and `BREVO_API_KEY` in `.dev.vars`.
 
+Published docs: https://innonestx.github.io/Custom-Mail/  
 Full guides: [docs/README.md](docs/README.md)
 
 ## Before You Submit

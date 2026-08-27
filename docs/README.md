@@ -1,8 +1,15 @@
-Welcome to the Custom Mail docs. Prefer the published site: **[innonestx.github.io/Custom-Mail](https://innonestx.github.io/Custom-Mail/)**.
+# Custom Mail — Documentation
 
-Source Markdown also lives under `docs/` and `docs-site/docs/`.
+**Published site (use this):** https://innonestx.github.io/Custom-Mail/
 
-## Guides
+| Language | URL |
+|----------|-----|
+| English | https://innonestx.github.io/Custom-Mail/en/ |
+| 中文 | https://innonestx.github.io/Custom-Mail/zh/ |
+
+Source Markdown also lives under `docs/` (this folder) and `docs-site/docs/` (VitePress).
+
+## Guides (in-repo)
 
 | Guide | Description |
 |-------|-------------|
@@ -12,9 +19,9 @@ Source Markdown also lives under `docs/` and `docs-site/docs/`.
 
 ## Quick links
 
-- [Published docs](https://innonestx.github.io/Custom-Mail/)
+- Docs site: https://innonestx.github.io/Custom-Mail/
+- Live demo: https://mail.xuxuclassmate.com
 - [Repository README](../README.md)
-- [Live demo](https://mail.xuxuclassmate.com)
 - [InnoNestX organization](https://github.com/InnoNestX)
 - [Brevo API](https://developers.brevo.com/)
 

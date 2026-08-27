@@ -29,11 +29,16 @@
 
 **Custom Mail** is a self-hosted outbound mail workspace. Run it on your own Cloudflare account, brand it with JSON config, and send through **Brevo** without maintaining a mail server.
 
+**Docs:** [English](https://innonestx.github.io/Custom-Mail/en/) · [中文](https://innonestx.github.io/Custom-Mail/zh/)  
+**Docs URL:** https://innonestx.github.io/Custom-Mail/
+
 | | |
 |---|---|
-| **Live example** | [mail.xuxuclassmate.com](https://mail.xuxuclassmate.com) |
-| **Org** | Part of [InnoNestX](https://github.com/InnoNestX) |
-| **Docs** | [Documentation site](https://innonestx.github.io/Custom-Mail/) · [repo docs/](docs/README.md) |
+| **Live demo** | https://mail.xuxuclassmate.com |
+| **Documentation** | https://innonestx.github.io/Custom-Mail/ |
+| **English** | https://innonestx.github.io/Custom-Mail/en/ |
+| **中文** | https://innonestx.github.io/Custom-Mail/zh/ |
+| **Org** | [InnoNestX](https://github.com/InnoNestX) |
 
 ## Why use it
 
@@ -68,10 +73,12 @@ Open **http://localhost:8790** and sign in with `ADMIN_PASSWORD`.
 
 ## Configuration
 
-All product copy and mail defaults live in **`config/mail.json`**. See the full reference:
+All product copy and mail defaults live in **`config/mail.json`**. Full reference on the docs site:
 
-- [Configuration guide](docs/CONFIG.md) — `host`, `app`, `mail`, `brand`, `addressBook`
-- [Deployment guide](docs/DEPLOY.md) — Cloudflare, secrets, CI, custom domain
+- https://innonestx.github.io/Custom-Mail/en/config.html
+- https://innonestx.github.io/Custom-Mail/zh/config.html
+
+Also in-repo: [docs/CONFIG.md](docs/CONFIG.md) · [docs/DEPLOY.md](docs/DEPLOY.md) · [docs/FAQ.md](docs/FAQ.md)
 
 `host` in `mail.json` must match the route in `wrangler.jsonc`.
 
@@ -94,7 +101,7 @@ npm run deploy
 
 Org/repo secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`. Worker secrets stay on Cloudflare (`ADMIN_PASSWORD`, `BREVO_API_KEY`).
 
-Details: [docs/DEPLOY.md](docs/DEPLOY.md)
+Details: https://innonestx.github.io/Custom-Mail/en/deploy.html · [docs/DEPLOY.md](docs/DEPLOY.md)
 
 ## Architecture
 

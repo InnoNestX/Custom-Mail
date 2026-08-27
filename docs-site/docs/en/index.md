@@ -4,8 +4,9 @@ Private **web mail console** on Cloudflare Workers. Compose Markdown, attach fil
 
 | | |
 |---|---|
-| **Live demo** | [mail.xuxuclassmate.com](https://mail.xuxuclassmate.com) |
-| **Repository** | [InnoNestX/Custom-Mail](https://github.com/InnoNestX/Custom-Mail) |
+| **This docs site** | https://innonestx.github.io/Custom-Mail/ |
+| **Live demo** | https://mail.xuxuclassmate.com |
+| **Repository** | https://github.com/InnoNestX/Custom-Mail |
 | **License** | MIT |
 
 ## Why Custom Mail

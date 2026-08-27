@@ -8,6 +8,10 @@
     "type": "git",
     "url": "git+https://github.com/InnoNestX/Custom-Mail.git"
   },
+  "homepage": "https://innonestx.github.io/Custom-Mail/",
+  "bugs": {
+    "url": "https://github.com/InnoNestX/Custom-Mail/issues"
+  },
   "scripts": {
     "dev": "wrangler dev --port 8790",
     "deploy": "wrangler deploy",
