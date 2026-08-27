@@ -9,7 +9,6 @@ const props = withDefaults(
 )
 
 const isZh = props.lang === 'zh'
-const logo = withBase('/images/logo.svg')
 
 const copy = isZh
   ? {
@@ -25,9 +24,6 @@ const copy = isZh
       deployHref: withBase('/zh/deploy.html'),
       faqHref: withBase('/zh/faq.html'),
       demo: '在线演示',
-      alt: 'English',
-      altHref: withBase('/'),
-      homeHref: withBase('/zh/'),
       stepsTitle: '三步上手',
       steps: [
         ['克隆仓库', '安装依赖，复制 .dev.vars'],
@@ -51,9 +47,6 @@ const copy = isZh
       deployHref: withBase('/deploy.html'),
       faqHref: withBase('/faq.html'),
       demo: 'Live demo',
-      alt: '中文',
-      altHref: withBase('/zh/'),
-      homeHref: withBase('/'),
       stepsTitle: 'Three steps',
       steps: [
         ['Clone the repo', 'Install deps, copy .dev.vars'],
@@ -73,17 +66,6 @@ const copy = isZh
       <span class="cm-orb cm-orb--b"></span>
       <span class="cm-envelope"></span>
     </div>
-
-    <header class="cm-home__nav">
-      <a class="cm-home__brand" :href="copy.homeHref">
-        <img :src="logo" width="36" height="36" alt="" />
-        <span>Custom Mail</span>
-      </a>
-      <div class="cm-home__nav-links">
-        <a :href="copy.altHref">{{ copy.alt }}</a>
-        <a href="https://github.com/InnoNestX/Custom-Mail">GitHub</a>
-      </div>
-    </header>
 
     <section class="cm-home__hero">
       <p class="cm-home__kicker">{{ copy.kicker }}</p>

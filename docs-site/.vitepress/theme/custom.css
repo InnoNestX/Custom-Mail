@@ -206,7 +206,7 @@ body {
   position: relative;
   max-width: 960px;
   margin: 0 auto;
-  padding: 1.25rem 1.25rem 3.5rem;
+  padding: 2.25rem 1.25rem 3.5rem;
   overflow: hidden;
   min-height: calc(100vh - 120px);
 }
@@ -269,51 +269,11 @@ body {
   background: rgba(21, 98, 79, 0.18);
 }
 
-.cm-home__nav,
 .cm-home__hero,
 .cm-home__steps,
 .cm-home__urls {
   position: relative;
   z-index: 1;
-}
-
-.cm-home__nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 3.5rem;
-  animation: cm-rise 0.6s ease both;
-}
-
-.cm-home__brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.7rem;
-  color: var(--cm-ink);
-  text-decoration: none;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-
-.cm-home__brand img {
-  border-radius: 10px;
-}
-
-.cm-home__nav-links {
-  display: flex;
-  gap: 1rem;
-}
-
-.cm-home__nav-links a {
-  color: var(--cm-muted);
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 0.92rem;
-}
-
-.cm-home__nav-links a:hover {
-  color: var(--cm-forest);
 }
 
 .cm-home__hero {
