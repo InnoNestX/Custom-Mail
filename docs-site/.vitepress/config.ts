@@ -29,7 +29,10 @@ export default defineConfig({
     )
   },
   head: [
-    ['link', { rel: 'icon', href: `${base}images/logo.svg`, type: 'image/svg+xml' }],
+    ['link', { rel: 'icon', href: `${base}favicon.ico`, sizes: 'any' }],
+    ['link', { rel: 'icon', href: `${base}images/favicon.svg`, type: 'image/svg+xml' }],
+    ['link', { rel: 'icon', href: `${base}images/favicon-32.png`, type: 'image/png', sizes: '32x32' }],
+    ['link', { rel: 'apple-touch-icon', href: `${base}images/apple-touch-icon.png`, sizes: '180x180' }],
     ['link', { rel: 'canonical', href: siteUrl }],
     ['meta', { name: 'theme-color', content: '#15624f' }],
     ['meta', { name: 'author', content: 'InnoNestX' }],
