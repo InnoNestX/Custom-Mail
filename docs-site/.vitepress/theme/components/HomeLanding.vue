@@ -66,9 +66,9 @@ const copy = isZh
 <template>
   <div class="cm-home">
     <div class="cm-home__atmosphere" aria-hidden="true">
-      <span class="cm-orb cm-orb--a" />
-      <span class="cm-orb cm-orb--b" />
-      <span class="cm-envelope" />
+      <span class="cm-orb cm-orb--a"></span>
+      <span class="cm-orb cm-orb--b"></span>
+      <span class="cm-envelope"></span>
     </div>
 
     <header class="cm-home__nav">

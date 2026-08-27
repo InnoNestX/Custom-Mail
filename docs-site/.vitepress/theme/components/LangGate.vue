@@ -12,7 +12,7 @@ const zh = withBase('/zh/')
 
 <template>
   <div class="cm-gate">
-    <div class="cm-gate__glow" aria-hidden="true" />
+    <div class="cm-gate__glow" aria-hidden="true"></div>
     <div class="cm-gate__panel">
       <img class="cm-gate__logo" :src="logo" width="72" height="72" alt="Custom Mail" />
       <p class="cm-gate__brand">Custom Mail</p>
