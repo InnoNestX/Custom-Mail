@@ -1,4 +1,5 @@
-import type { AddressBookEntry } from "./email";
+import type { AddressBookEntry } from "./config";
+import { mailConfig } from "./config";
 import { logoMarkSvg } from "./brand";
 
 export function renderAppHtml(opts: {
@@ -15,6 +16,18 @@ export function renderAppHtml(opts: {
   const mdInlineCode = "`js:行内代码`";
   const mdFencedCode = "```shell\n\n```";
   const mdLink = "[链接文字](https://example.com)";
+  const app = mailConfig.app;
+  const titleEsc = escapeHtml(app.title);
+  const subtitleEsc = escapeHtml(app.subtitle);
+  const loginTaglineEsc = escapeHtml(app.loginTagline);
+  const loginHeadlineBeforeEsc = escapeHtml(app.loginHeadlineBefore);
+  const loginHeadlineEmEsc = escapeHtml(app.loginHeadlineEm);
+  const loginLeadEsc = escapeHtml(app.loginLead);
+  const loginFormTitleEsc = escapeHtml(app.loginFormTitle);
+  const loginFormSubEsc = escapeHtml(app.loginFormSub);
+  const loginPointsHtml = app.loginPoints
+    .map((p) => `<li>${escapeHtml(p)}</li>`)
+    .join("");
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -22,7 +35,7 @@ export function renderAppHtml(opts: {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f7f4ee">
-<title>XuXu Mail</title>
+<title>${titleEsc}</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1182,8 +1195,8 @@ export function renderAppHtml(opts: {
     <div class="mark hidden" id="topMark">
       <div class="mark-badge">${logoHeader}</div>
       <div>
-        <h1>XuXu Mail</h1>
-        <p id="markSubApp">私有网页发信 · 仅本域可用</p>
+        <h1>${titleEsc}</h1>
+        <p id="markSubApp">${subtitleEsc}</p>
       </div>
     </div>
 
@@ -1193,23 +1206,21 @@ export function renderAppHtml(opts: {
           <div class="login-brand-row">
             <div class="mark-badge">${logoHero}</div>
             <div>
-              <h1>XuXu Mail</h1>
-              <p>Private web mail</p>
+              <h1>${titleEsc}</h1>
+              <p>${loginTaglineEsc}</p>
             </div>
           </div>
-          <h2 class="login-headline">A quiet place to <em>send mail</em></h2>
-          <p class="login-lead">Compose, preview, and send — a simple console for outbound notices.</p>
+          <h2 class="login-headline">${loginHeadlineBeforeEsc} <em>${loginHeadlineEmEsc}</em></h2>
+          <p class="login-lead">${loginLeadEsc}</p>
           <ul class="login-points">
-            <li>Preview before you send</li>
-            <li>Attachments and delivery log</li>
-            <li>Secure session access</li>
+            ${loginPointsHtml}
           </ul>
         </div>
       </section>
       <section class="login-panel">
         <div class="card login-form-card">
-          <h3 class="login-form-title">Sign in</h3>
-          <p class="login-form-sub">Enter your password to continue.</p>
+          <h3 class="login-form-title">${loginFormTitleEsc}</h3>
+          <p class="login-form-sub">${loginFormSubEsc}</p>
           <form id="loginForm" class="login-form">
             <label for="password">Password</label>
             <input id="password" type="password" placeholder="Enter your password" autocomplete="current-password">
@@ -1228,8 +1239,8 @@ export function renderAppHtml(opts: {
         <div class="app-brand">
           <div class="mark-badge">${logoApp}</div>
           <div>
-            <h1>XuXu Mail</h1>
-            <p>私有网页发信 · 仅本域可用</p>
+            <h1>${titleEsc}</h1>
+            <p>${subtitleEsc}</p>
           </div>
         </div>
         <div class="app-tabs">

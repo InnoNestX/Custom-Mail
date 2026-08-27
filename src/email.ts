@@ -1,60 +1,27 @@
 import { BRAND_ACCENT, BRAND_CREAM, BRAND_TILE, BRAND_TILE_EDGE, SITE_BRAND_BLUE } from "./brand";
+import { mailConfig, mailLogoUrl, mailOrigin } from "./config";
 
 export interface Env {
-  /** Display name only; email address is fixed in code */
-  EMAIL_FROM_NAME?: string;
-  /** JSON array of { address, note? } */
-  ADDRESS_BOOK?: string;
   BREVO_API_KEY: string;
   ADMIN_PASSWORD: string;
   MAIL_LOG_KV?: KVNamespace;
   ASSETS?: Fetcher;
 }
 
-export const FIXED_FROM_EMAIL = "noreply@xuxuclassmate.com";
-/** Shown in email footer — reachable inbox for replies */
-export const CONTACT_EMAIL = "mail@xuxuclassmate.com";
-export const SITE_URL = "https://www.xuxuclassmate.com";
-export const SITE_LABEL = "www.xuxuclassmate.com";
-/** Main-site mark (PNG). Hosted on mail until www deploys /images/logo.png */
-export const SITE_LOGO_URL = "https://mail.xuxuclassmate.com/images/logo.png";
-export const SITE_LOGO_CANONICAL_URL = "https://www.xuxuclassmate.com/images/logo.png";
-export const SITE_BRAND_NAME = "XuXuClassMate";
-export const DEFAULT_FROM_NAME = "XuXuClassMate Inc Notice";
+export type { AddressBookEntry } from "./config";
 
-export interface AddressBookEntry {
-  address: string;
-  note?: string;
+export function fixedFromEmail(): string {
+  return mailConfig.mail.fromEmail;
 }
 
-export function parseAddressBook(raw: string | undefined): AddressBookEntry[] {
-  if (!raw?.trim()) return [];
-  try {
-    const parsed = JSON.parse(raw) as unknown;
-    if (!Array.isArray(parsed)) return [];
-    const out: AddressBookEntry[] = [];
-    for (const item of parsed) {
-      if (!item || typeof item !== "object") continue;
-      const address = String((item as { address?: unknown }).address ?? "").trim().toLowerCase();
-      if (!address || !address.includes("@")) continue;
-      const noteRaw = (item as { note?: unknown }).note;
-      const note = typeof noteRaw === "string" && noteRaw.trim() ? noteRaw.trim() : undefined;
-      out.push(note ? { address, note } : { address });
-    }
-    return out;
-  } catch {
-    return [];
-  }
-}
-
-export function resolveFromName(env: Env, override?: string): string {
-  const candidate = (override ?? env.EMAIL_FROM_NAME ?? DEFAULT_FROM_NAME).trim();
+export function resolveFromName(override?: string): string {
+  const candidate = (override ?? mailConfig.mail.fromNameDefault).trim();
   const cleaned = candidate.replace(/[<>\r\n]/g, "").trim();
-  return cleaned.slice(0, 80) || DEFAULT_FROM_NAME;
+  return cleaned.slice(0, 80) || mailConfig.mail.fromNameDefault;
 }
 
 export function buildSender(fromName: string): { email: string; name: string } {
-  return { email: FIXED_FROM_EMAIL, name: fromName };
+  return { email: mailConfig.mail.fromEmail, name: fromName };
 }
 
 function escapeHtml(str: string): string {
@@ -159,7 +126,6 @@ const INLINE_CODE_STYLE =
 const COPY_BTN_STYLE =
   "font-size:10px;font-weight:700;color:#57534e;background:#fff;border:1px solid #e7e5e4;border-radius:5px;padding:3px 10px;text-decoration:none;line-height:1.4;font-family:Arial,Helvetica,sans-serif;";
 
-const SNIPPET_HOST = "https://mail.xuxuclassmate.com";
 const SNIPPET_MAX_CHARS = 1400;
 
 function encodeBase64Url(text: string): string {
@@ -180,7 +146,7 @@ export function decodeSnippetParam(encoded: string): string {
 
 function snippetUrl(code: string): string | null {
   if (code.length > SNIPPET_MAX_CHARS) return null;
-  return `${SNIPPET_HOST}/snippet?e=${encodeBase64Url(code)}`;
+  return `${mailOrigin()}/snippet?e=${encodeBase64Url(code)}`;
 }
 
 export function snippetPageHtml(code: string): string {
@@ -289,7 +255,7 @@ function inline(value: string, opts?: { interactive?: boolean }): string {
 }
 
 function emailFooterHtml(siteUrl: string, siteLabel: string, logoUrl: string, contact: string): string {
-  const brandName = escapeHtml(SITE_BRAND_NAME);
+  const brandName = escapeHtml(mailConfig.site.brandName);
   const siteBlue = SITE_BRAND_BLUE;
   return (
     `<div style="padding:22px 24px 24px;border-top:1px solid #ebe8e1;background:#f6f8f6;">` +
@@ -329,10 +295,10 @@ export function wrapEmailHtml(
 ): string {
   const title = escapeHtml(subject);
   const brand = escapeHtml(fromName);
-  const contact = escapeHtml(CONTACT_EMAIL);
-  const siteUrl = escapeHtml(SITE_URL);
-  const siteLabel = escapeHtml(SITE_LABEL);
-  const logoUrl = escapeHtml(SITE_LOGO_URL);
+  const contact = escapeHtml(mailConfig.mail.contactEmail);
+  const siteUrl = escapeHtml(mailConfig.site.url);
+  const siteLabel = escapeHtml(mailConfig.site.label);
+  const logoUrl = escapeHtml(mailLogoUrl());
   const headerBg = `linear-gradient(135deg,${BRAND_TILE} 0%,${BRAND_TILE_EDGE} 52%,${BRAND_ACCENT} 100%)`;
   const copyScript = opts?.interactive
     ? `<script>(function(){document.querySelectorAll("a.xxm-copy-btn").forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();var t=a.getAttribute("data-copy")||"";if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){var p=a.textContent;a.textContent="Copied";setTimeout(function(){a.textContent=p;},1200);});}});});})();</script>`
@@ -418,11 +384,10 @@ function validateAttachments(raw: EmailAttachment[] | undefined): EmailAttachmen
 }
 
 export function buildEmailPreviewHtml(
-  env: Env,
   input: { subject: string; body: string; fromName?: string; hasAttachments?: boolean },
 ): { fromName: string; html: string; textPreview: string } {
   const subject = input.subject.trim();
-  const fromName = resolveFromName(env, input.fromName);
+  const fromName = resolveFromName(input.fromName);
   const body = input.body.trim();
   const bodyForRender = body || (input.hasAttachments ? "（附件邮件，无正文）" : "");
   const html = wrapEmailHtml(subject, renderBodyHtml(bodyForRender, { interactive: true }), fromName, {
@@ -462,7 +427,7 @@ export async function sendViaBrevo(env: Env, input: SendEmailInput): Promise<Sen
     return { ok: false, status: 400, message: "正文或附件至少填写一项" };
   }
 
-  const fromName = resolveFromName(env, input.fromName);
+  const fromName = resolveFromName(input.fromName);
   const sender = buildSender(fromName);
   const bodyForRender = body || (attachments.length ? "（附件邮件，无正文）" : "");
   const htmlContent = input.html
@@ -476,7 +441,7 @@ export async function sendViaBrevo(env: Env, input: SendEmailInput): Promise<Sen
     subject,
     htmlContent,
     textContent,
-    tags: ["xuxu-mail"],
+    tags: [mailConfig.mail.brevoTag],
   };
 
   if (attachments.length) {

@@ -1,11 +1,12 @@
 /** XuXu Mail brand mark — envelope on green tile */
 
-export const BRAND_TILE = "#15624f";
-export const BRAND_TILE_EDGE = "#1a7a62";
-export const BRAND_ACCENT = "#2f9e7b";
-export const BRAND_CREAM = "#f7f4ee";
-/** Main-site geometric logo blue */
-export const SITE_BRAND_BLUE = "#4E89FE";
+import { mailConfig } from "./config";
+
+export const BRAND_TILE = mailConfig.brand.tile;
+export const BRAND_TILE_EDGE = mailConfig.brand.tileEdge;
+export const BRAND_ACCENT = mailConfig.brand.accent;
+export const BRAND_CREAM = mailConfig.brand.cream;
+export const SITE_BRAND_BLUE = mailConfig.brand.siteBlue;
 
 const TILE = BRAND_TILE;
 const TILE_EDGE = BRAND_TILE_EDGE;

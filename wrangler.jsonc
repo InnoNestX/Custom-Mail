@@ -10,10 +10,6 @@
     "enabled": true,
     "head_sampling_rate": 1
   },
-  "vars": {
-    "EMAIL_FROM_NAME": "XuXuClassMate Inc Notice",
-    "ADDRESS_BOOK": "[{\"address\":\"xuxuclassmate@gmail.com\",\"note\":\"xuxu_gmail\"}]"
-  },
   "kv_namespaces": [
     {
       "binding": "MAIL_LOG_KV",

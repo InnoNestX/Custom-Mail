@@ -1,0 +1,43 @@
+{
+  "host": "mail.xuxuclassmate.com",
+  "app": {
+    "title": "XuXu Mail",
+    "subtitle": "私有网页发信 · 仅本域可用",
+    "loginTagline": "Private web mail",
+    "loginHeadlineBefore": "A quiet place to",
+    "loginHeadlineEm": "send mail",
+    "loginLead": "Compose, preview, and send — a simple console for outbound notices.",
+    "loginPoints": [
+      "Preview before you send",
+      "Attachments and delivery log",
+      "Secure session access"
+    ],
+    "loginFormTitle": "Sign in",
+    "loginFormSub": "Enter your password to continue."
+  },
+  "mail": {
+    "fromEmail": "noreply@xuxuclassmate.com",
+    "fromNameDefault": "XuXuClassMate Inc Notice",
+    "contactEmail": "mail@xuxuclassmate.com",
+    "brevoTag": "xuxu-mail"
+  },
+  "site": {
+    "url": "https://www.xuxuclassmate.com",
+    "label": "www.xuxuclassmate.com",
+    "brandName": "XuXuClassMate",
+    "logoPath": "/images/logo.png"
+  },
+  "brand": {
+    "tile": "#15624f",
+    "tileEdge": "#1a7a62",
+    "accent": "#2f9e7b",
+    "cream": "#f7f4ee",
+    "siteBlue": "#4E89FE"
+  },
+  "addressBook": [
+    {
+      "address": "xuxuclassmate@gmail.com",
+      "note": "xuxu_gmail"
+    }
+  ]
+}

@@ -1,14 +1,14 @@
 import {
-  FIXED_FROM_EMAIL,
   buildEmailPreviewHtml,
   decodeSnippetParam,
-  parseAddressBook,
+  fixedFromEmail,
   resolveFromName,
   sendViaBrevo,
   snippetPageHtml,
   type EmailAttachment,
   type Env,
 } from "./email";
+import { mailConfig } from "./config";
 import { appendSendLog, getSendLog, listSendLogs } from "./history";
 import {
   checkLoginAllowed,
@@ -27,8 +27,6 @@ import {
 import { faviconSvg } from "./brand";
 import { renderAppHtml } from "./ui";
 
-const ALLOWED_HOST = "mail.xuxuclassmate.com";
-
 function json(data: unknown, status = 200, extraHeaders?: Record<string, string>): Response {
   return new Response(JSON.stringify(data, null, 2), {
     status,
@@ -43,8 +41,8 @@ function json(data: unknown, status = 200, extraHeaders?: Record<string, string>
 function assertAllowedHost(request: Request): void {
   const raw = request.headers.get("Host") || new URL(request.url).host;
   const host = raw.split(":")[0]?.toLowerCase() ?? "";
-  if (host !== ALLOWED_HOST) {
-    throw new HttpError(403, "This service is only available at mail.xuxuclassmate.com");
+  if (host !== mailConfig.host) {
+    throw new HttpError(403, `This service is only available at ${mailConfig.host}`);
   }
 }
 
@@ -118,7 +116,7 @@ export default {
     try {
       assertAllowedHost(request);
       const url = new URL(request.url);
-      const fromName = resolveFromName(env);
+      const fromName = resolveFromName();
 
       if (request.method === "GET" && url.pathname === "/favicon.svg") {
         return new Response(faviconSvg(32), {
@@ -163,8 +161,8 @@ export default {
         return new Response(
           renderAppHtml({
             fromName,
-            fromEmail: FIXED_FROM_EMAIL,
-            addressBook: parseAddressBook(env.ADDRESS_BOOK),
+            fromEmail: fixedFromEmail(),
+            addressBook: mailConfig.addressBook,
           }),
           {
             headers: {
@@ -179,7 +177,7 @@ export default {
         return json({
           ok: true,
           service: "mail",
-          from: `${fromName} <${FIXED_FROM_EMAIL}>`,
+          from: `${fromName} <${fixedFromEmail()}>`,
           brevo: Boolean(env.BREVO_API_KEY),
           history: Boolean(env.MAIL_LOG_KV),
         });
@@ -237,9 +235,9 @@ export default {
         await assertAuth(request, env);
         return json({
           ok: true,
-          fromName: resolveFromName(env),
-          fromEmail: FIXED_FROM_EMAIL,
-          addressBook: parseAddressBook(env.ADDRESS_BOOK),
+          fromName: resolveFromName(),
+          fromEmail: fixedFromEmail(),
+          addressBook: mailConfig.addressBook,
         });
       }
 
@@ -281,7 +279,7 @@ export default {
         if (!subject.trim()) throw new HttpError(400, "请填写主题");
         if (!text.trim() && !hasAttachments) throw new HttpError(400, "正文或附件至少一项");
 
-        const preview = buildEmailPreviewHtml(env, {
+        const preview = buildEmailPreviewHtml({
           subject,
           body: text,
           fromName: nameOverride,
@@ -291,7 +289,7 @@ export default {
         return json({
           ok: true,
           fromName: preview.fromName,
-          fromEmail: FIXED_FROM_EMAIL,
+          fromEmail: fixedFromEmail(),
           to,
           subject: subject.trim(),
           textPreview: preview.textPreview,
@@ -313,7 +311,7 @@ export default {
         const html = body.html === true;
         const nameOverride = typeof body.fromName === "string" ? body.fromName : undefined;
         const attachments = parseAttachments(body.attachments);
-        const resolvedFromName = resolveFromName(env, nameOverride);
+        const resolvedFromName = resolveFromName(nameOverride);
 
         const result = await sendViaBrevo(env, {
           to,
@@ -326,7 +324,7 @@ export default {
 
         await appendSendLog(env, {
           fromName: resolvedFromName,
-          fromEmail: FIXED_FROM_EMAIL,
+          fromEmail: fixedFromEmail(),
           to,
           subject,
           body: text,
