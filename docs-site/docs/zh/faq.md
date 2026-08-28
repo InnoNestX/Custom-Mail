@@ -28,7 +28,7 @@
 
 ## 能否换成非 Brevo 的邮件服务？
 
-发信逻辑在 `src/email.rs` 针对 Brevo 实现。可 Fork 后改成其他 ESP。
+可以。在 `config/mail.json` 里设置 `plugins.provider` 为 `brevo`、`resend`、`sendgrid`、`mailgun`、`postmark`、`mailersend`、`smtp2go` 或 `sparkpost`，并在 Worker 上配置对应密钥（见[配置说明](./config)）。`fromEmail` 须在该服务商处授权。
 
 ## 支持哪些 Markdown？
 

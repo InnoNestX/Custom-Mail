@@ -1,8 +1,29 @@
 {
   "host": "mail.xuxuclassmate.com",
+  "plugins": {
+    "provider": "brevo",
+    "theme": "forest",
+    "layout": "banner"
+  },
+  "features": {
+    "attachments": true,
+    "history": true,
+    "addressBook": true,
+    "markdown": true,
+    "syntaxHelp": true
+  },
+  "layout": {
+    "showHeader": true,
+    "showLogo": true,
+    "showSubject": true,
+    "showFrom": true,
+    "showFooterContact": true,
+    "showFooterSite": true
+  },
   "app": {
     "title": "Custom Mail",
-    "subtitle": "私有网页发信 · 仅本域可用",
+    "subtitle": "Private web mail · this host only",
+    "locale": "en",
     "loginTagline": "Private web mail",
     "loginHeadlineBefore": "A quiet place to",
     "loginHeadlineEm": "send mail",
@@ -19,20 +40,73 @@
     "fromEmail": "noreply@xuxuclassmate.com",
     "fromNameDefault": "XuXuClassMate Inc Notice",
     "contactEmail": "mail@xuxuclassmate.com",
-    "brevoTag": "custom-mail"
+    "tag": "custom-mail"
   },
   "site": {
     "url": "https://www.xuxuclassmate.com",
     "label": "www.xuxuclassmate.com",
     "brandName": "XuXuClassMate",
-    "logoPath": "/images/logo.png"
+    "logoPath": "/images/logo.svg",
+    "faviconPath": "/images/logo.svg"
   },
   "brand": {
     "tile": "#15624f",
     "tileEdge": "#1a7a62",
     "accent": "#2f9e7b",
     "cream": "#f7f4ee",
-    "siteBlue": "#4E89FE"
+    "siteBlue": "#4E89FE",
+    "heroFrom": "#15624f",
+    "heroTo": "#0d3d32",
+    "headerText": "#ffffff"
+  },
+  "i18n": {
+    "tabCompose": "Compose",
+    "tabHistory": "History",
+    "logout": "Sign out",
+    "from": "From",
+    "fromNamePlaceholder": "Display name",
+    "to": "To",
+    "toPlaceholder": "Type an address and press Enter",
+    "toHint": "Pick from the address book or type any email",
+    "syntax": "Syntax",
+    "attach": "Attachments",
+    "attachDropTitle": "Drop or click to add",
+    "attachDropSub": "Up to 8 files · 8MB each · 15MB total",
+    "attachAdd": "Add files",
+    "subject": "Subject",
+    "subjectPlaceholder": "Subject",
+    "body": "Body",
+    "bodyPlaceholder": "Write the message…",
+    "clear": "Clear",
+    "preview": "Preview",
+    "send": "Send",
+    "historyTitle": "Send history",
+    "historySub": "Latest 10 · click for detail",
+    "historyRefresh": "Refresh",
+    "previewTitle": "Message preview",
+    "previewBack": "Edit",
+    "previewSend": "Send now"
+  },
+  "syntax": {
+    "enabled": true,
+    "heading": "CommonMark / GFM · click to copy",
+    "chips": [
+      { "label": "# H1", "insert": "# Heading 1" },
+      { "label": "## H2", "insert": "## Heading 2" },
+      { "label": "### H3", "insert": "### Heading 3" },
+      { "label": "**bold**", "insert": "**bold**" },
+      { "label": "*italic*", "insert": "*italic*" },
+      { "label": "~~strike~~", "insert": "~~strike~~" },
+      { "label": "`code`", "insert": "`inline code`" },
+      { "label": "```fence```", "insert": "```\ncode\n```" },
+      { "label": "- list", "insert": "- list item" },
+      { "label": "1. ordered", "insert": "1. ordered item" },
+      { "label": "- [ ] task", "insert": "- [ ] task" },
+      { "label": "> quote", "insert": "> quote" },
+      { "label": "[link](url)", "insert": "[label](https://example.com)" },
+      { "label": "![img](url)", "insert": "![alt](https://example.com/image.png)" },
+      { "label": "table", "insert": "| Col A | Col B |\n| --- | --- |\n| 1 | 2 |" }
+    ]
   },
   "addressBook": [
     {

@@ -5,7 +5,7 @@ Custom Mail runs as a single **Cloudflare Worker** with **KV** and **Workers Ass
 ## Prerequisites
 
 - Cloudflare account with Workers enabled
-- [Brevo](https://www.brevo.com/) account and verified sender domain
+- [Brevo](https://www.brevo.com/) (default) or another supported provider — see [CONFIG.md](CONFIG.md)
 - Rust stable (`wasm32-unknown-unknown`) and `worker-build` 0.8.5
 - Node.js 22+ and `npm` (Wrangler CLI)
 
@@ -14,8 +14,8 @@ Custom Mail runs as a single **Cloudflare Worker** with **KV** and **Workers Ass
 Edit `config/mail.json`:
 
 - Set `host` to your mail subdomain (e.g. `mail.example.com`)
-- Set `mail.fromEmail` to a Brevo-authorized address
-- Customize `app`, `brand`, `addressBook`
+- Set `mail.fromEmail` to an address authorized by your provider
+- Customize `plugins`, `app`, `brand`, `site`, `i18n`, `addressBook`
 
 Edit `wrangler.jsonc`:
 
@@ -38,14 +38,14 @@ Paste the returned `id` into `wrangler.jsonc`.
 ```bash
 cp .dev.vars.example .dev.vars
 # ADMIN_PASSWORD=...
-# BREVO_API_KEY=...
+# Provider API key matching plugins.provider (BREVO_API_KEY, RESEND_API_KEY, …)
 ```
 
 **Production** — Worker secrets (one time per Worker name):
 
 ```bash
 npx wrangler secret put ADMIN_PASSWORD
-npx wrangler secret put BREVO_API_KEY
+npx wrangler secret put BREVO_API_KEY   # or RESEND_API_KEY / SENDGRID_API_KEY / …
 ```
 
 ## 3. Deploy
@@ -84,7 +84,7 @@ Cloudflare will attach the domain when deploy succeeds. Ensure DNS is on Cloudfl
 | `CLOUDFLARE_API_TOKEN` | Org or repo — Workers Scripts write |
 | `CLOUDFLARE_ACCOUNT_ID` | Your Cloudflare account ID |
 
-Worker secrets (`ADMIN_PASSWORD`, `BREVO_API_KEY`) are **not** stored in GitHub.
+Worker secrets (`ADMIN_PASSWORD` and the provider API key) are **not** stored in GitHub.
 
 ### Manual deploy from Actions
 
@@ -106,6 +106,6 @@ If you change the Worker `name` in `wrangler.jsonc`, set secrets again on the ne
 
 - [ ] `host` in `mail.json` matches `wrangler.jsonc` route
 - [ ] KV namespace ID is real (not placeholder)
-- [ ] `ADMIN_PASSWORD` and `BREVO_API_KEY` on Worker
-- [ ] Brevo sender domain verified for `fromEmail`
+- [ ] `ADMIN_PASSWORD` and the API key for `plugins.provider` on the Worker
+- [ ] Provider has verified `fromEmail`
 - [ ] CI `check` passes on `main`

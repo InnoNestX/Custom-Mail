@@ -4,20 +4,22 @@ mod email;
 mod history;
 mod login_guard;
 mod markdown;
+mod plugins;
 mod sessions;
 mod ui;
 
 use brand::favicon_svg;
 use config::load_config;
 use email::{
-    build_email_preview_html, decode_snippet_param, fixed_from_email, resolve_from_name,
-    send_via_brevo, snippet_page_html, EmailAttachment, SendEmailInput,
+    build_email_preview_html, decode_snippet_param, fixed_from_email, resolve_from_name, send_mail,
+    snippet_page_html, EmailAttachment, SendEmailInput,
 };
 use history::{append_send_log, get_send_log, list_send_logs, NewLog};
 use login_guard::{
     check_login_allowed, clear_login_failures, format_lockout_message, get_client_ip,
     record_login_failure,
 };
+use plugins::{ProviderId, ProviderSecrets};
 use sessions::{
     clear_session_cookie_header, create_session, read_session_token, revoke_session,
     session_cookie_header, validate_session,
@@ -79,6 +81,32 @@ fn secret_or_var(env: &Env, name: &str) -> String {
         .map(|s| s.to_string())
         .or_else(|_| env.var(name).map(|v| v.to_string()))
         .unwrap_or_default()
+}
+
+fn provider_secrets(env: &Env, cfg: &config::MailConfig) -> ProviderSecrets {
+    let id = ProviderId::parse(&cfg.plugins.provider);
+    let mut api_key = String::new();
+    for name in id.secret_names() {
+        let v = secret_or_var(env, name);
+        if !v.is_empty() {
+            api_key = v;
+            break;
+        }
+    }
+    let extra_domain = if id == ProviderId::Mailgun {
+        let d = secret_or_var(env, "MAILGUN_DOMAIN");
+        if d.is_empty() {
+            cfg.mail.provider_domain.clone()
+        } else {
+            d
+        }
+    } else {
+        String::new()
+    };
+    ProviderSecrets {
+        api_key,
+        extra_domain,
+    }
 }
 
 async fn require_auth(req: &Request, kv: &kv::KvStore) -> std::result::Result<(), String> {
@@ -144,15 +172,13 @@ async fn main(mut req: Request, env: Env, _ctx: Context) -> Result<Response> {
     }
 
     if method == Method::Get && (path == "/" || path == "/index.html") {
-        return html(
-            render_app_html(&from_name, &from_email, &cfg.address_book),
-            "no-store",
-        );
+        return html(render_app_html(&cfg, &from_name, &from_email), "no-store");
     }
 
     let kv = env.kv("MAIL_LOG_KV")?;
     let admin_password = secret_or_var(&env, "ADMIN_PASSWORD");
-    let brevo_key = secret_or_var(&env, "BREVO_API_KEY");
+    let mail_secrets = provider_secrets(&env, &cfg);
+    let provider_id = ProviderId::parse(&cfg.plugins.provider);
 
     if method == Method::Get && path == "/api/health" {
         return json(
@@ -161,8 +187,11 @@ async fn main(mut req: Request, env: Env, _ctx: Context) -> Result<Response> {
                 "service": "mail",
                 "runtime": "rust",
                 "from": format!("{from_name} <{from_email}>"),
-                "brevo": !brevo_key.is_empty(),
-                "history": true
+                "provider": provider_id.as_str(),
+                "theme": cfg.plugins.theme,
+                "layout": cfg.plugins.layout,
+                "configured": !mail_secrets.api_key.is_empty(),
+                "history": cfg.features.history
             }),
             200,
         );
@@ -264,6 +293,9 @@ async fn main(mut req: Request, env: Env, _ctx: Context) -> Result<Response> {
         if require_auth(&req, &kv).await.is_err() {
             return json(serde_json::json!({ "error": "Unauthorized" }), 401);
         }
+        if !cfg.features.history {
+            return json(serde_json::json!({ "ok": true, "items": [] }), 200);
+        }
         let body: serde_json::Value = req.json().await.unwrap_or(serde_json::json!({}));
         let limit = body.get("limit").and_then(|v| v.as_u64()).unwrap_or(50) as usize;
         let items = list_send_logs(&kv, limit).await.map_err(Error::RustError)?;
@@ -277,11 +309,11 @@ async fn main(mut req: Request, env: Env, _ctx: Context) -> Result<Response> {
         let body: serde_json::Value = req.json().await.unwrap_or(serde_json::json!({}));
         let id = body.get("id").and_then(|v| v.as_str()).unwrap_or("").trim();
         if id.is_empty() {
-            return json(serde_json::json!({ "error": "缺少记录 id" }), 400);
+            return json(serde_json::json!({ "error": cfg.i18n.missing_id }), 400);
         }
         return match get_send_log(&kv, id).await.map_err(Error::RustError)? {
             Some(entry) => json(serde_json::json!({ "ok": true, "entry": entry }), 200),
-            None => json(serde_json::json!({ "error": "记录不存在" }), 404),
+            None => json(serde_json::json!({ "error": cfg.i18n.missing_record }), 404),
         };
     }
 
@@ -300,13 +332,22 @@ async fn main(mut req: Request, env: Env, _ctx: Context) -> Result<Response> {
             .map(|a| !a.is_empty())
             .unwrap_or(false);
         if to.is_empty() {
-            return json(serde_json::json!({ "error": "请至少添加一个收件人" }), 400);
+            return json(
+                serde_json::json!({ "error": cfg.i18n.err_need_recipient }),
+                400,
+            );
         }
         if subject.trim().is_empty() {
-            return json(serde_json::json!({ "error": "请填写主题" }), 400);
+            return json(
+                serde_json::json!({ "error": cfg.i18n.err_need_subject }),
+                400,
+            );
         }
         if text.trim().is_empty() && !has_attachments {
-            return json(serde_json::json!({ "error": "正文或附件至少一项" }), 400);
+            return json(
+                serde_json::json!({ "error": cfg.i18n.err_need_body_or_attach }),
+                400,
+            );
         }
         let (pn, html_body, text_preview) =
             build_email_preview_html(&cfg, subject, text, name_override, has_attachments);
@@ -349,9 +390,9 @@ async fn main(mut req: Request, env: Env, _ctx: Context) -> Result<Response> {
         let resolved = resolve_from_name(&cfg, name_override.as_deref());
         let names: Vec<String> = attachments.iter().map(|a| a.name.clone()).collect();
         let sizes: Vec<u64> = attachments.iter().map(|a| a.size.unwrap_or(0)).collect();
-        let result = send_via_brevo(
+        let result = send_mail(
             &cfg,
-            &brevo_key,
+            &mail_secrets,
             SendEmailInput {
                 to: to.clone(),
                 subject: subject.clone(),
@@ -362,26 +403,28 @@ async fn main(mut req: Request, env: Env, _ctx: Context) -> Result<Response> {
             },
         )
         .await;
-        let _ = append_send_log(
-            &kv,
-            NewLog {
-                from_name: &resolved,
-                from_email: &from_email,
-                to: &to,
-                subject: &subject,
-                body: &text,
-                attachment_names: &names,
-                attachment_sizes: &sizes,
-                ok: result.ok,
-                message_id: result.message_id.as_deref(),
-                error: if result.ok {
-                    None
-                } else {
-                    Some(result.message.as_str())
+        if cfg.features.history {
+            let _ = append_send_log(
+                &kv,
+                NewLog {
+                    from_name: &resolved,
+                    from_email: &from_email,
+                    to: &to,
+                    subject: &subject,
+                    body: &text,
+                    attachment_names: &names,
+                    attachment_sizes: &sizes,
+                    ok: result.ok,
+                    message_id: result.message_id.as_deref(),
+                    error: if result.ok {
+                        None
+                    } else {
+                        Some(result.message.as_str())
+                    },
                 },
-            },
-        )
-        .await;
+            )
+            .await;
+        }
         if !result.ok {
             let status = if result.status >= 400 {
                 result.status

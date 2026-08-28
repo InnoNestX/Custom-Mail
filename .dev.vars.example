@@ -1,3 +1,15 @@
 ADMIN_PASSWORD=
+# Pick the secret that matches plugins.provider in config/mail.json.
+# Unused keys can be left empty.
 BREVO_API_KEY=
+RESEND_API_KEY=
+SENDGRID_API_KEY=
+MAILGUN_API_KEY=
+MAILGUN_DOMAIN=
+POSTMARK_SERVER_TOKEN=
+MAILERSEND_API_KEY=
+SMTP2GO_API_KEY=
+SPARKPOST_API_KEY=
+# Fallback used when the provider-specific secret is empty.
+MAIL_API_KEY=
 ALLOW_ANY_HOST=1
