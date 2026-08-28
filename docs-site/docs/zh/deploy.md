@@ -80,8 +80,8 @@ Cloudflare 部署所需 GitHub Secrets：`CLOUDFLARE_API_TOKEN`、`CLOUDFLARE_AC
 
 ## 检查清单
 
-- [ ] `mail.json` 的 `host` 与 `wrangler.jsonc` 路由一致
-- [ ] KV ID 为真实值
-- [ ] Worker 已设置 `ADMIN_PASSWORD` 与 `plugins.provider` 对应的 API 密钥
-- [ ] 服务商已验证 `fromEmail`
-- [ ] `main` 上 CI `check` 通过
+- `mail.json` 的 `host` 与 `wrangler.jsonc` 路由一致
+- KV ID 为真实绑定，不是占位符
+- Worker 已写入 `ADMIN_PASSWORD` 与 `plugins.provider` 对应的 API 密钥
+- 服务商已验证 `fromEmail`
+- `main` 上 CI `check` 为绿

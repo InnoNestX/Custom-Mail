@@ -8,9 +8,13 @@ export default {
   enhanceApp({ app }) {
     app.component('HomeLanding', HomeLanding)
     if (typeof document !== 'undefined') {
-      // appearance:false still leaves html.dark if localStorage remembers it.
       document.documentElement.classList.remove('dark')
       document.documentElement.style.colorScheme = 'light'
+      try {
+        localStorage.setItem('vitepress-theme-appearance', 'light')
+      } catch {
+        /* ignore private-mode storage */
+      }
     }
   },
 } satisfies Theme

@@ -29,6 +29,11 @@ export default defineConfig({
     )
   },
   head: [
+    [
+      'script',
+      {},
+      `document.documentElement.classList.remove('dark');document.documentElement.style.colorScheme='light';try{localStorage.setItem('vitepress-theme-appearance','light')}catch(e){}`,
+    ],
     ['link', { rel: 'icon', href: `${base}favicon.ico`, sizes: 'any' }],
     ['link', { rel: 'icon', href: `${base}images/favicon.svg`, type: 'image/svg+xml' }],
     ['link', { rel: 'icon', href: `${base}images/favicon-32.png`, type: 'image/png', sizes: '32x32' }],
