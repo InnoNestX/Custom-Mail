@@ -87,8 +87,8 @@ Worker secrets stay on Cloudflare — not in GitHub.
 
 ## Checklist
 
-- [ ] `host` in `mail.json` matches `wrangler.jsonc` route
-- [ ] KV namespace ID is real
-- [ ] `ADMIN_PASSWORD` and the API key for `plugins.provider` on the Worker
-- [ ] Provider has verified `fromEmail`
-- [ ] CI `check` passes on `main`
+- `host` in `mail.json` matches the `wrangler.jsonc` route
+- KV namespace ID is a real binding, not a placeholder
+- `ADMIN_PASSWORD` and the API key for `plugins.provider` are set on the Worker
+- The provider has verified `fromEmail`
+- CI `check` is green on `main`

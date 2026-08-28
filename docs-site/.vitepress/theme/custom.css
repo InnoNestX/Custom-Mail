@@ -1,6 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Manrope:wght@400;500;600;700&display=swap');
 
-:root {
+:root,
+html.dark,
+.dark {
+  color-scheme: light;
   --cm-ink: #12241f;
   --cm-muted: #4a635a;
   --cm-line: rgba(21, 98, 79, 0.14);
@@ -15,25 +18,30 @@
   --vp-c-brand-soft: rgba(47, 158, 123, 0.12);
   --vp-font-family-base: 'Manrope', 'Segoe UI', sans-serif;
   --vp-font-family-mono: 'SFMono-Regular', ui-monospace, Menlo, monospace;
-}
-
-/* Leftover vitepress-theme-appearance=dark can still set html.dark. */
-html.dark {
-  color-scheme: light;
   --vp-c-bg: #f8fbf9;
-  --vp-c-bg-alt: #eef6f2;
+  --vp-c-bg-alt: #e8f3ee;
   --vp-c-bg-elv: #ffffff;
   --vp-c-bg-soft: #eef6f2;
   --vp-c-text-1: #12241f;
   --vp-c-text-2: #4a635a;
   --vp-c-text-3: #6b857b;
-  --vp-c-divider: rgba(21, 98, 79, 0.14);
-  --vp-c-gutter: #eef6f2;
+  --vp-c-divider: rgba(21, 98, 79, 0.16);
+  --vp-c-gutter: #e8f3ee;
+  --vp-c-border: rgba(21, 98, 79, 0.18);
   --vp-c-default-soft: rgba(21, 98, 79, 0.08);
-  --vp-code-block-bg: #f4faf7;
-  --vp-c-brand-1: #15624f;
-  --vp-c-brand-2: #1a7a62;
-  --vp-c-brand-3: #2f9e7b;
+  --vp-c-neutral: #12241f;
+  --vp-c-neutral-inverse: #ffffff;
+  --vp-sidebar-bg-color: #e8f3ee;
+  --vp-nav-bg-color: rgba(248, 251, 249, 0.88);
+  --vp-local-nav-bg-color: rgba(248, 251, 249, 0.94);
+  --vp-code-block-bg: #15241f;
+  --vp-code-color: #d7efe4;
+  --vp-layout-max-width: 100vw;
+  --vp-sidebar-width: 240px;
+}
+
+html {
+  color-scheme: light !important;
 }
 
 html,
@@ -43,6 +51,8 @@ body {
     radial-gradient(900px 500px at -10% 30%, rgba(21, 98, 79, 0.1), transparent 50%),
     linear-gradient(180deg, #f4faf7 0%, var(--cm-paper) 42%, #f2f7f4 100%);
   background-attachment: fixed;
+  background-color: var(--cm-paper);
+  color: var(--cm-ink);
 }
 
 /* Quiet down default VitePress chrome on custom landings */
@@ -80,6 +90,220 @@ body {
 .VPNavBar .VPImage.logo {
   height: 28px;
   width: 28px;
+}
+
+.VPSwitchAppearance,
+.VPNavBarAppearance,
+.VPNavBarExtra .appearance {
+  display: none !important;
+}
+
+/* Guide pages: keep sidebar/nav on paper even if html.dark is leftover */
+.VPNav,
+.VPNavBar.has-sidebar .wrapper,
+.VPNavBar.has-sidebar .container,
+.Layout .VPNavBar .divider-line {
+  background: transparent !important;
+  border-bottom-color: var(--cm-line) !important;
+}
+
+.VPNavBar,
+.VPNavBar.has-sidebar {
+  background-color: color-mix(in srgb, var(--cm-paper) 88%, white) !important;
+  backdrop-filter: blur(16px);
+}
+
+.VPNavBar.has-sidebar .title,
+.VPNavBarTitle,
+.VPNavBarTitle.has-sidebar {
+  background: transparent !important;
+}
+
+.VPNavBarTitle .title {
+  color: var(--cm-ink) !important;
+  font-weight: 700;
+}
+
+.VPSidebar,
+.VPSidebar .curtain {
+  background-color: #e8f3ee !important;
+  box-shadow: none !important;
+}
+
+.VPSidebar {
+  border-right: 1px solid var(--cm-line);
+}
+
+/* VitePress inflates the sidebar/gutters above 1440px and caps prose at 688px. */
+@media (min-width: 1440px) {
+  .VPSidebar {
+    padding-left: 1.35rem !important;
+    width: var(--vp-sidebar-width) !important;
+  }
+
+  .VPNavBar.has-sidebar .title {
+    padding-left: 1.35rem !important;
+    width: var(--vp-sidebar-width) !important;
+  }
+
+  .VPNavBar.has-sidebar .content {
+    padding-left: var(--vp-sidebar-width) !important;
+    padding-right: 1.75rem !important;
+  }
+
+  .VPContent.has-sidebar {
+    padding-left: var(--vp-sidebar-width) !important;
+    padding-right: 1.5rem !important;
+  }
+}
+
+@media (min-width: 1280px) {
+  .VPDoc.has-sidebar .container {
+    justify-content: flex-start !important;
+    max-width: none;
+  }
+
+  .VPDoc.has-sidebar .content {
+    margin: 0 !important;
+    padding: 0 2rem 6rem 1.5rem !important;
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: none;
+  }
+
+  .VPDoc.has-sidebar.has-aside .content-container {
+    max-width: 54rem !important;
+    margin: 0 !important;
+  }
+
+  .VPDoc.has-sidebar .aside {
+    flex-grow: 0;
+    max-width: 220px;
+    padding-left: 1rem;
+  }
+}
+
+@media (min-width: 1600px) {
+  .VPDoc.has-sidebar.has-aside .content-container {
+    max-width: 58rem !important;
+  }
+}
+
+.VPSidebarItem .text {
+  color: var(--cm-ink) !important;
+}
+
+.VPSidebarItem.level-0 > .item .text {
+  color: var(--cm-muted) !important;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.VPSidebarItem.is-active > .item .text {
+  color: var(--cm-forest) !important;
+}
+
+.VPSidebarItem .indicator {
+  background-color: var(--cm-forest) !important;
+}
+
+.DocSearch-Button {
+  background: var(--cm-white) !important;
+  border: 1px solid var(--cm-line) !important;
+  color: var(--cm-muted) !important;
+  box-shadow: none !important;
+}
+
+.DocSearch-Button:hover {
+  border-color: color-mix(in srgb, var(--cm-sage, var(--cm-accent)) 50%, var(--cm-line)) !important;
+  background: var(--cm-white) !important;
+}
+
+.DocSearch-Button-Placeholder,
+.DocSearch-Search-Icon,
+.DocSearch-Button-Key {
+  color: var(--cm-muted) !important;
+}
+
+.DocSearch-Button-Key {
+  background: var(--cm-mist) !important;
+  box-shadow: none !important;
+  border: 1px solid var(--cm-line) !important;
+}
+
+.VPContent.has-sidebar,
+.VPDoc,
+.VPFooter.has-sidebar {
+  background: transparent !important;
+}
+
+.VPDocAsideOutline .outline-title {
+  color: var(--cm-muted) !important;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.VPDocAsideOutline .outline-link {
+  color: var(--cm-muted) !important;
+}
+
+.VPDocAsideOutline .outline-link.active,
+.VPDocAsideOutline .outline-link:hover {
+  color: var(--cm-forest) !important;
+}
+
+.VPDoc:not(:has(.cm-home)):not(:has(.cm-gate)) .vp-doc h1 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  color: var(--cm-ink);
+}
+
+.VPDoc:not(:has(.cm-home)):not(:has(.cm-gate)) .vp-doc h2 {
+  border-top-color: var(--cm-line);
+  color: var(--cm-ink);
+}
+
+.VPDoc:not(:has(.cm-home)):not(:has(.cm-gate)) .vp-doc :not(pre) > code {
+  background: color-mix(in srgb, var(--cm-accent) 12%, white);
+  color: var(--cm-forest);
+  border-radius: 6px;
+  padding: 0.12em 0.38em;
+}
+
+.VPDoc:not(:has(.cm-home)):not(:has(.cm-gate)) .vp-doc div[class*='language-'] {
+  background: #15241f !important;
+  border-radius: 14px;
+  border: 1px solid rgba(21, 98, 79, 0.35);
+}
+
+.VPDoc:not(:has(.cm-home)):not(:has(.cm-gate)) .vp-doc div[class*='language-'] code span {
+  color: var(--shiki-dark) !important;
+}
+
+.VPDoc:not(:has(.cm-home)):not(:has(.cm-gate)) .vp-doc div[class*='language-'] .line-numbers-wrapper {
+  color: rgba(215, 239, 228, 0.38);
+}
+
+.VPDoc:not(:has(.cm-home)):not(:has(.cm-gate)) .vp-doc tr:nth-child(2n) {
+  background: color-mix(in srgb, var(--cm-mist) 70%, white);
+}
+
+.VPDoc:not(:has(.cm-home)):not(:has(.cm-gate)) .vp-doc th,
+.VPDoc:not(:has(.cm-home)):not(:has(.cm-gate)) .vp-doc td {
+  border-color: var(--cm-line);
+}
+
+.VPDocFooter .pager-link {
+  border-color: var(--cm-line) !important;
+  background: color-mix(in srgb, white 80%, var(--cm-mist)) !important;
+}
+
+.VPDocFooter .pager-link .title {
+  color: var(--cm-forest) !important;
 }
 
 .Layout:has(.cm-home) .VPHome,
