@@ -1,6 +1,6 @@
 # Configuration
 
-Custom Mail is configured through **`config/mail.json`** plus drop-in files under **`plugins/`**. The Worker compiles those files at build/deploy time; change them before `npm run deploy`.
+Custom Mail is configured through **`config/mail.json`** plus drop-in files under **`plugins/`**. The Worker compiles those files at build/deploy time; change them before `npm run deploy`. See the [plugins guide](./plugins) for the folder layout.
 
 Empty optional fields (and `false` feature/layout flags) **omit** that chrome. Nothing is required beyond `host`, `app.title`, and `mail.fromEmail` / `fromNameDefault`.
 

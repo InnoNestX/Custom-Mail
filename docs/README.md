@@ -13,6 +13,7 @@ Source Markdown also lives under `docs/` (this folder) and `docs-site/docs/` (Vi
 
 | Guide | Description |
 |-------|-------------|
+| [Plugins](../docs-site/docs/plugins.md) | Drop-in catalogs — provider, theme, layout, logo, config |
 | [Configuration](CONFIG.md) | `config/mail.json` — host, branding, plugins, mail defaults, address book |
 | [Deployment](DEPLOY.md) | Cloudflare Worker, secrets, domain, GitHub Actions |
 | [FAQ](FAQ.md) | Common errors and fixes |

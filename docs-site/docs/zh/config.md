@@ -1,6 +1,6 @@
 # 配置说明
 
-Custom Mail 通过仓库根目录的 **`config/mail.json`** 与 **`plugins/`** 下的可插拔文件配置。Worker 在构建 / 部署时编译这些文件，修改后需重新 `npm run deploy`。
+Custom Mail 通过仓库根目录的 **`config/mail.json`** 与 **`plugins/`** 下的可插拔文件配置。Worker 在构建 / 部署时编译这些文件，修改后需重新 `npm run deploy`。目录说明见[插件](./plugins)。
 
 空字段或 `false` 的功能/版式开关会**省略**对应区块。最少需要 `host`、`app.title`、`mail.fromEmail` / `fromNameDefault`。
 

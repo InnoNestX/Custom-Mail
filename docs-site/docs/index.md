@@ -1,7 +1,7 @@
 ---
 layout: home
 title: Custom Mail
-description: Private web mail console on Cloudflare Workers. Compose, preview, attachments, and send history with a pluggable ESP.
+description: Private web mail console on Cloudflare Workers. Drop-in provider, theme, layout, logo, and config plugins.
 sidebar: false
 aside: false
 ---
