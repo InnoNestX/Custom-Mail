@@ -4,7 +4,7 @@
 
 **Private Brevo mail console — compose, preview, attachments, and send history**
 
-[![Version](https://img.shields.io/docker/v/xuxuclassmate/custom-mail?sort=semver&label=version)](https://hub.docker.com/r/xuxuclassmate/custom-mail/tags)
+[![Version](https://img.shields.io/github/v/release/InnoNestX/Custom-Mail?label=version)](https://github.com/InnoNestX/Custom-Mail/releases)
 [![Docker Pulls](https://img.shields.io/docker/pulls/xuxuclassmate/custom-mail)](https://hub.docker.com/r/xuxuclassmate/custom-mail)
 
 [GitHub](https://github.com/InnoNestX/Custom-Mail) • [Docker Hub](https://hub.docker.com/r/xuxuclassmate/custom-mail) • [Docs](https://innonestx.github.io/Custom-Mail/) • [Live demo](https://mail.xuxuclassmate.com)

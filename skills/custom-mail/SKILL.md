@@ -1,7 +1,7 @@
 ---
 name: custom-mail
 description: Run the Custom Mail Brevo console locally with Docker — compose, preview, attachments, and send history.
-version: 1.3.0
+version: 0.2.0
 metadata:
   openclaw:
     requires:
