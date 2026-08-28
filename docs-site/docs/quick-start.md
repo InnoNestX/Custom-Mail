@@ -2,7 +2,8 @@
 
 ## Requirements
 
-- Node.js **22+**
+- Rust **stable** (with `wasm32-unknown-unknown`) and `worker-build` 0.8.5
+- Node.js **22+** (Wrangler)
 - Cloudflare account (for production)
 - Brevo API key (for sending)
 
@@ -20,6 +21,7 @@ Edit `.dev.vars`:
 ```bash
 ADMIN_PASSWORD=your-strong-password
 BREVO_API_KEY=your-brevo-key
+ALLOW_ANY_HOST=1
 ```
 
 Start the local Worker:

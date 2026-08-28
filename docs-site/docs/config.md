@@ -52,7 +52,7 @@ All strings are plain text; HTML is not interpreted in labels.
 
 ## `brand` — colors
 
-Used by the generated logo tile SVG in `src/brand.ts`:
+Used by the generated logo tile SVG in `src/brand.rs`:
 
 | Key | Role |
 |-----|------|

@@ -4,14 +4,12 @@ FROM rust:1-bookworm AS build
 WORKDIR /app
 RUN rustup target add wasm32-unknown-unknown \
   && cargo install worker-build --locked --version 0.8.5
-COPY Cargo.toml ./
+COPY Cargo.toml Cargo.lock ./
 COPY .cargo ./.cargo
 COPY src ./src
 COPY config ./config
 COPY templates ./templates
-# Generate lock on first build if missing
-RUN cargo generate-lockfile \
-  && worker-build --release --no-panic-recovery
+RUN worker-build --release --no-panic-recovery
 
 FROM node:22-bookworm-slim
 WORKDIR /app

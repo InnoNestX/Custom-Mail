@@ -28,7 +28,19 @@ Send history uses a list → full-screen detail flow on narrow screens. Desktop 
 
 ## Can I use another ESP instead of Brevo?
 
-The send path is implemented for Brevo in `src/email.ts`. Fork and adapt that module for another provider.
+The send path is implemented for Brevo in `src/email.rs`. Fork and adapt that module for another provider.
+
+## Which Markdown is supported?
+
+Mail bodies are rendered with CommonMark plus GitHub Flavored Markdown in Rust (`src/markdown.rs`):
+
+- Headings, paragraphs, emphasis, strong, strikethrough
+- Ordered / unordered / task lists (including nesting)
+- Links (`http`/`https`/`mailto`) and images (`http`/`https`)
+- Fenced and indented code, tables, block quotes, thematic breaks
+- GFM alerts (`> [!NOTE]`, `> [!WARNING]`, …)
+
+Raw HTML in the source is ignored. `javascript:` and `data:` URLs are not turned into links.
 
 ## Security notes
 

@@ -16,7 +16,7 @@
   <a href="https://workers.cloudflare.com/"><img src="https://img.shields.io/badge/runtime-Cloudflare%20Workers-f38020?style=flat-square" alt="Workers" /></a>
   <a href="https://github.com/InnoNestX/Custom-Mail/releases"><img src="https://img.shields.io/github/v/release/InnoNestX/Custom-Mail?label=version&style=flat-square" alt="Version" /></a>
   <a href="https://hub.docker.com/r/xuxuclassmate/custom-mail"><img src="https://img.shields.io/docker/pulls/xuxuclassmate/custom-mail?style=flat-square&label=docker%20pulls" alt="Docker pulls" /></a>
-  <a href="https://github.com/InnoNestX/Custom-Mail/pkgs/container/custom-mail"><img src="https://img.shields.io/badge/ghcr-innonestx%2Fcustom-mail-15624f?style=flat-square" alt="GHCR" /></a>
+  <a href="https://github.com/InnoNestX/Custom-Mail/pkgs/container/custom-mail"><img src="https://img.shields.io/static/v1?label=GHCR&amp;message=innonestx/custom-mail&amp;color=15624f&amp;style=flat-square&amp;logo=github&amp;logoColor=white" alt="GHCR" /></a>
 </p>
 
 <p align="center">
@@ -44,20 +44,31 @@
 - **No VPS** — Worker + KV + static assets on the edge
 - **One password** — session login for a private compose UI
 - **Brandable** — title, colors, login copy, address book in `config/mail.json`
-- **Markdown body** — preview before send; optional attachments
+- **Markdown body** — CommonMark + GitHub Flavored Markdown preview before send; optional attachments
 - **Audit trail** — last 10 sends stored in KV with detail view (desktop + mobile)
 
 ## Features
 
 | Area | Details |
 |------|---------|
-| Compose | To / from name, subject, Markdown body, address book chips |
+| Compose | To / from name, subject, CommonMark + GFM body, address book chips |
 | Attachments | Up to 8 files · 8 MB each · 15 MB total |
-| Preview | HTML preview modal before confirm send |
+| Preview | Email-safe HTML preview (headings, lists, tables, code, …) before confirm send |
 | History | List + detail; mobile full-screen detail layout |
 | Security | HttpOnly session cookie, login rate limit, secrets on Worker |
 | CI | Rust tests + wasm check on every push; CodeQL scanning |
 | Runtime | Cloudflare Workers via `workers-rs` (Rust → WASM) |
+
+## Markdown
+
+The compose box is **CommonMark + GitHub Flavored Markdown**, rendered in Rust (`pulldown-cmark`) to email-safe HTML:
+
+- Headings, paragraphs, **strong**, *emphasis*, ~~strikethrough~~
+- Nested ordered / unordered lists and `- [ ]` task lists
+- Tables, block quotes (including `> [!NOTE]` alerts), images, `http`/`https`/`mailto` links
+- Fenced and indented code — preview has a Copy control; sent mail links to a snippet page
+
+Raw HTML in the body is ignored. `javascript:` and `data:` URLs are not turned into links.
 
 ## Quick start
 
@@ -67,7 +78,7 @@ cd Custom-Mail
 # Rust + wasm32-unknown-unknown + worker-build required
 cargo test --lib
 npm install
-cp .dev.vars.example .dev.vars   # ADMIN_PASSWORD, BREVO_API_KEY
+cp .dev.vars.example .dev.vars   # ADMIN_PASSWORD, BREVO_API_KEY; ALLOW_ANY_HOST=1 for localhost
 npm run dev
 ```
 

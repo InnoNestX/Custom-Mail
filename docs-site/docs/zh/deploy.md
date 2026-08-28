@@ -6,6 +6,7 @@ Custom Mail 以单个 **Cloudflare Worker** 运行，配合 **KV** 与 **Workers
 
 - 已开通 Workers 的 Cloudflare 账号
 - [Brevo](https://www.brevo.com/) 账号与已验证发信域名
+- Rust stable（`wasm32-unknown-unknown`）与 `worker-build` 0.8.5
 - Node.js 22+ 与 `npm`
 
 ## 1. 配置产品
