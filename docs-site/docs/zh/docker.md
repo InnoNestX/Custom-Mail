@@ -6,7 +6,7 @@
 
 - Docker Hub / GHCR：`xuxuclassmate/custom-mail:1.0.0` 与 `ghcr.io/innonestx/custom-mail:1.0.0`
 - 滚动标签：`:latest`（同一次发版）
-- 架构：`linux/amd64`、`linux/arm64`、`linux/arm/v7`（macOS / Windows 上的 Docker Desktop 会自动选对应的 Linux 镜像）
+- 架构：`linux/amd64`、`linux/arm64`（macOS / Windows 上的 Docker Desktop 会自动选对应的 Linux 镜像）
 
 镜像内已设置 `ALLOW_ANY_HOST=1`，`localhost` 不会被 Host 检查拦住。
 

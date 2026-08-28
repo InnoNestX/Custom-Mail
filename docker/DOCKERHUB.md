@@ -151,9 +151,8 @@ Multi-arch manifest (pick the right one automatically with `docker pull`):
 | --- | --- |
 | `linux/amd64` | Intel/AMD PCs, most cloud VMs, Windows Docker Desktop (x86_64) |
 | `linux/arm64` | Apple Silicon Macs, Windows/ARM Docker Desktop, Pi 4/5 (64-bit), AWS Graviton |
-| `linux/arm/v7` | Older 32-bit ARM boards (e.g. Raspberry Pi 2/3) |
 
-macOS and Windows run these **Linux** images via Docker Desktop — there is no separate Windows/macOS container image.
+macOS and Windows run these **Linux** images via Docker Desktop — there is no separate Windows/macOS container image. 32-bit ARM (`linux/arm/v7`) is not supported because Cloudflare `workerd` / Wrangler does not ship that binary.
 
 ## OpenClaw
 
