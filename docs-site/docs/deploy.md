@@ -5,7 +5,7 @@ Custom Mail runs as a single **Cloudflare Worker** with **KV** and **Workers Ass
 ## Prerequisites
 
 - Cloudflare account with Workers enabled
-- [Brevo](https://www.brevo.com/) account and verified sender domain
+- [Brevo](https://www.brevo.com/) (default) or another supported provider — see [configuration](./config)
 - Rust stable (`wasm32-unknown-unknown`) and `worker-build` 0.8.5
 - Node.js 22+ and `npm`
 
@@ -14,8 +14,8 @@ Custom Mail runs as a single **Cloudflare Worker** with **KV** and **Workers Ass
 Edit `config/mail.json`:
 
 - Set `host` to your mail subdomain
-- Set `mail.fromEmail` to a Brevo-authorized address
-- Customize `app`, `brand`, `addressBook`
+- Set `mail.fromEmail` to an address authorized by your provider
+- Customize `plugins`, `app`, `brand`, `site`, `i18n`, `addressBook`
 
 Edit `wrangler.jsonc`:
 
@@ -41,7 +41,7 @@ cp .dev.vars.example .dev.vars
 
 ```bash
 npx wrangler secret put ADMIN_PASSWORD
-npx wrangler secret put BREVO_API_KEY
+npx wrangler secret put BREVO_API_KEY   # or the key for plugins.provider
 ```
 
 ## 3. Deploy

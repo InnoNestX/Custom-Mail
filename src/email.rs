@@ -1,5 +1,9 @@
-use crate::config::{mail_logo_url, mail_origin, MailConfig};
+use crate::config::MailConfig;
 use crate::markdown::{self, MarkdownOptions};
+use crate::plugins::{
+    resolve_theme, send_via_provider, wrap_email_html as layout_wrap, JobAttachment,
+    ProviderSecrets, SendJob,
+};
 use serde::{Deserialize, Serialize};
 
 pub use markdown::{decode_snippet_param, escape_html};
@@ -92,15 +96,28 @@ fn sanitize_filename(name: &str) -> String {
     base.chars().take(120).collect()
 }
 
-fn validate_attachments(raw: &[EmailAttachment]) -> Result<Vec<EmailAttachment>, SendEmailResult> {
+fn validate_attachments(
+    cfg: &MailConfig,
+    raw: &[EmailAttachment],
+) -> Result<Vec<EmailAttachment>, SendEmailResult> {
     if raw.is_empty() {
         return Ok(vec![]);
+    }
+    if !cfg.features.attachments {
+        return Err(SendEmailResult {
+            ok: false,
+            status: 400,
+            message: cfg.i18n.err_need_body_or_attach.clone(),
+            message_id: None,
+        });
     }
     if raw.len() > MAX_ATTACHMENTS {
         return Err(SendEmailResult {
             ok: false,
             status: 400,
-            message: format!("最多 {MAX_ATTACHMENTS} 个附件"),
+            message: cfg
+                .i18n
+                .fmt(&cfg.i18n.err_max_attach, "n", &MAX_ATTACHMENTS.to_string()),
             message_id: None,
         });
     }
@@ -117,7 +134,7 @@ fn validate_attachments(raw: &[EmailAttachment]) -> Result<Vec<EmailAttachment>,
             return Err(SendEmailResult {
                 ok: false,
                 status: 400,
-                message: format!("附件 {name} 内容为空"),
+                message: cfg.i18n.fmt(&cfg.i18n.err_empty_attach, "name", &name),
                 message_id: None,
             });
         }
@@ -126,7 +143,7 @@ fn validate_attachments(raw: &[EmailAttachment]) -> Result<Vec<EmailAttachment>,
             return Err(SendEmailResult {
                 ok: false,
                 status: 400,
-                message: format!("附件 {name} 超过 8MB 限制"),
+                message: cfg.i18n.fmt(&cfg.i18n.err_file_too_big, "name", &name),
                 message_id: None,
             });
         }
@@ -135,7 +152,7 @@ fn validate_attachments(raw: &[EmailAttachment]) -> Result<Vec<EmailAttachment>,
             return Err(SendEmailResult {
                 ok: false,
                 status: 400,
-                message: "附件总大小超过 15MB 限制".into(),
+                message: cfg.i18n.err_total_too_big.clone(),
                 message_id: None,
             });
         }
@@ -148,8 +165,16 @@ fn validate_attachments(raw: &[EmailAttachment]) -> Result<Vec<EmailAttachment>,
     Ok(out)
 }
 
-pub fn render_body_html(body: &str, opts: &MarkdownOptions) -> String {
-    markdown::render_markdown(body, opts)
+pub fn render_body_html(cfg: &MailConfig, body: &str, opts: &MarkdownOptions) -> String {
+    if cfg.features.markdown {
+        markdown::render_markdown(body, opts)
+    } else {
+        let escaped = escape_html(body);
+        format!(
+            "<p>{}</p>",
+            escaped.replace("\r\n", "\n").replace('\n', "<br>")
+        )
+    }
 }
 
 pub fn wrap_email_html(
@@ -159,68 +184,8 @@ pub fn wrap_email_html(
     from_name: &str,
     interactive: bool,
 ) -> String {
-    let logo = mail_logo_url(cfg);
-    let title = escape_html(subject);
-    let brand = escape_html(from_name);
-    let contact = escape_html(&cfg.mail.contact_email);
-    let site_url = escape_html(&cfg.site.url);
-    let site_label = escape_html(&cfg.site.label);
-    let brand_name = escape_html(&cfg.site.brand_name);
-    let header_bg = format!(
-        "linear-gradient(135deg,{} 0%,{} 52%,{} 100%)",
-        cfg.brand.tile, cfg.brand.tile_edge, cfg.brand.accent
-    );
-    let copy_script = if interactive {
-        r#"<script>(function(){document.querySelectorAll("a.xxm-copy-btn").forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();var t=a.getAttribute("data-copy")||"";if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){var p=a.textContent;a.textContent="Copied";setTimeout(function(){a.textContent=p;},1200);});}});});})();</script>"#
-    } else {
-        ""
-    };
-    format!(
-        r##"<!DOCTYPE html>
-<html lang="zh">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{title}</title></head>
-<body style="margin:0;padding:0;background:{cream};color:#1c1917;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;font-size:14px;line-height:1.65;">
-  <div style="max-width:640px;margin:0 auto;padding:28px 16px;">
-    <div style="background:#fffdf9;border-radius:14px;border:1px solid #e7e0d6;overflow:hidden;box-shadow:0 12px 40px rgba(21,98,79,.08);">
-      <div style="padding:22px 24px;border-bottom:1px solid rgba(255,255,255,.14);background:{header_bg};">
-        <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,.82);letter-spacing:.01em;">{brand}</div>
-        <div style="margin-top:8px;font-size:17px;font-weight:700;color:#ffffff;line-height:1.35;letter-spacing:-.02em;">{title}</div>
-      </div>
-      <div style="padding:22px 24px;">{body}</div>
-      <div style="padding:22px 24px 24px;border-top:1px solid #ebe8e1;background:#f6f8f6;">
-        <div style="max-width:380px;margin:0 auto;background:#ffffff;border:1px solid #e6ece8;border-radius:16px;padding:18px 20px 16px;">
-          <a href="{site_url}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;display:block;margin-bottom:16px;">
-            <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;border-collapse:collapse;">
-              <tr>
-                <td style="padding-right:14px;vertical-align:middle;">
-                  <img src="{logo}" width="40" height="40" alt="{brand_name}" style="display:block;border:0;outline:none;border-radius:11px;"/>
-                </td>
-                <td style="vertical-align:middle;text-align:left;">
-                  <div style="font-size:15px;font-weight:800;color:#1a1c19;letter-spacing:-.03em;line-height:1.2;">{brand_name}</div>
-                  <div style="margin-top:5px;font-size:12px;font-weight:700;color:{site_blue};letter-spacing:.01em;">{site_label}</div>
-                </td>
-              </tr>
-            </table>
-          </a>
-          <div style="height:1px;margin:0 2px 14px;background:#dde5df;"></div>
-          <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;border-collapse:collapse;">
-            <tr>
-              <td style="padding-right:12px;vertical-align:middle;font-size:11px;font-weight:700;color:#9aa89f;letter-spacing:.06em;text-transform:uppercase;">Contact</td>
-              <td style="vertical-align:middle;">
-                <a href="mailto:{contact}" style="display:inline-block;font-size:12px;font-weight:600;color:#3f463d;text-decoration:none;padding:7px 14px;border-radius:999px;background:#f3f6f4;border:1px solid #e2e9e4;">{contact}</a>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>{copy_script}
-</body>
-</html>"##,
-        cream = cfg.brand.cream,
-        site_blue = cfg.brand.site_blue,
-        body = body_html,
-    )
+    let pal = resolve_theme(&cfg.plugins, &cfg.brand);
+    layout_wrap(cfg, &pal, subject, body_html, from_name, interactive)
 }
 
 pub fn build_email_preview_html(
@@ -233,34 +198,29 @@ pub fn build_email_preview_html(
     let from = resolve_from_name(cfg, from_name);
     let body_trim = body.trim();
     let body_for_render = if body_trim.is_empty() && has_attachments {
-        "（附件邮件，无正文）"
+        cfg.i18n.body_empty_attach.as_str()
     } else {
         body_trim
     };
     let html = wrap_email_html(
         cfg,
         subject.trim(),
-        &render_body_html(body_for_render, &MarkdownOptions::preview(mail_origin(cfg))),
+        &render_body_html(
+            cfg,
+            body_for_render,
+            &MarkdownOptions::preview(crate::config::mail_origin(cfg)),
+        ),
         &from,
         true,
     );
     (from, html, body_for_render.to_string())
 }
 
-pub async fn send_via_brevo(
+pub async fn send_mail(
     cfg: &MailConfig,
-    api_key: &str,
+    secrets: &ProviderSecrets,
     input: SendEmailInput,
 ) -> SendEmailResult {
-    if api_key.is_empty() {
-        return SendEmailResult {
-            ok: false,
-            status: 500,
-            message: "BREVO_API_KEY is not configured".into(),
-            message_id: None,
-        };
-    }
-
     let mut to: Vec<String> = input
         .to
         .iter()
@@ -273,7 +233,7 @@ pub async fn send_via_brevo(
         return SendEmailResult {
             ok: false,
             status: 400,
-            message: "At least one recipient is required".into(),
+            message: cfg.i18n.err_need_recipient.clone(),
             message_id: None,
         };
     }
@@ -293,12 +253,12 @@ pub async fn send_via_brevo(
         return SendEmailResult {
             ok: false,
             status: 400,
-            message: "Subject is required".into(),
+            message: cfg.i18n.err_need_subject.clone(),
             message_id: None,
         };
     }
 
-    let attachments = match validate_attachments(&input.attachments) {
+    let attachments = match validate_attachments(cfg, &input.attachments) {
         Ok(a) => a,
         Err(e) => return e,
     };
@@ -308,24 +268,25 @@ pub async fn send_via_brevo(
         return SendEmailResult {
             ok: false,
             status: 400,
-            message: "正文或附件至少填写一项".into(),
+            message: cfg.i18n.err_need_body_or_attach.clone(),
             message_id: None,
         };
     }
 
     let from_name = resolve_from_name(cfg, input.from_name.as_deref());
     let body_for_render = if body.is_empty() && !attachments.is_empty() {
-        "（附件邮件，无正文）".to_string()
+        cfg.i18n.body_empty_attach.clone()
     } else {
         body.clone()
     };
+    let origin = crate::config::mail_origin(cfg);
     let html_content = if input.html {
         body_for_render.clone()
     } else {
         wrap_email_html(
             cfg,
             &subject,
-            &render_body_html(&body_for_render, &MarkdownOptions::email(mail_origin(cfg))),
+            &render_body_html(cfg, &body_for_render, &MarkdownOptions::email(origin)),
             &from_name,
             false,
         )
@@ -336,100 +297,31 @@ pub async fn send_via_brevo(
         body_for_render
     };
 
-    let mut payload = serde_json::json!({
-        "sender": { "email": cfg.mail.from_email, "name": from_name },
-        "to": to.iter().map(|email| serde_json::json!({ "email": email })).collect::<Vec<_>>(),
-        "subject": subject,
-        "htmlContent": html_content,
-        "textContent": text_content,
-        "tags": [cfg.mail.brevo_tag],
-    });
-    if !attachments.is_empty() {
-        payload["attachment"] = serde_json::json!(attachments
-            .iter()
-            .map(|a| serde_json::json!({ "name": a.name, "content": a.content }))
-            .collect::<Vec<_>>());
-    }
+    let job = SendJob {
+        from_email: cfg.mail.from_email.clone(),
+        from_name,
+        to,
+        subject,
+        html: html_content,
+        text: text_content,
+        tag: cfg.mail.tag.clone(),
+        attachments: attachments
+            .into_iter()
+            .map(|a| JobAttachment {
+                name: a.name,
+                content: a.content,
+            })
+            .collect(),
+        provider_domain: cfg.mail.provider_domain.clone(),
+    };
 
-    let result = gloo_net_post(api_key, &payload).await;
-    match result {
-        Ok((status, raw)) => {
-            let parsed: Option<serde_json::Value> = serde_json::from_str(&raw).ok();
-            let message_id = parsed.as_ref().and_then(|p| {
-                p.get("messageId")
-                    .and_then(|v| v.as_str())
-                    .map(str::to_string)
-                    .or_else(|| {
-                        p.get("messageIds")
-                            .and_then(|v| v.as_array())
-                            .and_then(|a| a.first())
-                            .and_then(|v| v.as_str())
-                            .map(str::to_string)
-                    })
-            });
-            if (200..300).contains(&status) && message_id.is_some() {
-                SendEmailResult {
-                    ok: true,
-                    status,
-                    message: "Delivered".into(),
-                    message_id,
-                }
-            } else {
-                let err = parsed
-                    .as_ref()
-                    .and_then(|p| {
-                        p.get("message")
-                            .or_else(|| p.get("msg"))
-                            .and_then(|v| v.as_str())
-                    })
-                    .map(str::to_string)
-                    .unwrap_or_else(|| raw.chars().take(300).collect());
-                SendEmailResult {
-                    ok: false,
-                    status,
-                    message: if err.is_empty() {
-                        "Brevo request failed".into()
-                    } else {
-                        err
-                    },
-                    message_id: None,
-                }
-            }
-        }
-        Err(e) => SendEmailResult {
-            ok: false,
-            status: 502,
-            message: e,
-            message_id: None,
-        },
+    let result = send_via_provider(cfg, secrets, job).await;
+    SendEmailResult {
+        ok: result.ok,
+        status: result.status,
+        message: result.message,
+        message_id: result.message_id,
     }
-}
-
-async fn gloo_net_post(
-    api_key: &str,
-    payload: &serde_json::Value,
-) -> Result<(u16, String), String> {
-    use worker::{Fetch, Headers, Method, Request, RequestInit};
-    let headers = Headers::new();
-    headers.set("api-key", api_key).map_err(|e| e.to_string())?;
-    headers
-        .set("Content-Type", "application/json")
-        .map_err(|e| e.to_string())?;
-    let mut init = RequestInit::new();
-    init.with_method(Method::Post)
-        .with_headers(headers)
-        .with_body(Some(wasm_bindgen::JsValue::from_str(
-            &serde_json::to_string(payload).unwrap(),
-        )));
-    let req = Request::new_with_init("https://api.brevo.com/v3/smtp/email", &init)
-        .map_err(|e| e.to_string())?;
-    let mut resp = Fetch::Request(req)
-        .send()
-        .await
-        .map_err(|e| e.to_string())?;
-    let status = resp.status_code();
-    let text = resp.text().await.map_err(|e| e.to_string())?;
-    Ok((status, text))
 }
 
 pub fn snippet_page_html(code: &str) -> String {
@@ -502,8 +394,21 @@ mod tests {
 
     #[test]
     fn render_body_html_uses_commonmark() {
-        let html = render_body_html("# Title\n\n**hello**", &MarkdownOptions::default());
+        let cfg = crate::config::load_config();
+        let html = render_body_html(&cfg, "# Title\n\n**hello**", &MarkdownOptions::default());
         assert!(html.contains("<h1"));
         assert!(html.contains("<strong>hello</strong>"));
+    }
+
+    #[test]
+    fn wrap_omits_unconfigured_footer() {
+        let mut cfg = crate::config::load_config();
+        cfg.layout.show_footer_contact = false;
+        cfg.layout.show_footer_site = false;
+        cfg.mail.contact_email.clear();
+        cfg.site.url.clear();
+        let html = wrap_email_html(&cfg, "Hi", "<p>x</p>", "From", false);
+        assert!(html.contains("<p>x</p>"));
+        assert!(!html.contains("mailto:"));
     }
 }

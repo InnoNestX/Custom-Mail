@@ -2,6 +2,20 @@
 
 Custom Mail 通过仓库根目录的 **`config/mail.json`** 配置。Worker 在构建 / 部署时读取该文件，修改后需重新 `npm run deploy`。
 
+## `plugins` — 主题 / 版式 / 发信服务商
+
+全部插件编译进 Worker，部署时在 `mail.json` 里选一个即可。未配置的区块（页脚联系方式、站点、Logo、附件栏等）不会渲染。
+
+| 字段 | 可选值 |
+|------|--------|
+| `provider` | `brevo` `resend` `sendgrid` `mailgun` `postmark` `mailersend` `smtp2go` `sparkpost` |
+| `theme` | `forest` `midnight` `ocean` `paper` `rose` `slate` |
+| `layout` | `card` `minimal` `banner` `digest` |
+
+对应密钥见下文「环境密钥」。`fromEmail` 须在所选服务商处授权。
+
+页眉颜色用 `brand.heroFrom` / `heroTo` / `headerText`（也可继续用 `tile` / `tileEdge`）。Logo 用 `site.logoPath` 或 `logoUrl`；不配则控制台显示品牌名首字母，邮件里不放图片。浏览器标签图标用 `site.faviconPath`。
+
 ## 文件结构
 
 ```jsonc
@@ -70,7 +84,7 @@ Custom Mail 通过仓库根目录的 **`config/mail.json`** 配置。Worker 在�
 | Secret | 位置 | 用途 |
 |--------|------|------|
 | `ADMIN_PASSWORD` | `.dev.vars` / Worker secret | 登录密码 |
-| `BREVO_API_KEY` | `.dev.vars` / Worker secret | Brevo API |
+| 服务商 API Key | `.dev.vars` / Worker secret | 与 `plugins.provider` 对应，或使用 `MAIL_API_KEY` |
 
 切勿将密钥提交到 Git。
 

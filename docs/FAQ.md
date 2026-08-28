@@ -28,7 +28,7 @@ Send history uses a list → full-screen detail flow on narrow screens. Desktop 
 
 ## Can I use another ESP instead of Brevo?
 
-The send path is implemented for Brevo in `src/email.rs`. Fork and adapt that module for another provider.
+Yes. Set `plugins.provider` in `config/mail.json` to `brevo`, `resend`, `sendgrid`, `mailgun`, `postmark`, `mailersend`, `smtp2go`, or `sparkpost`, and put the matching API secret on the Worker (see [CONFIG.md](CONFIG.md)). `fromEmail` must be authorized with that provider.
 
 ## Which Markdown is supported?
 

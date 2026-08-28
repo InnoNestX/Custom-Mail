@@ -1,27 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="___HTML_LANG___">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f7f4ee">
-<title>Custom Mail</title>
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/apple-touch-icon.svg">
+<meta name="theme-color" content="___THEME_COLOR___">
+<title>___PAGE_TITLE___</title>
+<link rel="icon" href="___FAVICON_HREF___" type="image/svg+xml">
+<link rel="apple-touch-icon" href="___APPLE_TOUCH_HREF___">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ink: #1a1c19;
-    --ink-soft: #3f463d;
-    --muted: #6f776c;
-    --line: #dde3d8;
+    ___THEME_VARS___
     --panel: rgba(255, 252, 247, .9);
     --panel-solid: #fffbf5;
     --chip: #eef3ea;
-    --accent: #1f6f5b;
-    --accent-2: #2f9e7b;
-    --accent-soft: #e4f4ee;
     --danger: #b42318;
     --ok: #1b7a4a;
     --shadow: 0 24px 60px rgba(26, 28, 25, .10);
@@ -37,9 +31,9 @@
     font-family: var(--font);
     color: var(--ink);
     background:
-      radial-gradient(900px 520px at 12% -8%, #d9efe6 0%, transparent 55%),
-      radial-gradient(760px 480px at 100% 0%, #f3e7d4 0%, transparent 50%),
-      linear-gradient(180deg, #f7f4ee 0%, #eef1ea 100%);
+      radial-gradient(900px 520px at 12% -8%, var(--accent-soft) 0%, transparent 55%),
+      radial-gradient(760px 480px at 100% 0%, color-mix(in srgb, var(--paper) 80%, #f3e7d4) 0%, transparent 50%),
+      linear-gradient(180deg, var(--paper) 0%, var(--paper) 100%);
   }
   body::before {
     content: "";
@@ -75,8 +69,12 @@
     width: 42px; height: 42px;
     flex-shrink: 0; line-height: 0;
   }
-  .mark-badge svg {
+  .mark-badge svg,
+  .mark-badge img.logo-mark {
     display: block; width: 100%; height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+  }
     filter: drop-shadow(0 6px 16px rgba(21,98,79,.35));
   }
   .mark h1 { margin: 0; font-size: 22px; letter-spacing: -.04em; font-weight: 800; }
@@ -1299,24 +1297,10 @@
 <body>
   <div class="shell login-mode" id="shell">
     <div class="mark hidden" id="topMark">
-      <div class="mark-badge"><svg class="logo-mark" width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <defs>
-    <linearGradient id="xxm-g-hdr" x1="6" y1="4" x2="42" y2="44" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#15624f"/>
-      <stop offset="1" stop-color="#1a7a62"/>
-    </linearGradient>
-  </defs>
-  <rect width="48" height="48" rx="14" fill="url(#xxm-g-hdr)"/>
-  
-    <rect x="11" y="19" width="26" height="17" rx="1.5" fill="rgba(255,255,255,.18)"/>
-    <path d="M11 19h26a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H11a1 1 0 0 1-1-1V20a1 1 0 0 1 1-1Z" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/>
-    <path d="M11 19l13 9.5L37 19" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M23 27.5l4 4 4-4" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-  
-</svg></div>
+      <div class="mark-badge">___BRAND_MARK_HDR___</div>
       <div>
-        <h1>Custom Mail</h1>
-        <p id="markSubApp">私有网页发信 · 仅本域可用</p>
+        <h1>___APP_TITLE___</h1>
+        ___APP_SUBTITLE_P___
       </div>
     </div>
 
@@ -1324,44 +1308,28 @@
       <section class="login-hero">
         <div class="login-hero-inner">
           <div class="login-brand-row">
-            <div class="mark-badge"><svg class="logo-mark" width="56" height="56" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <defs>
-    <linearGradient id="xxm-g-hero" x1="6" y1="4" x2="42" y2="44" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#15624f"/>
-      <stop offset="1" stop-color="#1a7a62"/>
-    </linearGradient>
-  </defs>
-  <rect width="48" height="48" rx="14" fill="url(#xxm-g-hero)"/>
-  
-    <rect x="11" y="19" width="26" height="17" rx="1.5" fill="rgba(255,255,255,.18)"/>
-    <path d="M11 19h26a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H11a1 1 0 0 1-1-1V20a1 1 0 0 1 1-1Z" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/>
-    <path d="M11 19l13 9.5L37 19" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M23 27.5l4 4 4-4" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-  
-</svg></div>
+            <div class="mark-badge">___BRAND_MARK_HERO___</div>
             <div>
-              <h1>Custom Mail</h1>
-              <p>Private web mail</p>
+              <h1>___APP_TITLE___</h1>
+              <p>___LOGIN_TAGLINE___</p>
             </div>
           </div>
-          <h2 class="login-headline">A quiet place to <em>send mail</em></h2>
-          <p class="login-lead">Compose, preview, and send — a simple console for outbound notices.</p>
-          <ul class="login-points">
-            <li>Preview before you send</li><li>Attachments and delivery log</li><li>Secure session access</li>
-          </ul>
+          <h2 class="login-headline">___LOGIN_HEADLINE___</h2>
+          ___LOGIN_LEAD___
+          ___LOGIN_POINTS___
         </div>
       </section>
       <section class="login-panel">
         <div class="card login-form-card">
-          <h3 class="login-form-title">Sign in</h3>
-          <p class="login-form-sub">Enter your password to continue.</p>
+          <h3 class="login-form-title">___LOGIN_FORM_TITLE___</h3>
+          <p class="login-form-sub">___LOGIN_FORM_SUB___</p>
           <form id="loginForm" class="login-form">
-            <label for="password">Password</label>
-            <input id="password" type="password" placeholder="Enter your password" autocomplete="current-password">
+            <label for="password">___I18N_PASSWORD___</label>
+            <input id="password" type="password" placeholder="___I18N_PASSWORD_PLACEHOLDER___" autocomplete="current-password">
             <div class="login-alert err" id="loginAlert" role="alert"></div>
             <div class="actions">
               <div class="status" id="loginStatus"></div>
-              <button class="primary" id="loginBtn" type="submit">Sign in</button>
+              <button class="primary" id="loginBtn" type="submit">___I18N_SIGN_IN___</button>
             </div>
           </form>
         </div>
@@ -1371,31 +1339,17 @@
     <div id="appView" class="hidden">
       <header class="app-header">
         <div class="app-brand">
-          <div class="mark-badge"><svg class="logo-mark" width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <defs>
-    <linearGradient id="xxm-g-app" x1="6" y1="4" x2="42" y2="44" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#15624f"/>
-      <stop offset="1" stop-color="#1a7a62"/>
-    </linearGradient>
-  </defs>
-  <rect width="48" height="48" rx="14" fill="url(#xxm-g-app)"/>
-  
-    <rect x="11" y="19" width="26" height="17" rx="1.5" fill="rgba(255,255,255,.18)"/>
-    <path d="M11 19h26a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H11a1 1 0 0 1-1-1V20a1 1 0 0 1 1-1Z" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/>
-    <path d="M11 19l13 9.5L37 19" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M23 27.5l4 4 4-4" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-  
-</svg></div>
+          <div class="mark-badge">___BRAND_MARK_APP___</div>
           <div>
-            <h1>Custom Mail</h1>
-            <p>私有网页发信 · 仅本域可用</p>
+            <h1>___APP_TITLE___</h1>
+            ___APP_SUBTITLE_P___
           </div>
         </div>
         <div class="app-tabs">
-          <button class="tab active" id="tabCompose" type="button">写信</button>
-          <button class="tab" id="tabHistory" type="button">发送记录</button>
+          <button class="tab active" id="tabCompose" type="button">___I18N_TAB_COMPOSE___</button>
+          <button class="tab___FEATURE_HISTORY___" id="tabHistory" type="button">___I18N_TAB_HISTORY___</button>
         </div>
-        <button class="ghost" id="logoutBtn" type="button">退出</button>
+        <button class="ghost" id="logoutBtn" type="button">___I18N_LOGOUT___</button>
       </header>
 
       <div id="composePanel" class="card workspace">
@@ -1403,86 +1357,58 @@
           <div id="composeFocusHint" class="compose-focus-hint hidden" aria-live="polite"></div>
           <div class="compose-layout">
             <div class="compose-col-side">
-              <div class="compose-field compose-field-from compose-section compact" data-field="from" data-label="发件人">
-                <div class="section-label"><span class="dot"></span>发件人</div>
+              <div class="compose-field compose-field-from compose-section compact" data-field="from" data-label="___I18N_FROM___">
+                <div class="section-label"><span class="dot"></span>___I18N_FROM___</div>
                 <div class="compose-field-inner">
-                  <span class="field-label">发件人</span>
+                  <span class="field-label">___I18N_FROM___</span>
                   <div class="field-input-wrap">
                     <div class="from-grid">
                       <div>
-                        <input id="fromName" type="text" value="___FROM_NAME___" placeholder="显示名称" maxlength="80">
+                        <input id="fromName" type="text" value="___FROM_NAME___" placeholder="___I18N_FROM_NAME_PLACEHOLDER___" maxlength="80">
                       </div>
-                      <div class="locked"><span class="pill">LOCKED</span><span>___FROM_EMAIL___</span></div>
+                      <div class="locked"><span class="pill">___I18N_LOCKED___</span><span>___FROM_EMAIL___</span></div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div class="compose-field compose-field-to compose-section compact" data-field="to" data-label="收件人">
-                <div class="section-label"><span class="dot"></span>收件人</div>
+              <div class="compose-field compose-field-to compose-section compact" data-field="to" data-label="___I18N_TO___">
+                <div class="section-label"><span class="dot"></span>___I18N_TO___</div>
                 <div class="compose-field-inner">
-                  <span class="field-label">收件人</span>
+                  <span class="field-label">___I18N_TO___</span>
                   <div class="field-input-wrap">
                     <div class="to-box">
                       <div class="chips" id="chips"></div>
-                      <input class="to-input" id="toInput" type="email" placeholder="输入邮箱后回车，或从下方点选" autocomplete="off">
+                      <input class="to-input" id="toInput" type="email" placeholder="___I18N_TO_PLACEHOLDER___" autocomplete="off">
                     </div>
-                    <div class="book" id="addressBook"></div>
-                    <div class="hint">可点选地址簿，也可手动填写任意邮箱</div>
+                    <div class="book___FEATURE_BOOK___" id="addressBook"></div>
+                    <div class="hint___FEATURE_BOOK___">___I18N_TO_HINT___</div>
                   </div>
                 </div>
               </div>
 
-              <div class="compose-field compose-field-syntax compose-section compact" data-field="syntax" data-label="语法参考">
-                <div class="section-label"><span class="dot"></span>语法参考</div>
+              <div class="compose-field compose-field-syntax compose-section compact___FEATURE_SYNTAX___" data-field="syntax" data-label="___I18N_SYNTAX___">
+                <div class="section-label"><span class="dot"></span>___I18N_SYNTAX___</div>
                 <div class="compose-field-inner">
-                  <span class="field-label">语法参考</span>
+                  <span class="field-label">___I18N_SYNTAX___</span>
                   <div class="field-input-wrap">
                     <div class="md-syntax" id="mdSyntaxRef">
-                      <div class="md-syntax-head">CommonMark / GFM · 点击复制</div>
-                      <div class="md-syntax-row">
-                        <code class="md-copy" data-copy="# 一级标题" title="点击复制"># 一级</code>
-                        <code class="md-copy" data-copy="## 二级标题" title="点击复制">## 二级</code>
-                        <code class="md-copy" data-copy="### 三级标题" title="点击复制">### 三级</code>
-                      </div>
-                      <div class="md-syntax-row">
-                        <code class="md-copy" data-copy="**粗体**" title="点击复制">**粗体**</code>
-                        <code class="md-copy" data-copy="*斜体*" title="点击复制">*斜体*</code>
-                        <code class="md-copy" data-copy="~~删除线~~" title="点击复制">~~删除线~~</code>
-                        <code class="md-copy" data-copy="`行内代码`" title="点击复制">&#96;行内&#96;</code>
-                      </div>
-                      <div class="md-syntax-row">
-                        <code class="md-copy" data-copy="```shell
-echo hello
-```" title="点击复制">&#96;&#96;&#96;代码块&#96;&#96;&#96;</code>
-                        <code class="md-copy" data-copy="- 列表项" title="点击复制">- 列表</code>
-                        <code class="md-copy" data-copy="1. 有序项" title="点击复制">1. 有序</code>
-                        <code class="md-copy" data-copy="- [ ] 待办" title="点击复制">- [ ] 待办</code>
-                      </div>
-                      <div class="md-syntax-row">
-                        <code class="md-copy" data-copy="> 引用" title="点击复制">&gt; 引用</code>
-                        <code class="md-copy" data-copy="[链接文字](https://example.com)" title="点击复制">[链接](url)</code>
-                        <code class="md-copy" data-copy="![说明](https://example.com/image.png)" title="点击复制">![图](url)</code>
-                        <code class="md-copy" data-copy="| 列 A | 列 B |
-| --- | --- |
-| 1 | 2 |" title="点击复制">表格</code>
-                        <span class="md-syntax-hint">空行分段</span>
-                      </div>
+                      ___SYNTAX_CHIPS___
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div class="compose-field compose-field-attach compose-section compact compose-side-attach" data-field="attach" data-label="附件">
-                <div class="section-label"><span class="dot"></span>附件</div>
+              <div class="compose-field compose-field-attach compose-section compact compose-side-attach___FEATURE_ATTACH___" data-field="attach" data-label="___I18N_ATTACH___">
+                <div class="section-label"><span class="dot"></span>___I18N_ATTACH___</div>
                 <div class="compose-field-inner">
-                  <span class="field-label">附件</span>
+                  <span class="field-label">___I18N_ATTACH___</span>
                   <div class="field-input-wrap">
                     <div class="attach-drop" id="attachDrop">
-                      <p class="attach-drop-title">拖拽或点击添加</p>
-                      <p class="attach-drop-sub">最多 8 个 · 单文件 ≤ 8MB · 合计 ≤ 15MB</p>
+                      <p class="attach-drop-title">___I18N_ATTACH_DROP_TITLE___</p>
+                      <p class="attach-drop-sub">___I18N_ATTACH_DROP_SUB___</p>
                       <input id="fileInput" type="file" multiple hidden>
-                      <button class="secondary" id="addFilesBtn" type="button">添加文件</button>
+                      <button class="secondary" id="addFilesBtn" type="button">___I18N_ATTACH_ADD___</button>
                       <div class="attach-list" id="attachList"></div>
                     </div>
                   </div>
@@ -1491,22 +1417,22 @@ echo hello
             </div>
 
             <div class="compose-col-main">
-              <div class="compose-field compose-field-subject compose-section compose-main-subject" data-field="subject" data-label="主题">
-                <div class="section-label"><span class="dot"></span>主题</div>
+              <div class="compose-field compose-field-subject compose-section compose-main-subject" data-field="subject" data-label="___I18N_SUBJECT___">
+                <div class="section-label"><span class="dot"></span>___I18N_SUBJECT___</div>
                 <div class="compose-field-inner">
-                  <span class="field-label">主题</span>
+                  <span class="field-label">___I18N_SUBJECT___</span>
                   <div class="field-input-wrap">
-                    <input id="subject" type="text" placeholder="邮件主题">
+                    <input id="subject" type="text" placeholder="___I18N_SUBJECT_PLACEHOLDER___">
                   </div>
                 </div>
               </div>
 
-              <div class="compose-field compose-field-body compose-section compose-body-wrap" data-field="body" data-label="正文">
-                <div class="section-label"><span class="dot"></span>正文</div>
+              <div class="compose-field compose-field-body compose-section compose-body-wrap" data-field="body" data-label="___I18N_BODY___">
+                <div class="section-label"><span class="dot"></span>___I18N_BODY___</div>
                 <div class="compose-field-inner">
-                  <span class="field-label">正文</span>
+                  <span class="field-label">___I18N_BODY___</span>
                   <div class="field-input-wrap">
-                    <textarea id="body" placeholder="在此输入正文…" aria-describedby="mdSyntaxRef"></textarea>
+                    <textarea id="body" placeholder="___I18N_BODY_PLACEHOLDER___" aria-describedby="mdSyntaxRef"></textarea>
                   </div>
                 </div>
               </div>
@@ -1516,23 +1442,23 @@ echo hello
         <div class="workspace-foot">
           <div class="status" id="sendStatus"></div>
           <div class="btn-group">
-            <button class="secondary" id="clearBtn" type="button">清空</button>
-            <button class="secondary" id="previewBtn" type="button">预览</button>
-            <button class="primary" id="sendBtn" type="button">发送</button>
+            <button class="secondary" id="clearBtn" type="button">___I18N_CLEAR___</button>
+            <button class="secondary" id="previewBtn" type="button">___I18N_PREVIEW___</button>
+            <button class="primary" id="sendBtn" type="button">___I18N_SEND___</button>
           </div>
         </div>
       </div>
 
-      <div id="historyPanel" class="card workspace hidden">
+      <div id="historyPanel" class="card workspace hidden___FEATURE_HISTORY___">
         <div class="workspace-head hist-list-head" id="historyListHead">
           <div class="hist-head-title">
-            <h2>发送记录</h2>
-            <p class="hist-head-sub">最近 10 条 · 点击查看详情</p>
+            <h2>___I18N_HISTORY_TITLE___</h2>
+            <p class="hist-head-sub">___I18N_HISTORY_SUB___</p>
           </div>
-          <button class="secondary hist-refresh-btn" id="refreshHistoryBtn" type="button">刷新</button>
+          <button class="secondary hist-refresh-btn" id="refreshHistoryBtn" type="button">___I18N_HISTORY_REFRESH___</button>
         </div>
         <div class="hist-detail-bar" id="historyDetailBar">
-          <button type="button" class="hist-back-btn" id="historyBackBtn" aria-label="返回列表">←</button>
+          <button type="button" class="hist-back-btn" id="historyBackBtn" aria-label="___I18N_HISTORY_BACK___">←</button>
           <div class="hist-detail-bar-meta">
             <div class="hist-detail-bar-subject" id="historyDetailBarSubject"></div>
             <div class="hist-detail-bar-sub" id="historyDetailBarSub"></div>
@@ -1541,7 +1467,7 @@ echo hello
         <div class="hist-layout" id="historyLayout">
           <div id="historyList" class="hist-list"></div>
           <div id="historyDetail" class="hist-detail-pane hidden">
-            <div class="hist-detail-empty"><strong>选择一条记录</strong>在左侧列表中点击，查看收件人、正文与附件</div>
+            <div class="hist-detail-empty"><strong>___I18N_SELECT_RECORD___</strong>___I18N_SELECT_RECORD_HINT___</div>
           </div>
         </div>
       </div>
@@ -1550,32 +1476,43 @@ echo hello
     <div id="resultOverlay" class="preview-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="resultTitle">
       <div class="result-panel" id="resultPanel">
         <div class="result-mark" id="resultMark">✓</div>
-        <h3 id="resultTitle">发送成功</h3>
+        <h3 id="resultTitle">___I18N_SEND_OK___</h3>
         <p id="resultMsg"></p>
-        <button class="primary" id="resultCloseBtn" type="button">确定</button>
+        <button class="primary" id="resultCloseBtn" type="button">___I18N_RESULT_CLOSE___</button>
       </div>
     </div>
 
     <div id="previewOverlay" class="preview-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="previewTitle">
       <div class="preview-panel">
         <div class="preview-head">
-          <h3 id="previewTitle">邮件预览</h3>
+          <h3 id="previewTitle">___I18N_PREVIEW_TITLE___</h3>
           <div class="preview-meta" id="previewMeta"></div>
         </div>
         <div class="preview-frame-wrap">
-          <iframe id="previewFrame" class="preview-frame" title="邮件预览"></iframe>
+          <iframe id="previewFrame" class="preview-frame" title="___I18N_PREVIEW_TITLE___"></iframe>
         </div>
         <div class="preview-foot">
-          <button class="secondary" id="previewCloseBtn" type="button">返回修改</button>
-          <button class="primary" id="previewSendBtn" type="button">确认发送</button>
+          <button class="secondary" id="previewCloseBtn" type="button">___I18N_PREVIEW_BACK___</button>
+          <button class="primary" id="previewSendBtn" type="button">___I18N_PREVIEW_SEND___</button>
         </div>
       </div>
     </div>
   </div>
-
 <script>
 (() => {
   const ADDRESS_BOOK = ___ADDRESS_BOOK___;
+  const BOOT = ___BOOTSTRAP___;
+  const I18N = (BOOT && BOOT.i18n) || {};
+  const FEATURES = (BOOT && BOOT.features) || {};
+  function t(key, vars) {
+    let s = I18N[key] != null && I18N[key] !== "" ? I18N[key] : key;
+    if (vars) {
+      Object.keys(vars).forEach((k) => {
+        s = String(s).split("{" + k + "}").join(String(vars[k]));
+      });
+    }
+    return s;
+  }
   const recipients = new Set();
   const pendingFiles = [];
   const MAX_FILES = 8;
@@ -1667,7 +1604,7 @@ echo hello
     appView.classList.toggle("hidden", !on);
     topMark.classList.add("hidden");
     shellEl.classList.toggle("login-mode", !on);
-    document.documentElement.lang = on ? "zh-CN" : "en";
+    document.documentElement.lang = (BOOT && BOOT.locale) || "en";
     if (on) setLoginMessage("");
   }
 
@@ -1697,7 +1634,7 @@ echo hello
       return;
     }
     historyDetailEl.classList.remove("hidden");
-    historyDetailEl.innerHTML = '<div class="hist-detail-empty"><strong>选择一条记录</strong>在左侧列表中点击，查看收件人、正文与附件</div>';
+    historyDetailEl.innerHTML = '<div class="hist-detail-empty"><strong>' + escapeText(t("selectRecord")) + "</strong>" + escapeText(t("selectRecordHint")) + "</div>";
   }
   function setStatus(el, text, kind) {
     el.textContent = text || "";
@@ -1710,7 +1647,7 @@ echo hello
   }
   function formatTime(iso) {
     try {
-      return new Date(iso).toLocaleString("zh-CN", { hour12: false });
+      return new Date(iso).toLocaleString((BOOT && BOOT.locale) || undefined, { hour12: false });
     } catch { return iso; }
   }
   function escapeText(s) {
@@ -1823,21 +1760,21 @@ echo hello
   async function addFiles(fileList) {
     for (const file of fileList) {
       if (pendingFiles.length >= MAX_FILES) {
-        setStatus(sendStatus, "最多 " + MAX_FILES + " 个附件", "err");
+        setStatus(sendStatus, t("errMaxAttach", { n: MAX_FILES }), "err");
         break;
       }
       if (file.size > MAX_FILE_BYTES) {
-        setStatus(sendStatus, file.name + " 超过 8MB", "err");
+        setStatus(sendStatus, t("errFileTooBig", { name: file.name }), "err");
         continue;
       }
       if (totalAttachBytes() + file.size > MAX_TOTAL_BYTES) {
-        setStatus(sendStatus, "附件总大小超过 15MB", "err");
+        setStatus(sendStatus, t("errTotalTooBig"), "err");
         break;
       }
       try {
         pendingFiles.push(await fileToAttachment(file));
       } catch (err) {
-        setStatus(sendStatus, "读取文件失败: " + file.name, "err");
+        setStatus(sendStatus, t("errReadFile", { name: file.name }), "err");
       }
     }
     renderAttachments();
@@ -2003,7 +1940,7 @@ echo hello
       composeFocusHint.classList.add("hidden");
       return;
     }
-    composeFocusHint.textContent = "正在编辑：" + label;
+    composeFocusHint.textContent = t("editingPrefix") + label;
     composeFocusHint.classList.remove("hidden");
   }
 
@@ -2075,16 +2012,16 @@ echo hello
   $("clearBtn").onclick = () => clearComposeForm();
 
   async function loadHistory() {
-    historyListEl.innerHTML = '<div class="hist-empty"><strong>加载中</strong>正在读取发送记录…</div>';
+    historyListEl.innerHTML = '<div class="hist-empty"><strong>' + escapeText(t("historyLoading")) + "</strong>" + escapeText(t("historyLoadingHint")) + "</div>";
     resetHistoryDetail();
     const { res, data } = await api("/api/history", { limit: 10 });
     if (!res.ok) {
-      historyListEl.innerHTML = '<div class="hist-empty"><strong>加载失败</strong>' + escapeText(data.error || "请稍后重试") + '</div>';
+      historyListEl.innerHTML = '<div class="hist-empty"><strong>' + escapeText(t("historyLoadFail")) + "</strong>" + escapeText(data.error || t("retryLater")) + "</div>";
       return;
     }
     const items = data.items || [];
     if (!items.length) {
-      historyListEl.innerHTML = '<div class="hist-empty"><strong>暂无发送记录</strong>发送成功后会显示在这里</div>';
+      historyListEl.innerHTML = '<div class="hist-empty"><strong>' + escapeText(t("historyEmpty")) + "</strong>" + escapeText(t("historyEmptyHint")) + "</div>";
       return;
     }
     historyListEl.innerHTML = "";
@@ -2093,9 +2030,9 @@ echo hello
       row.className = "hist-row";
       row.dataset.id = item.id;
       const statusCls = item.ok ? "ok" : "fail";
-      const statusTxt = item.ok ? "成功" : "失败";
+      const statusTxt = item.ok ? t("statusOk") : t("statusFail");
       const attach = item.attachmentNames?.length
-        ? " · " + item.attachmentNames.length + " 个附件"
+        ? " · " + t("nAttachments", { n: item.attachmentNames.length })
         : "";
       row.innerHTML =
         '<div class="hist-meta">' + formatTime(item.createdAt) +
@@ -2118,35 +2055,35 @@ echo hello
       historyDetailBarSub.textContent = metaEl ? metaEl.textContent : "";
     }
     historyDetailEl.classList.remove("hidden");
-    historyDetailEl.innerHTML = '<div class="hist-detail-empty">加载详情…</div>';
+    historyDetailEl.innerHTML = '<div class="hist-detail-empty">' + escapeText(t("loadingDetail")) + "</div>";
     const { res, data } = await api("/api/history/detail", { id });
     if (!res.ok) {
-      historyDetailEl.innerHTML = '<div class="hist-detail-empty"><strong>加载失败</strong>' + escapeText(data.error || "请稍后重试") + '</div>';
+      historyDetailEl.innerHTML = '<div class="hist-detail-empty"><strong>' + escapeText(t("historyLoadFail")) + "</strong>" + escapeText(data.error || t("retryLater")) + "</div>";
       return;
     }
     const e = data.entry;
     const attachLine = e.attachmentNames?.length
       ? e.attachmentNames.map((n, i) => n + " (" + formatSize(e.attachmentSizes?.[i] || 0) + ")").join(", ")
-      : "无";
+      : t("none");
     const kvHtml =
       '<div class="kv">' +
-      "<div><strong>时间</strong><span>" + escapeText(formatTime(e.createdAt)) + "</span></div>" +
+      "<div><strong>" + escapeText(t("time")) + "</strong><span>" + escapeText(formatTime(e.createdAt)) + "</span></div>" +
       "<div><strong>From</strong><span>" + escapeText(e.fromName) + " &lt;" + escapeText(e.fromEmail) + "&gt;</span></div>" +
       "<div><strong>To</strong><span>" + escapeText((e.to || []).join(", ")) + "</span></div>" +
-      "<div><strong>状态</strong><span>" + (e.ok ? "成功" : ("失败" + (e.error ? " · " + escapeText(e.error) : ""))) + "</span></div>" +
+      "<div><strong>" + escapeText(t("status")) + "</strong><span>" + (e.ok ? t("statusOk") : (t("statusFail") + (e.error ? " · " + escapeText(e.error) : ""))) + "</span></div>" +
       (e.messageId ? "<div><strong>ID</strong><span>" + escapeText(e.messageId) + "</span></div>" : "") +
-      "<div><strong>附件</strong><span>" + escapeText(attachLine) + "</span></div>" +
+      "<div><strong>" + escapeText(t("attachments")) + "</strong><span>" + escapeText(attachLine) + "</span></div>" +
       "</div>";
     if (isMobileHist()) {
       historyDetailEl.innerHTML =
         '<details class="hist-meta-fold">' +
-        "<summary>收件与状态</summary>" + kvHtml + "</details>" +
-        '<h4 class="hist-body-label">正文</h4>' +
-        '<pre class="hist-body-pre">' + escapeText(e.body || "(无正文)") + "</pre>";
+        "<summary>" + escapeText(t("recipientsStatus")) + "</summary>" + kvHtml + "</details>" +
+        '<h4 class="hist-body-label">' + escapeText(t("bodyLabel")) + "</h4>" +
+        '<pre class="hist-body-pre">' + escapeText(e.body || t("emptyBody")) + "</pre>";
     } else {
       historyDetailEl.innerHTML =
-        "<h4>详情</h4>" + kvHtml +
-        "<h4>正文</h4><pre>" + escapeText(e.body || "(无正文)") + "</pre>";
+        "<h4>" + escapeText(t("detail")) + "</h4>" + kvHtml +
+        "<h4>" + escapeText(t("bodyLabel")) + "</h4><pre>" + escapeText(e.body || t("emptyBody")) + "</pre>";
     }
   }
 
@@ -2163,15 +2100,15 @@ echo hello
 
   function validateCompose(payload, el) {
     if (!payload.to.length) {
-      setStatus(el, "请至少添加一个收件人", "err");
+      setStatus(el, t("errNeedRecipient"), "err");
       return false;
     }
     if (!payload.subject) {
-      setStatus(el, "请填写主题", "err");
+      setStatus(el, t("errNeedSubject"), "err");
       return false;
     }
     if (!payload.body.trim() && !payload.attachments.length) {
-      setStatus(el, "正文或附件至少一项", "err");
+      setStatus(el, t("errNeedBodyOrAttach"), "err");
       return false;
     }
     return true;
@@ -2198,7 +2135,7 @@ echo hello
     if (pendingFiles.length) {
       const attachLabel = document.createElement("div");
       const attachStrong = document.createElement("strong");
-      attachStrong.textContent = "附件";
+      attachStrong.textContent = t("attach");
       attachLabel.appendChild(attachStrong);
       previewMeta.appendChild(attachLabel);
       const chipsWrap = document.createElement("div");
@@ -2223,10 +2160,10 @@ echo hello
   $("previewBtn").onclick = async () => {
     const payload = collectComposePayload();
     if (!validateCompose(payload, sendStatus)) return;
-    setStatus(sendStatus, "生成预览…");
+    setStatus(sendStatus, t("generatingPreview"));
     const { res, data } = await api("/api/preview", payload);
     if (!res.ok) {
-      setStatus(sendStatus, data.error || "预览失败", "err");
+      setStatus(sendStatus, data.error || t("previewFail"), "err");
       if (res.status === 401) showApp(false);
       return;
     }
@@ -2256,21 +2193,21 @@ echo hello
 
     const btn = $("sendBtn");
     btn.disabled = true;
-    setStatus(sendStatus, "发送中…");
+    setStatus(sendStatus, t("sending"));
     try {
       const { res, data } = await api("/api/send", payload);
       if (!res.ok) {
         setStatus(sendStatus, "");
-        openResultModal(false, "发送失败", data.error || "请稍后重试");
+        openResultModal(false, t("sendFail"), data.error || t("retryLater"));
         if (res.status === 401) showApp(false);
         return;
       }
       clearComposeForm();
-      const detail = data.messageId ? "Message ID: " + data.messageId : "邮件已成功发出。";
-      openResultModal(true, "发送成功", detail);
+      const detail = data.messageId ? "Message ID: " + data.messageId : t("sendOkBody");
+      openResultModal(true, t("sendOk"), detail);
     } catch (err) {
       setStatus(sendStatus, "");
-      openResultModal(false, "发送失败", String(err));
+      openResultModal(false, t("sendFail"), String(err));
     } finally {
       btn.disabled = false;
     }
@@ -2297,7 +2234,7 @@ echo hello
         }
         el.classList.add("copied");
         const prevTitle = el.getAttribute("title");
-        el.setAttribute("title", "已复制");
+        el.setAttribute("title", t("copied"));
         setTimeout(() => {
           el.classList.remove("copied");
           if (prevTitle) el.setAttribute("title", prevTitle);

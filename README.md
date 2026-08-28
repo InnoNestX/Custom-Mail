@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>Private web mail console on Cloudflare Workers</strong><br />
-  Compose · Preview · Attachments · Send history — delivered via Brevo
+  Compose · Preview · Attachments · Send history — pluggable ESP (Brevo, Resend, SendGrid, …)
 </p>
 
 <p align="center">
@@ -29,7 +29,7 @@
 
 ---
 
-**Custom Mail** is a self-hosted outbound mail workspace written in **Rust** (`workers-rs`). Run it on your own Cloudflare account, brand it with JSON config, and send through **Brevo** without maintaining a mail server.
+**Custom Mail** is a self-hosted outbound mail workspace written in **Rust** (`workers-rs`). Run it on your own Cloudflare account, brand it with JSON config (name, domain, colors, logo, favicon, footer, copy), pick a theme / layout / mail-provider plugin, and send without maintaining a mail server.
 
 **Docs:** [English](https://innonestx.github.io/Custom-Mail/) · [中文](https://innonestx.github.io/Custom-Mail/zh/)  
 **Docs URL:** https://innonestx.github.io/Custom-Mail/
@@ -43,7 +43,8 @@
 
 - **No VPS** — Worker + KV + static assets on the edge
 - **One password** — session login for a private compose UI
-- **Brandable** — title, colors, login copy, address book in `config/mail.json`
+- **Brandable** — title, domain, header colors, logo, favicon, footer, and every label in `config/mail.json`; unused sections stay hidden
+- **Plugins** — pick a visual theme, HTML layout, and mail provider at deploy time
 - **Markdown body** — CommonMark + GitHub Flavored Markdown preview before send; optional attachments
 - **Audit trail** — last 10 sends stored in KV with detail view (desktop + mobile)
 
@@ -78,7 +79,7 @@ cd Custom-Mail
 # Rust + wasm32-unknown-unknown + worker-build required
 cargo test --lib
 npm install
-cp .dev.vars.example .dev.vars   # ADMIN_PASSWORD, BREVO_API_KEY; ALLOW_ANY_HOST=1 for localhost
+cp .dev.vars.example .dev.vars   # ADMIN_PASSWORD, provider API key; ALLOW_ANY_HOST=1 for localhost
 npm run dev
 ```
 

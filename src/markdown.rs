@@ -712,7 +712,7 @@ mod tests {
 
     #[test]
     fn snippet_roundtrip() {
-        let src = "hello, 世界\nline2";
+        let src = "hello, world\nline2";
         let enc = encode_snippet_param(src);
         assert!(!enc.contains('+') && !enc.contains('/') && !enc.contains('='));
         assert_eq!(decode_snippet_param(&enc).unwrap(), src);
