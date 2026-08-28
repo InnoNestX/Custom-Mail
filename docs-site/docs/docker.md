@@ -6,6 +6,7 @@ Images:
 
 - Docker Hub / GHCR: `xuxuclassmate/custom-mail:1.0.0` and `ghcr.io/innonestx/custom-mail:1.0.0`
 - Moving tag: `:latest` (same release)
+- Architectures: `linux/amd64`, `linux/arm64`, `linux/arm/v7` (Docker Desktop on macOS/Windows uses the matching Linux image)
 
 The image sets `ALLOW_ANY_HOST=1` so Host-header checks do not block `localhost`.
 
