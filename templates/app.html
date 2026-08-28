@@ -1740,18 +1740,43 @@
     return pendingFiles.reduce((sum, f) => sum + f.size, 0);
   }
 
+  const attachPreviewUrls = [];
+
+  function revokeAttachPreviewUrls() {
+    for (const url of attachPreviewUrls) URL.revokeObjectURL(url);
+    attachPreviewUrls.length = 0;
+  }
+
+  const ALLOWED_IMAGE_TYPES = new Set(["image/png", "image/jpeg", "image/gif", "image/webp"]);
+
+  function attachmentPreviewUrl(f) {
+    const type = String(f.type || "").toLowerCase();
+    if (!ALLOWED_IMAGE_TYPES.has(type)) return null;
+    try {
+      const binary = atob(String(f.content).replace(/s/g, ""));
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      const url = URL.createObjectURL(new Blob([bytes], { type }));
+      attachPreviewUrls.push(url);
+      return url;
+    } catch {
+      return null;
+    }
+  }
+
   function renderAttachments() {
+    revokeAttachPreviewUrls();
     attachListEl.innerHTML = "";
     for (let i = 0; i < pendingFiles.length; i++) {
       const f = pendingFiles[i];
       const row = document.createElement("div");
       row.className = "attach-item";
-      const isImg = f.type && f.type.startsWith("image/");
-      if (isImg) {
+      const previewUrl = attachmentPreviewUrl(f);
+      if (previewUrl) {
         const img = document.createElement("img");
         img.className = "attach-thumb";
         img.alt = "";
-        img.src = "data:" + f.type + ";base64," + f.content;
+        img.src = previewUrl;
         row.appendChild(img);
       } else {
         const icon = document.createElement("span");
