@@ -46,6 +46,18 @@ Mail bodies are rendered with CommonMark plus GitHub Flavored Markdown in Rust (
 
 Raw HTML in the source is ignored. `javascript:` and `data:` URLs are not turned into links.
 
+## How do I run this in Docker?
+
+See the [Docker](./docker) guide: `docker pull xuxuclassmate/custom-mail:latest`, set `ADMIN_PASSWORD`, then `docker run -p 8787:8787`. Compose and env vars are on that page.
+
+## How do I use the OpenClaw / Claw skill?
+
+```bash
+clawhub install custom-mail
+```
+
+Or copy `skills/custom-mail/` into `~/.openclaw/workspace/skills/`. The skill needs Docker. Details: [OpenClaw skill](./openclaw).
+
 ## Security notes
 
 - Do not expose this UI without a strong `ADMIN_PASSWORD`.

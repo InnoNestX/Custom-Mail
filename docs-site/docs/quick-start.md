@@ -32,7 +32,15 @@ Start the local Worker:
 npm run dev
 ```
 
-Open **http://localhost:8790** and sign in with `ADMIN_PASSWORD`.
+Open **http://localhost:8790** and sign in with `ADMIN_PASSWORD`. Then see [Console](./console) for compose, preview, attachments, and history.
+
+## Other ways to run
+
+| Path | When to use |
+|------|-------------|
+| [Docker](./docker) | No Rust toolchain. `docker run` or Compose on port 8787. |
+| [OpenClaw skill](./openclaw) | An agent starts the container: `clawhub install custom-mail`. |
+| [Deploy](./deploy) | Production on Cloudflare Workers. |
 
 ## Pick plugins
 

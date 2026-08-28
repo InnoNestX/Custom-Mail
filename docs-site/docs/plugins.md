@@ -19,6 +19,10 @@ Bundled: `brevo` · `resend` · `sendgrid` · `mailgun` · `postmark` · `mailer
 
 JSON registers id, label, secret names, and whether a sending domain is required. **A new HTTP ESP still needs a send adapter in Rust** (`src/plugins/provider.rs`).
 
+## Features
+
+Drop JSON under `plugins/features/`. Each file is a toggle in `features.*` — set it to `false` to hide that capability. Bundled: `markdown` · `history` · `attachments`.
+
 ## Theme
 
 Drop a palette JSON — **no Rust change**. Bundled: `forest` · `midnight` · `ocean` · `paper` · `rose` · `slate` · `aurora` · `sunset` · `nord`.

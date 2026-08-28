@@ -18,3 +18,5 @@ npm run docs:build
 Output: `_site/` (deployed by GitHub Actions to Pages).
 
 Published at: https://innonestx.github.io/Custom-Mail/
+
+Pages: Quick start · Console · Docker · OpenClaw skill · Plugins · Configuration · Deploy · FAQ (English and 中文).

@@ -32,7 +32,15 @@ ALLOW_ANY_HOST=1
 npm run dev
 ```
 
-打开 **http://localhost:8790**，用 `ADMIN_PASSWORD` 登录。
+打开 **http://localhost:8790**，用 `ADMIN_PASSWORD` 登录。撰写、预览、附件、历史见[控制台](./console)。
+
+## 其他运行方式
+
+| 路径 | 适用 |
+|------|------|
+| [Docker](./docker) | 不装 Rust。`docker run` 或 Compose，端口 8787。 |
+| [OpenClaw 技能](./openclaw) | 让 agent 拉起容器：`clawhub install custom-mail`。 |
+| [部署](./deploy) | 生产环境 Cloudflare Workers。 |
 
 ## 选择插件
 
