@@ -1,5 +1,8 @@
 use crate::config::{mail_logo_url, mail_origin, MailConfig};
+use crate::markdown::{self, MarkdownOptions};
 use serde::{Deserialize, Serialize};
+
+pub use markdown::{decode_snippet_param, escape_html};
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct EmailAttachment {
@@ -54,13 +57,6 @@ pub fn resolve_from_name(cfg: &MailConfig, override_name: Option<&str>) -> Strin
     }
 }
 
-pub fn escape_html(s: &str) -> String {
-    s.replace('&', "&amp;")
-        .replace('<', "&lt;")
-        .replace('>', "&gt;")
-        .replace('"', "&quot;")
-}
-
 pub fn strip_html_tags(html: &str) -> String {
     let mut result = String::new();
     let bytes = html.as_bytes();
@@ -112,7 +108,11 @@ fn validate_attachments(raw: &[EmailAttachment]) -> Result<Vec<EmailAttachment>,
     let mut total = 0u64;
     for item in raw {
         let name = sanitize_filename(&item.name);
-        let content: String = item.content.chars().filter(|c| !c.is_whitespace()).collect();
+        let content: String = item
+            .content
+            .chars()
+            .filter(|c| !c.is_whitespace())
+            .collect();
         if content.is_empty() {
             return Err(SendEmailResult {
                 ok: false,
@@ -121,9 +121,7 @@ fn validate_attachments(raw: &[EmailAttachment]) -> Result<Vec<EmailAttachment>,
                 message_id: None,
             });
         }
-        let size = item
-            .size
-            .unwrap_or(((content.len() as u64) * 3) / 4);
+        let size = item.size.unwrap_or(((content.len() as u64) * 3) / 4);
         if size > MAX_ATTACHMENT_BYTES {
             return Err(SendEmailResult {
                 ok: false,
@@ -150,117 +148,78 @@ fn validate_attachments(raw: &[EmailAttachment]) -> Result<Vec<EmailAttachment>,
     Ok(out)
 }
 
-/// Lightweight markdown-ish body renderer (fenced code + basic inline).
-pub fn render_body_html(body: &str) -> String {
-    let normalized = body.replace("\r\n", "\n");
-    let mut out = String::new();
-    let mut rest = normalized.as_str();
-    while let Some(start) = rest.find("```") {
-        let before = &rest[..start];
-        if !before.is_empty() {
-            out.push_str(&render_plain_lines(before));
-        }
-        rest = &rest[start + 3..];
-        let lang_end = rest.find('\n').unwrap_or(0);
-        let lang = rest[..lang_end].trim();
-        rest = if lang_end < rest.len() {
-            &rest[lang_end + 1..]
-        } else {
-            ""
-        };
-        if let Some(end) = rest.find("```") {
-            let code = rest[..end].trim_end_matches('\n');
-            out.push_str(&code_block_html(code, if lang.is_empty() { None } else { Some(lang) }));
-            rest = &rest[end + 3..];
-        } else {
-            out.push_str(&render_plain_lines(rest));
-            rest = "";
-        }
-    }
-    if !rest.is_empty() {
-        out.push_str(&render_plain_lines(rest));
-    }
-    if out.is_empty() {
-        out.push_str(&render_plain_lines(&normalized));
-    }
-    out
+pub fn render_body_html(body: &str, opts: &MarkdownOptions) -> String {
+    markdown::render_markdown(body, opts)
 }
 
-fn render_plain_lines(text: &str) -> String {
-    text.split('\n')
-        .map(|line| {
-            if line.trim().is_empty() {
-                "<br>".to_string()
-            } else {
-                render_inline(line)
-            }
-        })
-        .collect::<Vec<_>>()
-        .join("")
-}
-
-fn render_inline(line: &str) -> String {
-    // very small subset: escape then restore `code` and **bold** and [text](url)
-    let mut s = escape_html(line);
-    // inline code
-    while let Some(a) = s.find('`') {
-        if let Some(b) = s[a + 1..].find('`') {
-            let end = a + 1 + b;
-            let inner = s[a + 1..end].to_string();
-            let repl = format!("<code>{}</code>", inner);
-            s.replace_range(a..=end, &repl);
-        } else {
-            break;
-        }
-    }
-    format!("<div>{s}</div>")
-}
-
-fn code_block_html(code: &str, lang: Option<&str>) -> String {
-    let lang_attr = lang
-        .map(|l| format!(" data-lang=\"{}\"", escape_html(l)))
-        .unwrap_or_default();
-    format!(
-        "<pre class=\"code\"{lang_attr}><code>{}</code></pre>",
-        escape_html(code)
-    )
-}
-
-pub fn wrap_email_html(cfg: &MailConfig, subject: &str, body_html: &str, from_name: &str) -> String {
+pub fn wrap_email_html(
+    cfg: &MailConfig,
+    subject: &str,
+    body_html: &str,
+    from_name: &str,
+    interactive: bool,
+) -> String {
     let logo = mail_logo_url(cfg);
-    let origin = mail_origin(cfg);
+    let title = escape_html(subject);
+    let brand = escape_html(from_name);
+    let contact = escape_html(&cfg.mail.contact_email);
+    let site_url = escape_html(&cfg.site.url);
+    let site_label = escape_html(&cfg.site.label);
+    let brand_name = escape_html(&cfg.site.brand_name);
+    let header_bg = format!(
+        "linear-gradient(135deg,{} 0%,{} 52%,{} 100%)",
+        cfg.brand.tile, cfg.brand.tile_edge, cfg.brand.accent
+    );
+    let copy_script = if interactive {
+        r#"<script>(function(){document.querySelectorAll("a.xxm-copy-btn").forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();var t=a.getAttribute("data-copy")||"";if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){var p=a.textContent;a.textContent="Copied";setTimeout(function(){a.textContent=p;},1200);});}});});})();</script>"#
+    } else {
+        ""
+    };
     format!(
-        r##"<!DOCTYPE html><html><head><meta charset="utf-8"><title>{subject}</title></head>
-<body style="margin:0;background:{cream};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#1a1c19;">
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:{cream};padding:24px 12px;">
-    <tr><td align="center">
-      <table role="presentation" width="100%" style="max-width:640px;background:#fff;border-radius:16px;overflow:hidden;border:1px solid #e5ebe3;">
-        <tr><td style="padding:20px 24px;background:{tile};color:#fff;">
-          <img src="{logo}" alt="" width="36" height="36" style="vertical-align:middle;border-radius:10px;">
-          <span style="margin-left:10px;font-weight:700;vertical-align:middle;">{brand}</span>
-        </td></tr>
-        <tr><td style="padding:28px 24px;">
-          <div style="font-size:13px;color:#6f776c;margin-bottom:8px;">From {from_name}</div>
-          <h1 style="margin:0 0 16px;font-size:22px;">{subject}</h1>
-          <div style="line-height:1.65;font-size:15px;">{body}</div>
-        </td></tr>
-        <tr><td style="padding:16px 24px;background:#f7f4ee;font-size:12px;color:#6f776c;">
-          Sent via <a href="{origin}" style="color:{accent};">{host}</a>
-        </td></tr>
-      </table>
-    </td></tr>
-  </table>
-</body></html>"##,
-        subject = escape_html(subject),
+        r##"<!DOCTYPE html>
+<html lang="zh">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{title}</title></head>
+<body style="margin:0;padding:0;background:{cream};color:#1c1917;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;font-size:14px;line-height:1.65;">
+  <div style="max-width:640px;margin:0 auto;padding:28px 16px;">
+    <div style="background:#fffdf9;border-radius:14px;border:1px solid #e7e0d6;overflow:hidden;box-shadow:0 12px 40px rgba(21,98,79,.08);">
+      <div style="padding:22px 24px;border-bottom:1px solid rgba(255,255,255,.14);background:{header_bg};">
+        <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,.82);letter-spacing:.01em;">{brand}</div>
+        <div style="margin-top:8px;font-size:17px;font-weight:700;color:#ffffff;line-height:1.35;letter-spacing:-.02em;">{title}</div>
+      </div>
+      <div style="padding:22px 24px;">{body}</div>
+      <div style="padding:22px 24px 24px;border-top:1px solid #ebe8e1;background:#f6f8f6;">
+        <div style="max-width:380px;margin:0 auto;background:#ffffff;border:1px solid #e6ece8;border-radius:16px;padding:18px 20px 16px;">
+          <a href="{site_url}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;display:block;margin-bottom:16px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;border-collapse:collapse;">
+              <tr>
+                <td style="padding-right:14px;vertical-align:middle;">
+                  <img src="{logo}" width="40" height="40" alt="{brand_name}" style="display:block;border:0;outline:none;border-radius:11px;"/>
+                </td>
+                <td style="vertical-align:middle;text-align:left;">
+                  <div style="font-size:15px;font-weight:800;color:#1a1c19;letter-spacing:-.03em;line-height:1.2;">{brand_name}</div>
+                  <div style="margin-top:5px;font-size:12px;font-weight:700;color:{site_blue};letter-spacing:.01em;">{site_label}</div>
+                </td>
+              </tr>
+            </table>
+          </a>
+          <div style="height:1px;margin:0 2px 14px;background:#dde5df;"></div>
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;border-collapse:collapse;">
+            <tr>
+              <td style="padding-right:12px;vertical-align:middle;font-size:11px;font-weight:700;color:#9aa89f;letter-spacing:.06em;text-transform:uppercase;">Contact</td>
+              <td style="vertical-align:middle;">
+                <a href="mailto:{contact}" style="display:inline-block;font-size:12px;font-weight:600;color:#3f463d;text-decoration:none;padding:7px 14px;border-radius:999px;background:#f3f6f4;border:1px solid #e2e9e4;">{contact}</a>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>{copy_script}
+</body>
+</html>"##,
         cream = cfg.brand.cream,
-        tile = cfg.brand.tile,
-        logo = logo,
-        brand = escape_html(&cfg.site.brand_name),
-        from_name = escape_html(from_name),
+        site_blue = cfg.brand.site_blue,
         body = body_html,
-        origin = origin,
-        accent = cfg.brand.accent,
-        host = escape_html(&cfg.host),
     )
 }
 
@@ -278,7 +237,13 @@ pub fn build_email_preview_html(
     } else {
         body_trim
     };
-    let html = wrap_email_html(cfg, subject.trim(), &render_body_html(body_for_render), &from);
+    let html = wrap_email_html(
+        cfg,
+        subject.trim(),
+        &render_body_html(body_for_render, &MarkdownOptions::preview(mail_origin(cfg))),
+        &from,
+        true,
+    );
     (from, html, body_for_render.to_string())
 }
 
@@ -360,8 +325,9 @@ pub async fn send_via_brevo(
         wrap_email_html(
             cfg,
             &subject,
-            &render_body_html(&body_for_render),
+            &render_body_html(&body_for_render, &MarkdownOptions::email(mail_origin(cfg))),
             &from_name,
+            false,
         )
     };
     let text_content = if input.html {
@@ -379,12 +345,10 @@ pub async fn send_via_brevo(
         "tags": [cfg.mail.brevo_tag],
     });
     if !attachments.is_empty() {
-        payload["attachment"] = serde_json::json!(
-            attachments
-                .iter()
-                .map(|a| serde_json::json!({ "name": a.name, "content": a.content }))
-                .collect::<Vec<_>>()
-        );
+        payload["attachment"] = serde_json::json!(attachments
+            .iter()
+            .map(|a| serde_json::json!({ "name": a.name, "content": a.content }))
+            .collect::<Vec<_>>());
     }
 
     let result = gloo_net_post(api_key, &payload).await;
@@ -441,9 +405,12 @@ pub async fn send_via_brevo(
     }
 }
 
-async fn gloo_net_post(api_key: &str, payload: &serde_json::Value) -> Result<(u16, String), String> {
-    use worker::{Fetch, Method, Request, RequestInit, Headers};
-    let mut headers = Headers::new();
+async fn gloo_net_post(
+    api_key: &str,
+    payload: &serde_json::Value,
+) -> Result<(u16, String), String> {
+    use worker::{Fetch, Headers, Method, Request, RequestInit};
+    let headers = Headers::new();
     headers.set("api-key", api_key).map_err(|e| e.to_string())?;
     headers
         .set("Content-Type", "application/json")
@@ -465,49 +432,49 @@ async fn gloo_net_post(api_key: &str, payload: &serde_json::Value) -> Result<(u1
     Ok((status, text))
 }
 
-pub fn decode_snippet_param(encoded: &str) -> Result<String, String> {
-    let s = encoded.replace('-', "+").replace('_', "/");
-    let pad = match s.len() % 4 {
-        0 => "",
-        2 => "==",
-        3 => "=",
-        _ => return Err("Invalid snippet".into()),
-    };
-    let s = format!("{s}{pad}");
-    let bytes = base64_decode(&s)?;
-    String::from_utf8(bytes).map_err(|_| "Invalid snippet".into())
-}
-
-fn base64_decode(data: &str) -> Result<Vec<u8>, String> {
-    const T: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-    let mut out = Vec::new();
-    let mut buf = 0u32;
-    let mut bits = 0u32;
-    for c in data.chars() {
-        if c == '=' {
-            break;
-        }
-        let v = T
-            .iter()
-            .position(|&x| x == c as u8)
-            .ok_or_else(|| "Invalid snippet".to_string())? as u32;
-        buf = (buf << 6) | v;
-        bits += 6;
-        if bits >= 8 {
-            bits -= 8;
-            out.push((buf >> bits) as u8);
-            buf &= (1 << bits) - 1;
-        }
-    }
-    Ok(out)
-}
-
 pub fn snippet_page_html(code: &str) -> String {
+    let escaped = escape_html(code);
     format!(
-        r##"<!DOCTYPE html><html><head><meta charset="utf-8"><title>Snippet</title>
-<style>body{{font-family:ui-monospace,monospace;background:#111;color:#e8e8e8;padding:24px}}pre{{white-space:pre-wrap;word-break:break-word}}</style>
-</head><body><pre>{}</pre></body></html>"##,
-        escape_html(code)
+        r##"<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Code snippet</title>
+<style>
+  body {{ margin:0; padding:24px 16px; background:#f7f4ee; font-family:ui-sans-serif,system-ui,sans-serif; color:#1c1917; }}
+  .wrap {{ max-width:720px; margin:0 auto; }}
+  .bar {{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; }}
+  h1 {{ margin:0; font-size:15px; font-weight:800; }}
+  button {{ font:inherit; cursor:pointer; border:1px solid #e7e5e4; background:#fff; border-radius:8px; padding:8px 14px; font-weight:700; font-size:13px; }}
+  button:hover {{ border-color:#8dcfb8; color:#15624f; }}
+  pre {{ margin:0; padding:16px; background:#fff; border:1px solid #e7e0d6; border-radius:12px;
+    font-family:Consolas,Courier,monospace; font-size:12px; line-height:1.55; white-space:pre-wrap; word-break:break-word; }}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="bar">
+      <h1>Code snippet</h1>
+      <button type="button" id="copyBtn">Copy</button>
+    </div>
+    <pre id="code">{escaped}</pre>
+  </div>
+  <script>
+    (function () {{
+      var text = {json};
+      var btn = document.getElementById("copyBtn");
+      btn.addEventListener("click", function () {{
+        navigator.clipboard.writeText(text).then(function () {{
+          btn.textContent = "Copied";
+          setTimeout(function () {{ btn.textContent = "Copy"; }}, 1200);
+        }});
+      }});
+    }})();
+  </script>
+</body>
+</html>"##,
+        json = serde_json::to_string(code).unwrap_or_else(|_| "\"\"".into()),
     )
 }
 
@@ -531,5 +498,12 @@ mod tests {
         let cfg = crate::config::load_config();
         let n = resolve_from_name(&cfg, Some("  Foo<script> "));
         assert!(!n.contains('<'));
+    }
+
+    #[test]
+    fn render_body_html_uses_commonmark() {
+        let html = render_body_html("# Title\n\n**hello**", &MarkdownOptions::default());
+        assert!(html.contains("<h1"));
+        assert!(html.contains("<strong>hello</strong>"));
     }
 }

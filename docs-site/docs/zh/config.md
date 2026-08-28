@@ -52,7 +52,7 @@ Custom Mail 通过仓库根目录的 **`config/mail.json`** 配置。Worker 在�
 
 ## `brand` — 颜色
 
-供 `src/brand.ts` 生成 Logo 色块：
+供 `src/brand.rs` 生成 Logo 色块：
 
 | Key | 作用 |
 |-----|------|

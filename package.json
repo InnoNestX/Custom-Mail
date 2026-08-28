@@ -15,12 +15,10 @@
     "build": "worker-build --release --no-panic-recovery",
     "dev": "wrangler dev --port 8790",
     "deploy": "npm run build && wrangler deploy",
-    "test": "cargo test --lib --target aarch64-apple-darwin",
-    "typecheck": "cargo check --lib --target wasm32-unknown-unknown",
-    "ui:export": "npx --yes tsx scripts/export-ui.ts"
+    "test": "cargo test --lib",
+    "typecheck": "cargo check --lib --target wasm32-unknown-unknown"
   },
   "devDependencies": {
-    "typescript": "^5.9.2",
     "wrangler": "^4.125.0"
   }
 }

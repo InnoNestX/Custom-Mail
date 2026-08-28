@@ -2,7 +2,8 @@
 
 ## 环境要求
 
-- Node.js **22+**
+- Rust **stable**（含 `wasm32-unknown-unknown`）与 `worker-build` 0.8.5
+- Node.js **22+**（Wrangler）
 - Cloudflare 账号（生产部署）
 - Brevo API Key（发信）
 
@@ -20,6 +21,7 @@ cp .dev.vars.example .dev.vars
 ```bash
 ADMIN_PASSWORD=你的强密码
 BREVO_API_KEY=你的-brevo-key
+ALLOW_ANY_HOST=1
 ```
 
 启动本地 Worker：

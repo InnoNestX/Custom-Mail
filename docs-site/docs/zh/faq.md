@@ -28,7 +28,19 @@
 
 ## 能否换成非 Brevo 的邮件服务？
 
-发信逻辑在 `src/email.ts` 针对 Brevo 实现。可 Fork 后改成其他 ESP。
+发信逻辑在 `src/email.rs` 针对 Brevo 实现。可 Fork 后改成其他 ESP。
+
+## 支持哪些 Markdown？
+
+正文由 Rust（`src/markdown.rs`）按 CommonMark + GitHub Flavored Markdown 转成邮件 HTML：
+
+- 标题、段落、斜体、粗体、删除线
+- 有序 / 无序 / 任务列表（含嵌套）
+- 链接（`http`/`https`/`mailto`）与图片（`http`/`https`）
+- 围栏/缩进代码块、表格、引用、分隔线
+- GFM 提示块（`> [!NOTE]`、`> [!WARNING]` 等）
+
+源文中的原始 HTML 会被忽略。`javascript:` 与 `data:` 不会变成链接。
 
 ## 安全提示
 

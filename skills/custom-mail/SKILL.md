@@ -26,7 +26,7 @@ metadata:
 
 ## What this skill does
 
-Spin up a **private Brevo mail console** in Docker. Compose mail, preview Markdown as HTML, attach files, and browse send history — without running a mail server.
+Spin up a **private Brevo mail console** in Docker. Compose mail, preview CommonMark/GFM as HTML, attach files, and browse send history — without running a mail server.
 
 Runtime is a **Rust** Cloudflare Worker (`workers-rs` → WASM) packaged with Wrangler for local use.
 

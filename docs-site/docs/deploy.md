@@ -6,6 +6,7 @@ Custom Mail runs as a single **Cloudflare Worker** with **KV** and **Workers Ass
 
 - Cloudflare account with Workers enabled
 - [Brevo](https://www.brevo.com/) account and verified sender domain
+- Rust stable (`wasm32-unknown-unknown`) and `worker-build` 0.8.5
 - Node.js 22+ and `npm`
 
 ## 1. Configure product

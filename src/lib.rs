@@ -3,6 +3,7 @@ mod config;
 mod email;
 mod history;
 mod login_guard;
+mod markdown;
 mod sessions;
 mod ui;
 
@@ -265,9 +266,7 @@ async fn main(mut req: Request, env: Env, _ctx: Context) -> Result<Response> {
         }
         let body: serde_json::Value = req.json().await.unwrap_or(serde_json::json!({}));
         let limit = body.get("limit").and_then(|v| v.as_u64()).unwrap_or(50) as usize;
-        let items = list_send_logs(&kv, limit)
-            .await
-            .map_err(Error::RustError)?;
+        let items = list_send_logs(&kv, limit).await.map_err(Error::RustError)?;
         return json(serde_json::json!({ "ok": true, "items": items }), 200);
     }
 
