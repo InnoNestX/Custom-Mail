@@ -19,6 +19,10 @@
 
 JSON 登记 id、名称、密钥名、是否需要发信域名。**新增 HTTP 发信 API 仍要在 Rust 里写发送适配**（`src/plugins/provider.rs`）。
 
+## 功能
+
+把 JSON 放到 `plugins/features/`。每个文件对应 `features.*` 里的开关，设为 `false` 即隐藏。内置：`markdown` · `history` · `attachments`。
+
 ## 主题
 
 放入调色板 JSON 即可，**不用改 Rust**。内置：`forest` · `midnight` · `ocean` · `paper` · `rose` · `slate` · `aurora` · `sunset` · `nord`。

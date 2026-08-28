@@ -5,6 +5,78 @@ import { join } from 'node:path'
 const base = '/Custom-Mail/'
 const siteUrl = 'https://innonestx.github.io/Custom-Mail/'
 
+const enSidebar = [
+  {
+    text: 'Start',
+    collapsed: true,
+    items: [
+      { text: 'Overview', link: '/' },
+      { text: 'Quick start', link: '/quick-start' },
+    ],
+  },
+  {
+    text: 'Run',
+    collapsed: true,
+    items: [
+      { text: 'Console', link: '/console' },
+      { text: 'Docker', link: '/docker' },
+      { text: 'OpenClaw', link: '/openclaw' },
+    ],
+  },
+  {
+    text: 'Customize',
+    collapsed: true,
+    items: [
+      { text: 'Plugins', link: '/plugins' },
+      { text: 'Configuration', link: '/config' },
+    ],
+  },
+  {
+    text: 'Ship',
+    collapsed: true,
+    items: [
+      { text: 'Deploy', link: '/deploy' },
+      { text: 'FAQ', link: '/faq' },
+    ],
+  },
+]
+
+const zhSidebar = [
+  {
+    text: '开始',
+    collapsed: true,
+    items: [
+      { text: '概览', link: '/zh/' },
+      { text: '快速开始', link: '/zh/quick-start' },
+    ],
+  },
+  {
+    text: '运行',
+    collapsed: true,
+    items: [
+      { text: '控制台', link: '/zh/console' },
+      { text: 'Docker', link: '/zh/docker' },
+      { text: 'OpenClaw', link: '/zh/openclaw' },
+    ],
+  },
+  {
+    text: '定制',
+    collapsed: true,
+    items: [
+      { text: '插件', link: '/zh/plugins' },
+      { text: '配置说明', link: '/zh/config' },
+    ],
+  },
+  {
+    text: '上线',
+    collapsed: true,
+    items: [
+      { text: '部署', link: '/zh/deploy' },
+      { text: '常见问题', link: '/zh/faq' },
+    ],
+  },
+]
+
 export default defineConfig({
   title: 'Custom Mail',
   description:
@@ -77,38 +149,8 @@ export default defineConfig({
       { text: 'GitHub', link: 'https://github.com/InnoNestX/Custom-Mail' },
     ],
     sidebar: {
-      '/': [
-        {
-          text: 'Guide',
-          items: [
-            { text: 'Overview', link: '/' },
-            { text: 'Quick start', link: '/quick-start' },
-            { text: 'Console', link: '/console' },
-            { text: 'Docker', link: '/docker' },
-            { text: 'OpenClaw skill', link: '/openclaw' },
-            { text: 'Plugins', link: '/plugins' },
-            { text: 'Configuration', link: '/config' },
-            { text: 'Deploy', link: '/deploy' },
-            { text: 'FAQ', link: '/faq' },
-          ],
-        },
-      ],
-      '/zh/': [
-        {
-          text: '指南',
-          items: [
-            { text: '概览', link: '/zh/' },
-            { text: '快速开始', link: '/zh/quick-start' },
-            { text: '控制台', link: '/zh/console' },
-            { text: 'Docker', link: '/zh/docker' },
-            { text: 'OpenClaw 技能', link: '/zh/openclaw' },
-            { text: '插件', link: '/zh/plugins' },
-            { text: '配置说明', link: '/zh/config' },
-            { text: '部署', link: '/zh/deploy' },
-            { text: '常见问题', link: '/zh/faq' },
-          ],
-        },
-      ],
+      '/': enSidebar,
+      '/zh/': zhSidebar,
     },
     footer: {
       message: 'Open Source · MIT License',
@@ -147,22 +189,7 @@ export default defineConfig({
           { text: '在线演示', link: 'https://mail.xuxuclassmate.com' },
           { text: 'GitHub', link: 'https://github.com/InnoNestX/Custom-Mail' },
         ],
-        sidebar: [
-          {
-            text: '指南',
-            items: [
-              { text: '概览', link: '/zh/' },
-              { text: '快速开始', link: '/zh/quick-start' },
-              { text: '控制台', link: '/zh/console' },
-              { text: 'Docker', link: '/zh/docker' },
-              { text: 'OpenClaw 技能', link: '/zh/openclaw' },
-              { text: '插件', link: '/zh/plugins' },
-              { text: '配置说明', link: '/zh/config' },
-              { text: '部署', link: '/zh/deploy' },
-              { text: '常见问题', link: '/zh/faq' },
-            ],
-          },
-        ],
+        sidebar: zhSidebar,
         editLink: {
           pattern: 'https://github.com/InnoNestX/Custom-Mail/edit/main/docs-site/docs/:path',
           text: '在 GitHub 上编辑此页',
