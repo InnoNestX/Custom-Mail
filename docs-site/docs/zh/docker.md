@@ -6,7 +6,7 @@
 
 - Docker Hub：`xuxuclassmate/custom-mail:latest`
 - GHCR：`ghcr.io/innonestx/custom-mail:latest`
-- 版本标签：`xuxuclassmate/custom-mail:0.2.0`（GHCR 同名）
+- 版本标签：`xuxuclassmate/custom-mail:1.0.0`（GHCR 同名）
 
 镜像内已设置 `ALLOW_ANY_HOST=1`，`localhost` 不会被 Host 检查拦住。
 

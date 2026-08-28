@@ -139,9 +139,9 @@ Product copy, colors, footer, and the default plugin ids live in `config/mail.js
 ## Image Tags
 
 - `xuxuclassmate/custom-mail:latest`
-- `xuxuclassmate/custom-mail:0.2.0`
+- `xuxuclassmate/custom-mail:1.0.0`
 - `ghcr.io/innonestx/custom-mail:latest`
-- `ghcr.io/innonestx/custom-mail:0.2.0`
+- `ghcr.io/innonestx/custom-mail:1.0.0`
 
 ## OpenClaw
 

@@ -27,6 +27,11 @@
   .locked, button.secondary, .chip, .book button { color: var(--ink-soft); }
   * { box-sizing: border-box; }
   html, body { margin: 0; min-height: 100%; }
+  html:has(.shell.login-mode),
+  body:has(.shell.login-mode) {
+    height: 100%;
+    overflow: hidden;
+  }
   body {
     font-family: var(--font);
     color: var(--ink);
@@ -63,6 +68,9 @@
     max-width: none;
     margin: 0;
     padding: 0;
+    height: 100dvh;
+    max-height: 100dvh;
+    overflow: hidden;
   }
   .mark { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
   .mark-badge {
@@ -90,17 +98,29 @@
   .login-scene {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: stretch;
-    min-height: 100dvh;
     width: 100%;
-    padding: max(20px, env(safe-area-inset-top, 0px)) 0 max(24px, env(safe-area-inset-bottom, 0px));
+    height: 100dvh;
+    max-height: 100dvh;
+    overflow: hidden;
     box-sizing: border-box;
+    padding: 0;
+  }
+  .login-main {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding: max(12px, env(safe-area-inset-top, 0px)) 0 8px;
   }
   .login-hero {
     position: relative;
     flex: 0 0 auto;
-    padding: 0 22px 16px;
+    padding: 0 22px 12px;
     background:
       radial-gradient(720px 480px at 8% -10%, color-mix(in srgb, var(--accent) 16%, transparent) 0%, transparent 58%),
       radial-gradient(520px 360px at 92% 100%, color-mix(in srgb, var(--paper) 70%, #f3d6a8) 0%, transparent 62%),
@@ -113,8 +133,21 @@
     display: flex;
     align-items: center;
     gap: 14px;
-    margin-bottom: 28px;
+    margin-bottom: clamp(12px, 3vh, 28px);
   }
+  .org-eyebrow {
+    margin: 0 0 10px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--accent-deep);
+  }
+  .org-eyebrow a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .org-eyebrow a:hover { text-decoration: underline; text-underline-offset: 3px; }
   .login-brand-row .mark-badge { width: 56px; height: 56px; }
   .login-brand-row h1 {
     margin: 0;
@@ -128,8 +161,8 @@
     font-size: 13px;
   }
   .login-headline {
-    margin: 0 0 12px;
-    font-size: clamp(32px, 6vw, 48px);
+    margin: 0 0 clamp(8px, 1.4vh, 12px);
+    font-size: clamp(28px, 5.2vh, 48px);
     line-height: 1.06;
     letter-spacing: -.045em;
     font-weight: 800;
@@ -147,12 +180,12 @@
     max-width: 36ch;
   }
   .login-points {
-    margin: 28px 0 0;
+    margin: clamp(12px, 3vh, 28px) 0 0;
     padding: 0;
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: clamp(6px, 1.2vh, 12px);
   }
   .login-points li {
     display: flex;
@@ -176,13 +209,13 @@
     align-items: center;
     justify-content: center;
     flex: 0 0 auto;
-    padding: 8px 20px 0;
+    padding: 4px 20px 0;
     background: transparent;
     border-top: 0;
   }
   .login-form-card {
     width: min(400px, 100%);
-    padding: 28px 26px 26px;
+    padding: clamp(18px, 3vh, 28px) clamp(18px, 2.4vw, 26px) clamp(16px, 2.4vh, 26px);
   }
   .login-form-title {
     margin: 0 0 4px;
@@ -337,8 +370,13 @@
   }
   .app-brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
   .app-brand .mark-badge { width: 36px; height: 36px; }
+  .app-brand .org-eyebrow {
+    margin: 0 0 2px;
+    font-size: 9px;
+    letter-spacing: .12em;
+  }
   .app-brand h1 { margin: 0; font-size: 16px; letter-spacing: -.03em; font-weight: 800; line-height: 1.2; }
-  .app-brand p { margin: 1px 0 0; color: var(--muted); font-size: 11px; line-height: 1.3; }
+  .app-brand p:not(.org-eyebrow) { margin: 1px 0 0; color: var(--muted); font-size: 11px; line-height: 1.3; }
   .plugin-chips {
     display: flex;
     flex-wrap: wrap;
@@ -385,6 +423,82 @@
     border-radius: 8px; padding: 6px 10px; font-size: 12px; color: var(--ink-soft);
   }
   .app-header .ghost:hover { border-color: #c5d0c2; color: var(--ink); }
+  .version-pill {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    margin-left: auto;
+    padding: 4px 9px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .02em;
+    font-family: var(--mono);
+    text-decoration: none;
+    line-height: 1.2;
+  }
+  .version-pill:hover {
+    border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
+    color: var(--accent-deep);
+  }
+  .product-chrome {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+    margin-top: auto;
+    padding: 18px 16px max(14px, env(safe-area-inset-bottom, 0px));
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--muted);
+    text-align: center;
+  }
+  .product-chrome a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-weight: 700;
+  }
+  .product-chrome a:hover { color: var(--accent-deep); text-decoration: underline; text-underline-offset: 2px; }
+  .product-chrome .chrome-org {
+    color: var(--accent-deep);
+    letter-spacing: .02em;
+  }
+  .product-chrome .chrome-version {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: rgba(255,255,255,.72);
+    color: var(--ink-soft);
+  }
+  .product-chrome .chrome-sep { opacity: .45; }
+  .product-chrome .chrome-tagline {
+    width: 100%;
+    font-size: 11px;
+    color: var(--muted);
+    opacity: .9;
+  }
+  #appView > .product-chrome {
+    justify-content: flex-start;
+    margin-top: 6px;
+    padding: 4px 4px 2px;
+    gap: 6px;
+  }
+  #appView > .product-chrome .chrome-tagline { display: none; }
+  .login-scene > .product-chrome {
+    flex: 0 0 auto;
+    margin-top: 0;
+    padding: 10px 16px max(10px, env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+    background: color-mix(in srgb, var(--paper) 88%, #fff);
+    backdrop-filter: blur(8px);
+  }
   .workspace { display: flex; flex-direction: column; min-height: 0; }
   #composePanel.workspace,
   #historyPanel.workspace {
@@ -802,20 +916,26 @@
     .from-grid { grid-template-columns: 1fr; }
     .shell:not(.login-mode) { padding: 8px 10px 8px; }
     .login-scene {
-      min-height: 100dvh;
-      justify-content: center;
-      padding: max(16px, env(safe-area-inset-top, 0px)) 0 max(20px, env(safe-area-inset-bottom, 0px));
+      height: 100dvh;
+      max-height: 100dvh;
     }
-    .login-hero { padding: 0 18px 12px; }
-    .login-brand-row { margin-bottom: 16px; }
-    .login-headline { max-width: none; font-size: clamp(28px, 8vw, 36px); margin-bottom: 8px; }
+    .login-main {
+      justify-content: flex-start;
+      padding: max(10px, env(safe-area-inset-top, 0px)) 0 6px;
+    }
+    .login-hero { padding: 0 18px 10px; }
+    .login-brand-row { margin-bottom: 12px; }
+    .login-headline { max-width: none; font-size: clamp(26px, 7vw, 34px); margin-bottom: 8px; }
     .login-lead { font-size: 14px; }
-    .login-points { margin-top: 16px; gap: 8px; }
+    .login-points { margin-top: 12px; gap: 8px; }
     .login-panel {
       padding: 0 16px;
       align-items: stretch;
     }
-    .login-form-card { padding: 22px 20px 20px; }
+    .login-form-card { padding: 20px 18px 18px; }
+    .login-scene > .product-chrome {
+      padding: 8px 12px max(8px, env(safe-area-inset-bottom, 0px));
+    }
     .app-header {
       position: static;
       flex-direction: row;
@@ -828,7 +948,8 @@
     .app-brand { width: auto; flex: 1; min-width: 0; }
     .app-brand .mark-badge { width: 32px; height: 32px; }
     .app-brand h1 { font-size: 15px; }
-    .app-brand p { display: none; }
+    .app-brand p:not(.org-eyebrow) { display: none; }
+    .app-brand .org-eyebrow { display: block; font-size: 8px; margin-bottom: 1px; }
     .plugin-chips { display: none; }
     .app-tabs { margin-left: 0; width: auto; flex: 1; min-width: 140px; }
     .app-tabs .tab { flex: 1; text-align: center; padding: 8px 10px; font-size: 12px; }
@@ -838,7 +959,18 @@
       text-align: center;
       padding: 8px 12px;
       font-size: 12px;
+      order: 4;
     }
+    .version-pill {
+      margin-left: 0;
+      order: 3;
+    }
+    #appView > .product-chrome {
+      justify-content: center;
+      font-size: 11px;
+      padding-top: 2px;
+    }
+    #appView > .product-chrome .chrome-tagline { display: none; }
     .workspace { min-height: 0; }
     .workspace-head, .workspace-body, .workspace-foot { padding-left: 16px; padding-right: 16px; }
     .workspace-head { flex-direction: column; gap: 10px; }
@@ -862,7 +994,7 @@
     }
     #historyPanel .workspace-head .secondary { width: auto; }
     textarea { min-height: 120px; }
-    .app-brand p { display: none; }
+    .app-brand p:not(.org-eyebrow) { display: none; }
     #composePanel .workspace-foot {
       padding: 8px 12px max(10px, env(safe-area-inset-bottom, 0px));
     }
@@ -872,28 +1004,42 @@
     button { min-height: 44px; }
   }
   @media (min-width: 900px) {
-    .login-scene {
+    .login-main {
       display: grid;
       grid-template-columns: 1.08fr 0.92fr;
-      align-content: stretch;
+      align-items: stretch;
       justify-content: stretch;
-      min-height: 100dvh;
       padding: 0;
+      overflow: hidden;
     }
     .login-hero {
       display: flex;
       align-items: center;
-      padding: 48px 56px;
-      min-height: 100dvh;
+      padding: clamp(24px, 5vh, 48px) clamp(28px, 4vw, 56px);
+      min-height: 0;
+      height: 100%;
+      overflow: auto;
     }
     .login-hero-inner { max-width: 480px; }
     .login-panel {
-      min-height: 100dvh;
-      padding: 48px 40px;
+      min-height: 0;
+      height: 100%;
+      padding: clamp(24px, 5vh, 48px) clamp(24px, 3vw, 40px);
       border-top: 0;
       border-left: 1px solid rgba(221,227,216,.75);
       background: rgba(255,252,247,.88);
+      overflow: auto;
     }
+  }
+  @media (max-height: 700px) {
+    .login-points { display: none; }
+    .login-scene > .product-chrome .chrome-tagline { display: none; }
+    .login-lead { font-size: 13px; }
+    .login-form-title { font-size: 20px; }
+  }
+  @media (max-height: 560px) {
+    .login-hero-inner .login-lead { display: none; }
+    .org-eyebrow { margin-bottom: 6px; }
   }
   .locked {
     display: flex;
@@ -1222,10 +1368,18 @@
     display: grid; gap: 8px; margin-bottom: 16px;
   }
   .hist-detail-pane .kv div {
-    display: grid; grid-template-columns: 64px 1fr; gap: 8px;
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: 6px 14px;
+    align-items: baseline;
   }
   .hist-detail-pane .kv strong {
     color: var(--muted); font-weight: 700; font-size: 12px;
+    white-space: nowrap;
+  }
+  .hist-detail-pane .kv span {
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
   .hist-detail-pane pre {
     margin: 0; white-space: pre-wrap; word-break: break-word;
@@ -1333,8 +1487,10 @@
     </div>
 
     <div id="loginView" class="login-scene">
+      <div class="login-main">
       <section class="login-hero">
         <div class="login-hero-inner">
+          ___ORG_EYEBROW___
           <div class="login-brand-row">
             <div class="mark-badge">___BRAND_MARK_HERO___</div>
             <div>
@@ -1362,6 +1518,8 @@
           </form>
         </div>
       </section>
+      </div>
+      ___PRODUCT_CHROME___
     </div>
 
     <div id="appView" class="hidden">
@@ -1369,6 +1527,7 @@
         <div class="app-brand">
           <div class="mark-badge">___BRAND_MARK_APP___</div>
           <div>
+            ___ORG_EYEBROW___
             <h1>___APP_TITLE___</h1>
             ___APP_SUBTITLE_P___
             ___PLUGIN_CHIPS___
@@ -1378,6 +1537,7 @@
           <button class="tab active" id="tabCompose" type="button">___I18N_TAB_COMPOSE___</button>
           <button class="tab___FEATURE_HISTORY___" id="tabHistory" type="button">___I18N_TAB_HISTORY___</button>
         </div>
+        ___VERSION_PILL___
         <button class="ghost" id="logoutBtn" type="button">___I18N_LOGOUT___</button>
       </header>
 
@@ -1500,6 +1660,7 @@
           </div>
         </div>
       </div>
+      ___PRODUCT_CHROME___
     </div>
 
     <div id="resultOverlay" class="preview-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="resultTitle">

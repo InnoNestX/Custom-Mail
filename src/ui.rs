@@ -6,6 +6,7 @@ use crate::plugins::{
 };
 
 const TEMPLATE: &str = include_str!("../templates/app.html");
+const APP_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 fn hide(on: bool) -> &'static str {
     if on {
@@ -13,6 +14,80 @@ fn hide(on: bool) -> &'static str {
     } else {
         " hidden"
     }
+}
+
+fn product_chrome_html(cfg: &MailConfig) -> String {
+    let org = escape_html(&cfg.org.name);
+    let org_url = escape_html(&cfg.org.url);
+    let product = escape_html(&cfg.app.title);
+    let version = escape_html(APP_VERSION);
+    let releases = escape_html(
+        if cfg.org.releases.trim().is_empty() {
+            "https://github.com/InnoNestX/Custom-Mail/releases"
+        } else {
+            cfg.org.releases.as_str()
+        },
+    );
+    let tagline = cfg.org.tagline.trim();
+    let tagline_html = if tagline.is_empty() {
+        String::new()
+    } else {
+        format!(
+            r#"<span class="chrome-sep" aria-hidden="true">·</span><span class="chrome-tagline">{}</span>"#,
+            escape_html(tagline)
+        )
+    };
+    format!(
+        r#"<footer class="product-chrome" aria-label="Product attribution">
+  <a class="chrome-org" href="{org_url}" target="_blank" rel="noopener noreferrer">{org}</a>
+  <span class="chrome-sep" aria-hidden="true">·</span>
+  <span class="chrome-product">{product}</span>
+  <a class="chrome-version" href="{releases}" target="_blank" rel="noopener noreferrer" title="{product} version">v{version}</a>
+  {tagline_html}
+</footer>"#,
+        org_url = org_url,
+        org = org,
+        product = product,
+        releases = releases,
+        version = version,
+        tagline_html = tagline_html,
+    )
+}
+
+fn org_eyebrow_html(cfg: &MailConfig) -> String {
+    let name = cfg.org.name.trim();
+    if name.is_empty() {
+        return String::new();
+    }
+    let url = cfg.org.url.trim();
+    if url.is_empty() {
+        format!(
+            r#"<p class="org-eyebrow"><span>{}</span></p>"#,
+            escape_html(name)
+        )
+    } else {
+        format!(
+            r#"<p class="org-eyebrow"><a href="{}" target="_blank" rel="noopener noreferrer">{}</a></p>"#,
+            escape_html(url),
+            escape_html(name)
+        )
+    }
+}
+
+fn version_pill_html(cfg: &MailConfig) -> String {
+    let version = escape_html(APP_VERSION);
+    let releases = escape_html(
+        if cfg.org.releases.trim().is_empty() {
+            "https://github.com/InnoNestX/Custom-Mail/releases"
+        } else {
+            cfg.org.releases.as_str()
+        },
+    );
+    format!(
+        r#"<a class="version-pill" href="{releases}" target="_blank" rel="noopener noreferrer" title="Version {version}">v{version}</a>"#,
+        releases = releases,
+        version = version,
+    )
 }
 
 fn login_points_html(points: &[String]) -> String {
@@ -137,6 +212,9 @@ pub fn render_app_html(cfg: &MailConfig, from_name: &str, from_email: &str) -> S
         .replace("___BRAND_MARK_HDR___", &brand_mark_html(cfg, 44, "hdr"))
         .replace("___BRAND_MARK_HERO___", &brand_mark_html(cfg, 56, "hero"))
         .replace("___BRAND_MARK_APP___", &brand_mark_html(cfg, 44, "app"))
+        .replace("___ORG_EYEBROW___", &org_eyebrow_html(cfg))
+        .replace("___PRODUCT_CHROME___", &product_chrome_html(cfg))
+        .replace("___VERSION_PILL___", &version_pill_html(cfg))
         .replace("___APP_TITLE___", &escape_html(&cfg.app.title))
         .replace(
             "___APP_SUBTITLE_P___",
@@ -292,5 +370,19 @@ mod tests {
         let html = render_app_html(&cfg, "Desk", "a@b.test");
         assert!(html.contains("plugin-chips"));
         assert!(!html.contains("___PLUGIN_CHIPS___"));
+    }
+
+    #[test]
+    fn render_includes_org_chrome_and_version() {
+        let cfg = load_config();
+        let html = render_app_html(&cfg, "Desk", "a@b.test");
+        assert!(html.contains("InnoNestX"), "{html}");
+        assert!(html.contains("product-chrome"), "{html}");
+        assert!(html.contains(&format!("v{APP_VERSION}")), "{html}");
+        assert!(html.contains("version-pill"), "{html}");
+        assert!(html.contains("org-eyebrow"), "{html}");
+        assert!(!html.contains("___PRODUCT_CHROME___"));
+        assert!(!html.contains("___ORG_EYEBROW___"));
+        assert!(!html.contains("___VERSION_PILL___"));
     }
 }

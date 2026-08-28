@@ -1,6 +1,6 @@
 [package]
 name = "custom-mail"
-version = "0.2.0"
+version = "1.0.0"
 edition = "2021"
 description = "Custom Mail — private web mail console on Cloudflare Workers (Rust)"
 license = "MIT"
