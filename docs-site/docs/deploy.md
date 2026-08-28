@@ -57,7 +57,7 @@ Visit `https://<host>` and sign in.
 
 The published image is for trying the console locally. Pass `ADMIN_PASSWORD` and the API key for the active provider. `MAIL_PROVIDER`, `MAIL_THEME`, `MAIL_LAYOUT`, `MAIL_LOGO`, and `MAIL_CONFIG_JSON` override `mail.json` plugin slots without rebuilding. New theme/layout JSON or logo files still need an image rebuild.
 
-Full commands, Compose, and env vars: [Docker](./docker). Agent install: [OpenClaw skill](./openclaw) (`clawhub install custom-mail`).
+Full commands, Compose, and env vars: [Docker](./docker). Agent install: [OpenClaw skill](./openclaw) (`clawhub install custom-mail-skill`).
 
 ## Custom domain
 

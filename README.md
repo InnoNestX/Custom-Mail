@@ -103,7 +103,7 @@ Open **http://127.0.0.1:8787**. Or: `docker compose up`.
 
 To switch provider / theme / layout / logo without rebuilding: `-e MAIL_PROVIDER=resend -e MAIL_THEME=nord -e RESEND_API_KEY='re_...'`. New JSON under `plugins/` still needs a rebuild. Full guide: [Docker](https://innonestx.github.io/Custom-Mail/docker.html).
 
-OpenClaw skill: `clawhub install custom-mail` — [docs](https://innonestx.github.io/Custom-Mail/openclaw.html).
+OpenClaw skill: `clawhub install custom-mail-skill` — [ClawHub](https://clawhub.ai/xuxuclassmate/skills/custom-mail-skill) · [docs](https://innonestx.github.io/Custom-Mail/openclaw.html).
 ## Configuration
 
 All product copy and mail defaults live in **`config/mail.json`**. Drop-in catalogs live in **`plugins/`**. Full reference on the docs site:

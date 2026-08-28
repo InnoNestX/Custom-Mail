@@ -61,7 +61,7 @@ Visit `https://<host>` from `mail.json` and sign in.
 
 The published image is for trying the console locally. Pass `ADMIN_PASSWORD` and the API key for the active provider. `MAIL_PROVIDER`, `MAIL_THEME`, `MAIL_LAYOUT`, `MAIL_LOGO`, and `MAIL_CONFIG_JSON` override the matching `mail.json` slots without rebuilding. Adding a new theme/layout JSON or logo file still needs an image rebuild.
 
-See [docker/DOCKERHUB.md](../docker/DOCKERHUB.md), the docs [Docker](https://innonestx.github.io/Custom-Mail/docker.html) and [OpenClaw](https://innonestx.github.io/Custom-Mail/openclaw.html) guides, and `skills/custom-mail/SKILL.md`.
+See [docker/DOCKERHUB.md](../docker/DOCKERHUB.md), the docs [Docker](https://innonestx.github.io/Custom-Mail/docker.html) and [OpenClaw](https://innonestx.github.io/Custom-Mail/openclaw.html) guides, `skills/custom-mail/SKILL.md`, and ClawHub [`custom-mail-skill`@1.0.0](https://clawhub.ai/xuxuclassmate/skills/custom-mail-skill) (`clawhub install custom-mail-skill`).
 
 ## Custom domain
 

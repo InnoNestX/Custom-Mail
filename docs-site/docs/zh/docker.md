@@ -139,5 +139,5 @@ docker compose up -d
 ## 下一步
 
 - [控制台](./console)
-- [OpenClaw 技能](./openclaw) — `clawhub install custom-mail`
+- [OpenClaw 技能](./openclaw) — `clawhub install custom-mail-skill`
 - [插件](./plugins) · [部署](./deploy)
