@@ -109,6 +109,7 @@ Console labels default to English. Override any key under `i18n`. Syntax chips l
 | `ADMIN_PASSWORD` | Login password |
 | Provider key (see table) | Outbound API |
 | `MAIL_API_KEY` | Fallback API key |
+| `MAIL_PROVIDER` | Optional runtime override of `plugins.provider` (Docker / `.dev.vars`) |
 | `MAILGUN_DOMAIN` | Mailgun domain |
 | `ALLOW_ANY_HOST=1` | Local dev: skip Host header check |
 

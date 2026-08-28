@@ -57,6 +57,12 @@ npm run deploy
 
 Visit `https://<host>` from `mail.json` and sign in.
 
+## Docker (local)
+
+The published image is for trying the console locally. Pass `ADMIN_PASSWORD` and the API key for the active provider. `MAIL_PROVIDER` overrides `plugins.provider` without rebuilding. Branding, theme, layout, and logo are baked from `config/mail.json` at image build.
+
+See [docker/DOCKERHUB.md](../docker/DOCKERHUB.md) and the OpenClaw skill `skills/custom-mail/SKILL.md`.
+
 ## Custom domain
 
 In `wrangler.jsonc`:

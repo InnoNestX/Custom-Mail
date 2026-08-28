@@ -123,7 +123,11 @@ async fn require_auth(req: &Request, kv: &kv::KvStore) -> std::result::Result<()
 #[event(fetch)]
 async fn main(mut req: Request, env: Env, _ctx: Context) -> Result<Response> {
     console_error_panic_hook::set_once();
-    let cfg = load_config();
+    let mut cfg = load_config();
+    let provider_override = secret_or_var(&env, "MAIL_PROVIDER");
+    if !provider_override.trim().is_empty() {
+        cfg.plugins.provider = provider_override.trim().to_ascii_lowercase();
+    }
 
     let allow_any = secret_or_var(&env, "ALLOW_ANY_HOST") == "1";
     if !allow_any {

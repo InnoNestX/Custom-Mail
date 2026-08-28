@@ -12,7 +12,7 @@ const isZh = props.lang === 'zh'
 
 const copy = isZh
   ? {
-      kicker: 'Cloudflare Workers · Brevo · MIT',
+      kicker: 'Cloudflare Workers · 可插拔 ESP · MIT',
       brand: 'Custom Mail',
       headline: '安静的发信控制台',
       lede: '撰写、预览、发送。跑在边缘，不需要邮件服务器。',
@@ -27,7 +27,7 @@ const copy = isZh
       stepsTitle: '三步上手',
       steps: [
         ['克隆仓库', '安装依赖，复制 .dev.vars'],
-        ['配置 mail.json', '域名、品牌、发件人、通讯录'],
+        ['配置 mail.json', '域名、品牌、插件、发件人、通讯录'],
         ['部署 Worker', '写入密钥，npm run deploy'],
       ],
       urlsTitle: '地址',
@@ -35,9 +35,7 @@ const copy = isZh
       demoUrl: 'https://mail.xuxuclassmate.com',
     }
   : {
-      kicker: 'Cloudflare Workers · Brevo · MIT',
-      brand: 'Custom Mail',
-      headline: 'A quiet place to send mail',
+      kicker: 'Cloudflare Workers · pluggable ESP · MIT',
       lede: 'Compose, preview, and deliver. Edge-hosted — no mail server to run.',
       start: 'Quick start',
       startHref: withBase('/quick-start.html'),
@@ -50,7 +48,7 @@ const copy = isZh
       stepsTitle: 'Three steps',
       steps: [
         ['Clone the repo', 'Install deps, copy .dev.vars'],
-        ['Edit mail.json', 'Host, brand, sender, address book'],
+        ['Edit mail.json', 'Host, brand, plugins, sender, address book'],
         ['Deploy the Worker', 'Set secrets, npm run deploy'],
       ],
       urlsTitle: 'Addresses',

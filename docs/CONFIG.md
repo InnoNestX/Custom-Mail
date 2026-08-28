@@ -185,6 +185,7 @@ Array of `{ "address", "note" }` entries shown as quick-pick chips in the To fie
 | `ADMIN_PASSWORD` | Login password |
 | Provider key (see table above) | Outbound API |
 | `MAIL_API_KEY` | Fallback if the provider-specific key is unset |
+| `MAIL_PROVIDER` | Optional runtime override of `plugins.provider` (useful in Docker) |
 | `MAILGUN_DOMAIN` | Mailgun domain (optional if `mail.providerDomain` is set) |
 | `ALLOW_ANY_HOST=1` | Local dev: skip Host header check |
 

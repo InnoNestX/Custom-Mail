@@ -5,7 +5,7 @@
 - Rust **stable** (with `wasm32-unknown-unknown`) and `worker-build` 0.8.5
 - Node.js **22+** (Wrangler)
 - Cloudflare account (for production)
-- Brevo API key (for sending)
+- An API key for your chosen provider (Brevo by default; see [Configuration](./config))
 
 ## Install and run
 
@@ -21,6 +21,7 @@ Edit `.dev.vars`:
 ```bash
 ADMIN_PASSWORD=your-strong-password
 BREVO_API_KEY=your-brevo-key
+# or MAIL_PROVIDER=resend and RESEND_API_KEY=...
 ALLOW_ANY_HOST=1
 ```
 

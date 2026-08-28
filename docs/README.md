@@ -13,7 +13,7 @@ Source Markdown also lives under `docs/` (this folder) and `docs-site/docs/` (Vi
 
 | Guide | Description |
 |-------|-------------|
-| [Configuration](CONFIG.md) | `config/mail.json` — host, branding, mail defaults, address book |
+| [Configuration](CONFIG.md) | `config/mail.json` — host, branding, plugins, mail defaults, address book |
 | [Deployment](DEPLOY.md) | Cloudflare Worker, secrets, domain, GitHub Actions |
 | [FAQ](FAQ.md) | Common errors and fixes |
 
@@ -23,15 +23,15 @@ Source Markdown also lives under `docs/` (this folder) and `docs-site/docs/` (Vi
 - Live demo: https://mail.xuxuclassmate.com
 - [Repository README](../README.md)
 - [InnoNestX organization](https://github.com/InnoNestX)
-- [Brevo API](https://developers.brevo.com/)
+- [Brevo API](https://developers.brevo.com/) (default provider; others listed in CONFIG.md)
 
 ## Typical setup flow
 
 ```text
 1. Fork / clone this repo
-2. Edit config/mail.json (host, brand, from address)
+2. Edit config/mail.json (host, brand, plugins, from address)
 3. Create KV namespace → update wrangler.jsonc
-4. wrangler secret put ADMIN_PASSWORD + BREVO_API_KEY
+4. wrangler secret put ADMIN_PASSWORD + provider API key
 5. npm run deploy
 6. Open https://<your-host> and sign in
 ```

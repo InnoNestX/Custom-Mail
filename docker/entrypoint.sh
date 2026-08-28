@@ -7,9 +7,28 @@ if [ -z "${ADMIN_PASSWORD:-}" ]; then
 fi
 
 umask 077
-printf 'ADMIN_PASSWORD=%s\nBREVO_API_KEY=%s\nALLOW_ANY_HOST=1\n' \
-  "$ADMIN_PASSWORD" \
-  "${BREVO_API_KEY:-}" > .dev.vars
+{
+  printf 'ADMIN_PASSWORD=%s\n' "$ADMIN_PASSWORD"
+  printf 'ALLOW_ANY_HOST=1\n'
+  for name in \
+    MAIL_PROVIDER \
+    MAIL_API_KEY \
+    BREVO_API_KEY \
+    RESEND_API_KEY \
+    SENDGRID_API_KEY \
+    MAILGUN_API_KEY \
+    MAILGUN_DOMAIN \
+    POSTMARK_SERVER_TOKEN \
+    MAILERSEND_API_KEY \
+    SMTP2GO_API_KEY \
+    SPARKPOST_API_KEY
+  do
+    eval "val=\${${name}-}"
+    if [ -n "$val" ]; then
+      printf '%s=%s\n' "$name" "$val"
+    fi
+  done
+} > .dev.vars
 
 exec wrangler dev \
   --config wrangler.jsonc \

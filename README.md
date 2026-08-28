@@ -58,7 +58,7 @@
 | History | List + detail; mobile full-screen detail layout |
 | Security | HttpOnly session cookie, login rate limit, secrets on Worker |
 | CI | Rust tests + wasm check on every push; CodeQL scanning |
-| Runtime | Cloudflare Workers via `workers-rs` (Rust → WASM) |
+| Plugins | Theme, HTML layout, and ESP chosen in `config/mail.json` |
 
 ## Markdown
 
@@ -101,6 +101,8 @@ docker run --rm -p 8787:8787 \
 
 Open **http://127.0.0.1:8787**. Or: `docker compose up`.
 
+To send with another provider without rebuilding: `-e MAIL_PROVIDER=resend -e RESEND_API_KEY='re_...'`. Branding/theme/layout are baked from `config/mail.json` — edit and rebuild to change them.
+
 OpenClaw skill: `clawhub install custom-mail`
 ## Configuration
 
@@ -118,7 +120,7 @@ Also in-repo: [docs/CONFIG.md](docs/CONFIG.md) · [docs/DEPLOY.md](docs/DEPLOY.m
 
 ```bash
 npx wrangler secret put ADMIN_PASSWORD
-npx wrangler secret put BREVO_API_KEY
+npx wrangler secret put BREVO_API_KEY   # or the key for plugins.provider
 npm run deploy
 ```
 
@@ -129,7 +131,7 @@ npm run deploy
 | **CI** | Every push / PR — `npm run typecheck` |
 | **Deploy to Cloudflare Workers** | Manual **Run workflow** only |
 
-Org/repo secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`. Worker secrets stay on Cloudflare (`ADMIN_PASSWORD`, `BREVO_API_KEY`).
+Org/repo secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`. Worker secrets stay on Cloudflare (`ADMIN_PASSWORD` and the provider API key).
 
 Details: https://innonestx.github.io/Custom-Mail/deploy.html · [docs/DEPLOY.md](docs/DEPLOY.md)
 
@@ -139,7 +141,7 @@ Details: https://innonestx.github.io/Custom-Mail/deploy.html · [docs/DEPLOY.md]
 Browser ──► Cloudflare Worker (custom-mail)
               ├── Workers Assets (UI)
               ├── KV MAIL_LOG_KV (sessions + send log)
-              └── Brevo API (transactional send)
+              └── Provider API (Brevo, Resend, SendGrid, …)
 ```
 
 ## Community

@@ -2,7 +2,7 @@
 
 <div align="center">
 
-**Private Brevo mail console — compose, preview, attachments, and send history**
+**Private web mail console — compose, preview, attachments, and send history**
 
 [![Version](https://img.shields.io/github/v/release/InnoNestX/Custom-Mail?label=version)](https://github.com/InnoNestX/Custom-Mail/releases)
 [![Docker Pulls](https://img.shields.io/docker/pulls/xuxuclassmate/custom-mail)](https://hub.docker.com/r/xuxuclassmate/custom-mail)
@@ -22,7 +22,8 @@ Custom Mail is a self-hosted outbound mail workspace. Run it locally in Docker t
 - Attachments up to 8 files · 8 MB each · 15 MB total
 - Send history with detail view (desktop + mobile)
 - Session login, login rate limit, HttpOnly cookies
-- Delivered through **Brevo** — no mail server to maintain
+- Pluggable ESP (Brevo, Resend, SendGrid, Mailgun, Postmark, MailerSend, SMTP2GO, SparkPost)
+- Themes, layouts, logo, favicon, and copy from `config/mail.json`
 - Runtime: **Rust** Cloudflare Worker (`workers-rs` → WASM) inside a slim image
 
 ## Docker Quick Start
@@ -37,15 +38,22 @@ Also on GHCR: `ghcr.io/innonestx/custom-mail:latest`
 
 ### 2. Set your secrets
 
-You need at least a console password. Add a Brevo API key when you want to actually send mail.
+You need a console password. Add the API key for the provider selected in `config/mail.json` (`plugins.provider`, default `brevo`) when you want to send.
 
 ```bash
 export ADMIN_PASSWORD='choose-a-strong-password'
-export BREVO_API_KEY='xkeysib-...'   # optional for UI-only testing
-export PORT=8787                        # optional, default 8787
+export BREVO_API_KEY='xkeysib-...'   # or RESEND_API_KEY / SENDGRID_API_KEY / MAIL_API_KEY / …
+export PORT=8787                      # optional, default 8787
 ```
 
-Get a Brevo key from [Brevo → SMTP & API](https://app.brevo.com/settings/keys/api).
+To use another provider **without rebuilding** the image:
+
+```bash
+export MAIL_PROVIDER=resend
+export RESEND_API_KEY='re_...'
+```
+
+`MAIL_PROVIDER` overrides `plugins.provider` baked into the image.
 
 ### 3. Run the container
 
@@ -75,7 +83,7 @@ Quick health check:
 
 ```bash
 curl -s http://localhost:8787/api/health
-# {"ok":true,"runtime":"rust","service":"mail",...}
+# {"ok":true,"runtime":"rust","provider":"brevo","theme":"forest",...}
 ```
 
 ## Docker Compose
@@ -96,19 +104,30 @@ Stop the service:
 docker compose down
 ```
 
+To change **branding, theme, layout, or the default provider**, edit `config/mail.json` and rebuild (`docker compose build`). Logo/favicon files go under `public/`.
+
 ## Environment Variables
 
 | Variable | Default | Description |
 | --- | --- | --- |
 | `ADMIN_PASSWORD` | *(required)* | Login password for the mail console |
-| `BREVO_API_KEY` | empty | Brevo API key (`xkeysib-…`). UI works without it; send fails until set |
+| `MAIL_PROVIDER` | empty | Overrides `plugins.provider` (`brevo`, `resend`, `sendgrid`, `mailgun`, `postmark`, `mailersend`, `smtp2go`, `sparkpost`) |
+| `BREVO_API_KEY` | empty | Brevo key. UI works without a key; send needs the key for the active provider |
+| `RESEND_API_KEY` | empty | Resend |
+| `SENDGRID_API_KEY` | empty | SendGrid |
+| `MAILGUN_API_KEY` / `MAILGUN_DOMAIN` | empty | Mailgun |
+| `POSTMARK_SERVER_TOKEN` | empty | Postmark |
+| `MAILERSEND_API_KEY` | empty | MailerSend |
+| `SMTP2GO_API_KEY` | empty | SMTP2GO |
+| `SPARKPOST_API_KEY` | empty | SparkPost |
+| `MAIL_API_KEY` | empty | Fallback if the provider-specific key is unset |
 | `PORT` | `8787` | Port Wrangler listens on inside the container |
 
 The image sets `ALLOW_ANY_HOST=1` so local Docker works without tweaking Host headers.
 
 ## Branding & config
 
-Product copy, colors, login text, and address book live in `config/mail.json` inside the image. For production on Cloudflare, edit that file in the repo and redeploy — see the [config guide](https://innonestx.github.io/Custom-Mail/config.html).
+Product copy, colors, logo, favicon, footer, plugins, and address book live in `config/mail.json` (compiled into the Worker at image build). For a custom brand, edit that file (and `public/images/`) then rebuild. On Cloudflare, edit the repo and redeploy — see the [config guide](https://innonestx.github.io/Custom-Mail/config.html).
 
 ## Image Tags
 

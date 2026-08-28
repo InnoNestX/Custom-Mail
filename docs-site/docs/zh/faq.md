@@ -6,11 +6,11 @@
 - **本地：** 检查 `.dev.vars` 并重启 `npm run dev`。
 - 尝试次数过多会临时锁定，稍后再试。
 
-## 发送失败 / Brevo 报错
+## 发送失败 / 服务商报错
 
-- 确认 Worker 上有正确的 `BREVO_API_KEY`。
-- `mail.json` 中的 `fromEmail` 须在 Brevo 授权。
-- 在 Brevo 控制台查看限额或域名验证状态。
+- 确认 Worker 上有与 `plugins.provider`（或 `MAIL_PROVIDER`）对应的 API 密钥。
+- `mail.json` 中的 `fromEmail` 须在该服务商处授权。
+- 在服务商控制台查看限额或域名验证状态。
 
 ## CI 部署失败
 

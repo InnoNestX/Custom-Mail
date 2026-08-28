@@ -8,7 +8,7 @@ const siteUrl = 'https://innonestx.github.io/Custom-Mail/'
 export default defineConfig({
   title: 'Custom Mail',
   description:
-    'Private web mail console on Cloudflare Workers. Compose, preview, attachments, and send history via Brevo.',
+    'Private web mail console on Cloudflare Workers. Compose, preview, attachments, and send history with a pluggable ESP.',
   base,
   srcDir: 'docs',
   outDir: '_site',
@@ -41,7 +41,7 @@ export default defineConfig({
       {
         name: 'keywords',
         content:
-          'Custom Mail, Cloudflare Workers, Brevo, webmail, outbound email, self-hosted mail, InnoNestX',
+          'Custom Mail, Cloudflare Workers, Brevo, Resend, SendGrid, webmail, outbound email, self-hosted mail, InnoNestX',
       },
     ],
     ['meta', { name: 'robots', content: 'index,follow' }],
@@ -53,7 +53,7 @@ export default defineConfig({
       {
         property: 'og:description',
         content:
-          'Self-hosted outbound mail workspace. Markdown compose, attachments, preview, and send history via Brevo.',
+          'Self-hosted outbound mail workspace. Markdown compose, attachments, preview, send history, and a pluggable ESP.',
       },
     ],
     ['meta', { property: 'og:url', content: siteUrl }],
@@ -117,7 +117,7 @@ export default defineConfig({
       lang: 'en-US',
       title: 'Custom Mail',
       description:
-        'Private web mail console on Cloudflare Workers. Compose, preview, attachments, and send history via Brevo.',
+        'Private web mail console on Cloudflare Workers. Compose, preview, attachments, and send history with a pluggable ESP.',
     },
     zh: {
       label: '中文',
@@ -125,7 +125,7 @@ export default defineConfig({
       link: '/zh/',
       title: 'Custom Mail',
       description:
-        '基于 Cloudflare Workers 的私有网页发信控制台。Markdown 撰写、附件、预览与发送记录，经 Brevo 投递。',
+        '基于 Cloudflare Workers 的私有网页发信控制台。Markdown 撰写、附件、预览与发送记录，发信服务商可配置。',
       themeConfig: {
         nav: [
           { text: '文档', link: '/zh/' },
