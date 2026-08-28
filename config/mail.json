@@ -23,7 +23,7 @@
   "app": {
     "title": "Custom Mail",
     "subtitle": "Private web mail · this host only",
-    "locale": "zh-CN",
+    "locale": "en",
     "loginTagline": "Private web mail",
     "loginHeadlineBefore": "A quiet place to",
     "loginHeadlineEm": "send mail",
