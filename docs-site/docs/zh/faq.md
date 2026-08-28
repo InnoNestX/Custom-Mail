@@ -53,7 +53,7 @@
 ## 怎样用 OpenClaw / Claw 技能？
 
 ```bash
-clawhub install custom-mail
+clawhub install custom-mail-skill
 ```
 
 或把 `skills/custom-mail/` 拷到 `~/.openclaw/workspace/skills/`。技能需要 Docker。详见 [OpenClaw 技能](./openclaw)。

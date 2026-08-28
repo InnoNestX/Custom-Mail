@@ -39,7 +39,7 @@ Open **http://localhost:8790** and sign in with `ADMIN_PASSWORD`. Then see [Cons
 | Path | When to use |
 |------|-------------|
 | [Docker](./docker) | No Rust toolchain. `docker run` or Compose on port 8787. |
-| [OpenClaw skill](./openclaw) | An agent starts the container: `clawhub install custom-mail`. |
+| [OpenClaw skill](./openclaw) | An agent starts the container: `clawhub install custom-mail-skill`. |
 | [Deploy](./deploy) | Production on Cloudflare Workers. |
 
 ## Pick plugins

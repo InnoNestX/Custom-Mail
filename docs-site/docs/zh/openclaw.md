@@ -1,6 +1,6 @@
 # OpenClaw 技能
 
-仓库里带一份 [OpenClaw](https://docs.openclaw.ai/tools/skills) 技能，让 agent 拉取 Docker 镜像、写入密钥并启动[控制台](./console)。文件在 `skills/custom-mail/SKILL.md`（ClawHub 名称：`custom-mail`）。
+仓库里带一份 [OpenClaw](https://docs.openclaw.ai/tools/skills) 技能，让 agent 拉取 Docker 镜像、写入密钥并启动[控制台](./console)。文件在 `skills/custom-mail/SKILL.md`（ClawHub slug：`custom-mail-skill`，版本 `1.0.0`）。
 
 Agent 所在机器需要有 **`docker`**。技能不会部署到 Cloudflare，生产仍看[部署](./deploy)。
 
@@ -9,10 +9,10 @@ Agent 所在机器需要有 **`docker`**。技能不会部署到 Cloudflare，�
 ### ClawHub
 
 ```bash
-clawhub install custom-mail
+clawhub install custom-mail-skill
 ```
 
-技能目录：[clawhub.ai](https://clawhub.ai)。CLI 说明：[ClawHub](https://docs.openclaw.ai/tools/clawhub)。
+技能页：[custom-mail-skill（ClawHub）](https://clawhub.ai/xuxuclassmate/skills/custom-mail-skill)（版本 `1.0.0`）。CLI 说明：[ClawHub](https://docs.openclaw.ai/tools/clawhub)。
 
 ### 从本仓库复制
 

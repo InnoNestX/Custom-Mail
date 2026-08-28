@@ -146,8 +146,10 @@ Product copy, colors, footer, and the default plugin ids live in `config/mail.js
 ## OpenClaw
 
 ```bash
-clawhub install custom-mail
+clawhub install custom-mail-skill
 ```
+
+Skill page: https://clawhub.ai/xuxuclassmate/skills/custom-mail-skill (version `1.0.0`).
 
 Usage on the docs site: [OpenClaw skill](https://innonestx.github.io/Custom-Mail/openclaw.html).
 

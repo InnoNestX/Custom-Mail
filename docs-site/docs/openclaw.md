@@ -1,6 +1,6 @@
 # OpenClaw skill
 
-Custom Mail ships an [OpenClaw](https://docs.openclaw.ai/tools/skills) skill so an agent can pull the Docker image, set secrets, and start the [console](./console). The skill lives in the repo at `skills/custom-mail/SKILL.md` (ClawHub name: `custom-mail`).
+Custom Mail ships an [OpenClaw](https://docs.openclaw.ai/tools/skills) skill so an agent can pull the Docker image, set secrets, and start the [console](./console). The skill lives in the repo at `skills/custom-mail/SKILL.md` (ClawHub slug: `custom-mail-skill`, version `1.0.0`).
 
 It requires the **`docker`** binary on the machine where the agent runs. It does not deploy to Cloudflare; that is still [Deploy](./deploy).
 
@@ -9,10 +9,10 @@ It requires the **`docker`** binary on the machine where the agent runs. It does
 ### ClawHub
 
 ```bash
-clawhub install custom-mail
+clawhub install custom-mail-skill
 ```
 
-Browse skills at [clawhub.ai](https://clawhub.ai). CLI notes: [ClawHub](https://docs.openclaw.ai/tools/clawhub).
+Browse the published skill: [custom-mail-skill on ClawHub](https://clawhub.ai/xuxuclassmate/skills/custom-mail-skill) (version `1.0.0`). CLI notes: [ClawHub](https://docs.openclaw.ai/tools/clawhub).
 
 ### From this repository
 

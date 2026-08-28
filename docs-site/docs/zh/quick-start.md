@@ -39,7 +39,7 @@ npm run dev
 | 路径 | 适用 |
 |------|------|
 | [Docker](./docker) | 不装 Rust。`docker run` 或 Compose，端口 8787。 |
-| [OpenClaw 技能](./openclaw) | 让 agent 拉起容器：`clawhub install custom-mail`。 |
+| [OpenClaw 技能](./openclaw) | 让 agent 拉起容器：`clawhub install custom-mail-skill`。 |
 | [部署](./deploy) | 生产环境 Cloudflare Workers。 |
 
 ## 选择插件

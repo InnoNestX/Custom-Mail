@@ -139,5 +139,5 @@ Layout ids: `card`, `minimal`, `banner`, `digest`, `compact`.
 ## Next
 
 - [Console](./console) — use the UI
-- [OpenClaw skill](./openclaw) — `clawhub install custom-mail`
+- [OpenClaw skill](./openclaw) — `clawhub install custom-mail-skill`
 - [Plugins](./plugins) · [Deploy](./deploy)

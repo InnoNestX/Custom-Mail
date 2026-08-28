@@ -53,7 +53,7 @@ See the [Docker](./docker) guide: `docker pull xuxuclassmate/custom-mail:1.0.0`,
 ## How do I use the OpenClaw / Claw skill?
 
 ```bash
-clawhub install custom-mail
+clawhub install custom-mail-skill
 ```
 
 Or copy `skills/custom-mail/` into `~/.openclaw/workspace/skills/`. The skill needs Docker. Details: [OpenClaw skill](./openclaw).
