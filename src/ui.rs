@@ -1,7 +1,9 @@
 use crate::brand::brand_mark_html;
 use crate::config::MailConfig;
 use crate::markdown::escape_html;
-use crate::plugins::{resolve_theme, LayoutId, ProviderId, ThemeId};
+use crate::plugins::{
+    resolve_layout_id, resolve_provider_id, resolve_theme, resolve_theme_id, LogoMode,
+};
 
 const TEMPLATE: &str = include_str!("../templates/app.html");
 
@@ -67,9 +69,10 @@ pub fn render_app_html(cfg: &MailConfig, from_name: &str, from_email: &str) -> S
         "features": cfg.features,
         "i18n": cfg.i18n,
         "plugins": {
-            "provider": ProviderId::parse(&cfg.plugins.provider).as_str(),
-            "theme": ThemeId::parse(&cfg.plugins.theme).as_str(),
-            "layout": LayoutId::parse(&cfg.plugins.layout).as_str(),
+            "provider": resolve_provider_id(&cfg.plugins.provider),
+            "theme": resolve_theme_id(&cfg.plugins.theme),
+            "layout": resolve_layout_id(&cfg.plugins.layout),
+            "logo": LogoMode::parse(&cfg.plugins.logo).as_str(),
         }
     });
     let bootstrap = serde_json::to_string(&bootstrap)

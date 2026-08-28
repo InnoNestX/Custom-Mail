@@ -1,0 +1,6 @@
+{
+  "id": "syntax-help",
+  "label": "Syntax helper",
+  "configKey": "syntaxHelp",
+  "default": true
+}

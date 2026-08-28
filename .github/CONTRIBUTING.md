@@ -15,6 +15,8 @@ npm run dev
 
 Open <http://localhost:8790> and set `ADMIN_PASSWORD` plus the API key for `plugins.provider` in `.dev.vars`. Localhost also needs `ALLOW_ANY_HOST=1`.
 
+Drop-in catalogs live in `plugins/` (providers, themes, layouts, features, logos). See [plugins/README.md](../plugins/README.md).
+
 Published docs: https://innonestx.github.io/Custom-Mail/  
 Full guides: [docs/README.md](docs/README.md)
 

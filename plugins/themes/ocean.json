@@ -1,0 +1,17 @@
+{
+  "id": "ocean",
+  "label": "Ocean",
+  "aliases": [
+    "blue"
+  ],
+  "accent": "#0e7490",
+  "accentDeep": "#155e75",
+  "accentSoft": "#e0f2fe",
+  "ink": "#0f172a",
+  "muted": "#475569",
+  "paper": "#f0f9ff",
+  "line": "#bae6fd",
+  "heroFrom": "#0e7490",
+  "heroTo": "#164e63",
+  "headerText": "#ffffff"
+}

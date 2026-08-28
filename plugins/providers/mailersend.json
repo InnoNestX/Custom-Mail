@@ -1,0 +1,12 @@
+{
+  "id": "mailersend",
+  "label": "MailerSend",
+  "aliases": [
+    "mailer-send"
+  ],
+  "secrets": [
+    "MAILERSEND_API_KEY",
+    "MAIL_API_KEY"
+  ],
+  "needsDomain": false
+}

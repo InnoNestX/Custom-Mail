@@ -1,6 +1,6 @@
 use crate::config::MailConfig;
 use crate::markdown::escape_html;
-use crate::plugins::{resolve_theme, ThemePalette};
+use crate::plugins::{resolve_theme, LogoMode, ThemePalette};
 
 fn palette(cfg: &MailConfig) -> ThemePalette {
     resolve_theme(&cfg.plugins, &cfg.brand)
@@ -38,17 +38,75 @@ fn monogram_svg(cfg: &MailConfig, pal: &ThemePalette, size: u32, grad_key: &str)
     )
 }
 
-/// Console brand mark: configured image, otherwise a monogram from the brand name.
+fn image_tag(cfg: &MailConfig, src: &str, size: u32) -> String {
+    format!(
+        r#"<img class="logo-mark" src="{src}" width="{size}" height="{size}" alt="{alt}" />"#,
+        src = escape_html(src),
+        size = size,
+        alt = escape_html(cfg.brand_name()),
+    )
+}
+
+/// Console brand mark: configured image, monogram, or omitted.
 pub fn brand_mark_html(cfg: &MailConfig, size: u32, grad_key: &str) -> String {
-    if let Some(src) = cfg.console_logo_src() {
-        format!(
-            r#"<img class="logo-mark" src="{src}" width="{size}" height="{size}" alt="{alt}" />"#,
-            src = escape_html(&src),
-            size = size,
-            alt = escape_html(cfg.brand_name()),
-        )
-    } else {
-        monogram_svg(cfg, &palette(cfg), size, grad_key)
+    if !cfg.layout.show_logo {
+        return String::new();
+    }
+    let pal = palette(cfg);
+    match LogoMode::parse(&cfg.plugins.logo) {
+        LogoMode::None => String::new(),
+        LogoMode::Monogram => monogram_svg(cfg, &pal, size, grad_key),
+        LogoMode::Image => {
+            if let Some(src) = cfg.console_logo_src() {
+                image_tag(cfg, &src, size)
+            } else {
+                monogram_svg(cfg, &pal, size, grad_key)
+            }
+        }
+        LogoMode::Auto => {
+            if let Some(src) = cfg.console_logo_src() {
+                image_tag(cfg, &src, size)
+            } else if cfg.brand_name().is_empty() {
+                String::new()
+            } else {
+                monogram_svg(cfg, &pal, size, grad_key)
+            }
+        }
+    }
+}
+
+/// Logo block for outbound HTML. Images use an absolute URL; monogram is inline SVG.
+pub fn email_logo_html(cfg: &MailConfig, pal: &ThemePalette) -> String {
+    if !cfg.layout.show_logo {
+        return String::new();
+    }
+    match LogoMode::parse(&cfg.plugins.logo) {
+        LogoMode::None => String::new(),
+        LogoMode::Monogram => monogram_svg(cfg, pal, 40, "mail"),
+        LogoMode::Image => {
+            if let Some(url) = cfg.configured_logo_url() {
+                format!(
+                    r#"<img src="{src}" alt="{alt}" width="40" height="40" style="display:block;border:0;border-radius:10px;max-width:40px;height:auto;" />"#,
+                    src = escape_html(&url),
+                    alt = escape_html(cfg.brand_name()),
+                )
+            } else {
+                monogram_svg(cfg, pal, 40, "mail")
+            }
+        }
+        LogoMode::Auto => {
+            if let Some(url) = cfg.configured_logo_url() {
+                format!(
+                    r#"<img src="{src}" alt="{alt}" width="40" height="40" style="display:block;border:0;border-radius:10px;max-width:40px;height:auto;" />"#,
+                    src = escape_html(&url),
+                    alt = escape_html(cfg.brand_name()),
+                )
+            } else if cfg.brand_name().is_empty() {
+                String::new()
+            } else {
+                monogram_svg(cfg, pal, 40, "mail")
+            }
+        }
     }
 }
 
@@ -81,7 +139,8 @@ mod tests {
 
     #[test]
     fn configured_logo_renders_img() {
-        let cfg = load_config();
+        let mut cfg = load_config();
+        cfg.plugins.logo = "image".into();
         if cfg.console_logo_src().is_some() {
             let html = brand_mark_html(&cfg, 40, "t");
             assert!(html.contains("<img"), "{html}");
@@ -94,8 +153,17 @@ mod tests {
         let mut cfg = load_config();
         cfg.site.logo_path.clear();
         cfg.site.logo_url.clear();
+        cfg.plugins.logo = "monogram".into();
         let html = brand_mark_html(&cfg, 40, "t");
         assert!(html.contains("<svg"), "{html}");
         assert!(html.contains("<text"), "{html}");
+    }
+
+    #[test]
+    fn logo_none_omits_mark() {
+        let mut cfg = load_config();
+        cfg.plugins.logo = "none".into();
+        let html = brand_mark_html(&cfg, 40, "t");
+        assert!(html.is_empty(), "{html}");
     }
 }

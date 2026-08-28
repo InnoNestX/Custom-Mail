@@ -1,0 +1,17 @@
+{
+  "id": "rose",
+  "label": "Rose",
+  "aliases": [
+    "pink"
+  ],
+  "accent": "#be123c",
+  "accentDeep": "#9f1239",
+  "accentSoft": "#ffe4e6",
+  "ink": "#1c1917",
+  "muted": "#9f1239",
+  "paper": "#fff1f2",
+  "line": "#fecdd3",
+  "heroFrom": "#be123c",
+  "heroTo": "#9f1239",
+  "headerText": "#ffffff"
+}

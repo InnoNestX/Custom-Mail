@@ -23,7 +23,7 @@ Custom Mail is a self-hosted outbound mail workspace. Run it locally in Docker t
 - Send history with detail view (desktop + mobile)
 - Session login, login rate limit, HttpOnly cookies
 - Pluggable ESP (Brevo, Resend, SendGrid, Mailgun, Postmark, MailerSend, SMTP2GO, SparkPost)
-- Themes, layouts, logo, favicon, and copy from `config/mail.json`
+- Drop-in themes, layouts, logo, features, and config overlays (`plugins/` + `config/mail.json`)
 - Runtime: **Rust** Cloudflare Worker (`workers-rs` → WASM) inside a slim image
 
 ## Docker Quick Start
@@ -46,14 +46,17 @@ export BREVO_API_KEY='xkeysib-...'   # or RESEND_API_KEY / SENDGRID_API_KEY / MA
 export PORT=8787                      # optional, default 8787
 ```
 
-To use another provider **without rebuilding** the image:
+To use another provider, theme, layout, or logo **without rebuilding** the image:
 
 ```bash
 export MAIL_PROVIDER=resend
+export MAIL_THEME=nord
+export MAIL_LAYOUT=compact
+export MAIL_LOGO=monogram
 export RESEND_API_KEY='re_...'
 ```
 
-`MAIL_PROVIDER` overrides `plugins.provider` baked into the image.
+These override the matching `plugins.*` slots baked into the image. `MAIL_CONFIG_JSON='{"site":{"brandName":"Desk"}}'` deep-merges extra JSON. Adding a new theme JSON file still needs `docker compose build`.
 
 ### 3. Run the container
 
@@ -83,7 +86,7 @@ Quick health check:
 
 ```bash
 curl -s http://localhost:8787/api/health
-# {"ok":true,"runtime":"rust","provider":"brevo","theme":"forest",...}
+# {"ok":true,"runtime":"rust","plugins":{"provider":"brevo","theme":"forest","layout":"banner","logo":"image"},...}
 ```
 
 ## Docker Compose
@@ -104,7 +107,7 @@ Stop the service:
 docker compose down
 ```
 
-To change **branding, theme, layout, or the default provider**, edit `config/mail.json` and rebuild (`docker compose build`). Logo/favicon files go under `public/`.
+To change **branding or add plugin JSON/logo files**, edit `config/mail.json` / `plugins/` and rebuild (`docker compose build`). Slot env vars above switch the active plugin without a rebuild.
 
 ## Environment Variables
 
@@ -112,6 +115,10 @@ To change **branding, theme, layout, or the default provider**, edit `config/mai
 | --- | --- | --- |
 | `ADMIN_PASSWORD` | *(required)* | Login password for the mail console |
 | `MAIL_PROVIDER` | empty | Overrides `plugins.provider` (`brevo`, `resend`, `sendgrid`, `mailgun`, `postmark`, `mailersend`, `smtp2go`, `sparkpost`) |
+| `MAIL_THEME` | empty | Overrides `plugins.theme` (`forest`, `midnight`, `ocean`, `paper`, `rose`, `slate`, `aurora`, `sunset`, `nord`, …) |
+| `MAIL_LAYOUT` | empty | Overrides `plugins.layout` (`card`, `minimal`, `banner`, `digest`, `compact`) |
+| `MAIL_LOGO` | empty | Overrides `plugins.logo` (`auto`, `image`, `monogram`, `none`) |
+| `MAIL_CONFIG_JSON` | empty | JSON object deep-merged onto `mail.json` at runtime |
 | `BREVO_API_KEY` | empty | Brevo key. UI works without a key; send needs the key for the active provider |
 | `RESEND_API_KEY` | empty | Resend |
 | `SENDGRID_API_KEY` | empty | SendGrid |
@@ -127,7 +134,7 @@ The image sets `ALLOW_ANY_HOST=1` so local Docker works without tweaking Host he
 
 ## Branding & config
 
-Product copy, colors, logo, favicon, footer, plugins, and address book live in `config/mail.json` (compiled into the Worker at image build). For a custom brand, edit that file (and `public/images/`) then rebuild. On Cloudflare, edit the repo and redeploy — see the [config guide](https://innonestx.github.io/Custom-Mail/config.html).
+Product copy, colors, footer, and the default plugin ids live in `config/mail.json`. Drop-in catalogs live in `plugins/` (themes, layouts, providers, logos). For a custom brand, edit those files then rebuild. On Cloudflare, edit the repo and redeploy — see the [config guide](https://innonestx.github.io/Custom-Mail/config.html).
 
 ## Image Tags
 

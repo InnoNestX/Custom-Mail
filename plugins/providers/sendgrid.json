@@ -1,0 +1,10 @@
+{
+  "id": "sendgrid",
+  "label": "SendGrid",
+  "aliases": [],
+  "secrets": [
+    "SENDGRID_API_KEY",
+    "MAIL_API_KEY"
+  ],
+  "needsDomain": false
+}

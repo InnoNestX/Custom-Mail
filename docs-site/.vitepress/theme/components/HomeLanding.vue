@@ -27,7 +27,7 @@ const copy = isZh
       stepsTitle: '三步上手',
       steps: [
         ['克隆仓库', '安装依赖，复制 .dev.vars'],
-        ['配置 mail.json', '域名、品牌、插件、发件人、通讯录'],
+        ['配置 mail.json 与 plugins/', '域名、品牌、可插拔主题/版式/Logo/服务商'],
         ['部署 Worker', '写入密钥，npm run deploy'],
       ],
       urlsTitle: '地址',
@@ -48,7 +48,7 @@ const copy = isZh
       stepsTitle: 'Three steps',
       steps: [
         ['Clone the repo', 'Install deps, copy .dev.vars'],
-        ['Edit mail.json', 'Host, brand, plugins, sender, address book'],
+        ['Edit mail.json + plugins/', 'Host, brand, drop-in theme/layout/logo/provider'],
         ['Deploy the Worker', 'Set secrets, npm run deploy'],
       ],
       urlsTitle: 'Addresses',

@@ -37,12 +37,15 @@ pub struct PluginsConfig {
     /// Email API plugin: brevo, resend, sendgrid, mailgun, postmark, mailersend, smtp2go, sparkpost.
     #[serde(default = "default_provider")]
     pub provider: String,
-    /// Visual palette plugin: forest, midnight, ocean, paper, rose, slate.
+    /// Visual palette plugin: forest, midnight, ocean, paper, rose, slate, aurora, sunset, nord, …
     #[serde(default = "default_theme")]
     pub theme: String,
-    /// Outbound HTML layout plugin: card, minimal, banner, digest.
+    /// Outbound HTML layout plugin: card, minimal, banner, digest, compact, …
     #[serde(default = "default_layout")]
     pub layout: String,
+    /// Brand mark plugin: auto, image, monogram, none.
+    #[serde(default = "default_logo")]
+    pub logo: String,
 }
 
 fn default_provider() -> String {
@@ -54,6 +57,9 @@ fn default_theme() -> String {
 fn default_layout() -> String {
     "card".into()
 }
+fn default_logo() -> String {
+    "auto".into()
+}
 
 impl Default for PluginsConfig {
     fn default() -> Self {
@@ -61,6 +67,7 @@ impl Default for PluginsConfig {
             provider: default_provider(),
             theme: default_theme(),
             layout: default_layout(),
+            logo: default_logo(),
         }
     }
 }
@@ -454,7 +461,10 @@ impl I18nConfig {
         fallback(&mut self.sending, "Sending…");
         fallback(&mut self.send_fail, "Send failed");
         fallback(&mut self.send_ok, "Sent");
-        fallback(&mut self.send_ok_body, "The message was accepted for delivery.");
+        fallback(
+            &mut self.send_ok_body,
+            "The message was accepted for delivery.",
+        );
         fallback(&mut self.copied, "Copied");
         fallback(&mut self.click_to_copy, "Click to copy");
         fallback(&mut self.result_close, "OK");
@@ -501,10 +511,7 @@ fn default_syntax_chips() -> Vec<SyntaxChip> {
         chip("> quote", "> quote"),
         chip("[link](url)", "[label](https://example.com)"),
         chip("![img](url)", "![alt](https://example.com/image.png)"),
-        chip(
-            "table",
-            "| Col A | Col B |\n| --- | --- |\n| 1 | 2 |",
-        ),
+        chip("table", "| Col A | Col B |\n| --- | --- |\n| 1 | 2 |"),
     ]
 }
 
@@ -528,9 +535,50 @@ impl SyntaxConfig {
 
 static RAW: &str = include_str!("../config/mail.json");
 
-pub fn load_config() -> MailConfig {
-    let mut cfg: MailConfig =
+/// Deep-merge JSON objects. Overlay wins; `null` deletes a key; arrays/scalars replace.
+pub fn merge_json(base: serde_json::Value, overlay: serde_json::Value) -> serde_json::Value {
+    match (base, overlay) {
+        (serde_json::Value::Object(mut acc), serde_json::Value::Object(over)) => {
+            for (key, value) in over {
+                if value.is_null() {
+                    acc.remove(&key);
+                } else if let Some(existing) = acc.remove(&key) {
+                    acc.insert(key, merge_json(existing, value));
+                } else {
+                    acc.insert(key, value);
+                }
+            }
+            serde_json::Value::Object(acc)
+        }
+        (_, overlay) => overlay,
+    }
+}
+
+fn bundled_config_value() -> serde_json::Value {
+    let mut value: serde_json::Value =
         serde_json::from_str(RAW).expect("config/mail.json must be valid JSON");
+    for raw in crate::plugins::catalog::config_overlays() {
+        let trimmed = raw.trim();
+        if trimmed.is_empty() {
+            continue;
+        }
+        let overlay: serde_json::Value = serde_json::from_str(trimmed)
+            .unwrap_or_else(|e| panic!("config overlay must be valid JSON: {e}"));
+        value = merge_json(value, overlay);
+    }
+    value
+}
+
+fn apply_slot(slot: &mut String, raw: &str) {
+    let t = raw.trim();
+    if !t.is_empty() {
+        *slot = t.to_ascii_lowercase();
+    }
+}
+
+fn finish_config(value: serde_json::Value) -> MailConfig {
+    let mut cfg: MailConfig =
+        serde_json::from_value(value).expect("merged mail config must match schema");
     cfg.mail.from_email = cfg.mail.from_email.trim().to_lowercase();
     cfg.mail.contact_email = cfg.mail.contact_email.trim().to_lowercase();
     cfg.site.url = cfg.site.url.trim_end_matches('/').to_string();
@@ -566,9 +614,35 @@ pub fn load_config() -> MailConfig {
     cfg.plugins.provider = cfg.plugins.provider.trim().to_ascii_lowercase();
     cfg.plugins.theme = cfg.plugins.theme.trim().to_ascii_lowercase();
     cfg.plugins.layout = cfg.plugins.layout.trim().to_ascii_lowercase();
+    cfg.plugins.logo = cfg.plugins.logo.trim().to_ascii_lowercase();
+    if cfg.plugins.logo.is_empty() {
+        cfg.plugins.logo = default_logo();
+    }
     if cfg.app.locale.trim().is_empty() {
         cfg.app.locale = default_locale();
     }
+    cfg
+}
+
+#[allow(dead_code)]
+pub fn load_config() -> MailConfig {
+    finish_config(bundled_config_value())
+}
+
+/// Load bundled config, then apply `MAIL_CONFIG_JSON` and slot env overrides.
+pub fn load_config_with_env(get: impl Fn(&str) -> String) -> MailConfig {
+    let mut value = bundled_config_value();
+    let extra = get("MAIL_CONFIG_JSON");
+    if !extra.trim().is_empty() {
+        if let Ok(overlay) = serde_json::from_str::<serde_json::Value>(&extra) {
+            value = merge_json(value, overlay);
+        }
+    }
+    let mut cfg = finish_config(value);
+    apply_slot(&mut cfg.plugins.provider, &get("MAIL_PROVIDER"));
+    apply_slot(&mut cfg.plugins.theme, &get("MAIL_THEME"));
+    apply_slot(&mut cfg.plugins.layout, &get("MAIL_LAYOUT"));
+    apply_slot(&mut cfg.plugins.logo, &get("MAIL_LOGO"));
     cfg
 }
 
@@ -576,36 +650,38 @@ pub fn mail_origin(cfg: &MailConfig) -> String {
     format!("https://{}", cfg.host)
 }
 
-pub fn configured_logo_url(cfg: &MailConfig) -> Option<String> {
-    if !cfg.layout.show_logo {
-        return None;
-    }
+fn logo_mode(cfg: &MailConfig) -> crate::plugins::LogoMode {
+    crate::plugins::LogoMode::parse(&cfg.plugins.logo)
+}
+
+fn configured_image_href(cfg: &MailConfig) -> Option<String> {
     let abs = cfg.site.logo_url.trim();
     if !abs.is_empty() {
         return Some(abs.to_string());
     }
     let path = cfg.site.logo_path.trim();
-    if path.is_empty() {
+    if !path.is_empty() {
+        return Some(path.to_string());
+    }
+    crate::plugins::catalog::first_bundled_logo()
+}
+
+pub fn configured_logo_url(cfg: &MailConfig) -> Option<String> {
+    if !cfg.layout.show_logo || !logo_mode(cfg).uses_image() {
         return None;
     }
-    Some(format!("{}{}", mail_origin(cfg), path))
+    match configured_image_href(cfg)? {
+        href if href.starts_with("http://") || href.starts_with("https://") => Some(href),
+        path => Some(format!("{}{}", mail_origin(cfg), path)),
+    }
 }
 
 /// Public path for the console logo `<img>` (relative, served from assets).
 pub fn console_logo_src(cfg: &MailConfig) -> Option<String> {
-    if !cfg.layout.show_logo {
+    if !cfg.layout.show_logo || !logo_mode(cfg).uses_image() {
         return None;
     }
-    let abs = cfg.site.logo_url.trim();
-    if !abs.is_empty() {
-        return Some(abs.to_string());
-    }
-    let path = cfg.site.logo_path.trim();
-    if path.is_empty() {
-        None
-    } else {
-        Some(path.to_string())
-    }
+    configured_image_href(cfg)
 }
 
 pub fn configured_favicon_href(cfg: &MailConfig) -> String {
@@ -710,7 +786,9 @@ mod tests {
         let mut cfg = load_config();
         cfg.site.logo_path.clear();
         cfg.site.logo_url.clear();
+        cfg.plugins.logo = "none".into();
         assert!(configured_logo_url(&cfg).is_none());
+        assert!(console_logo_src(&cfg).is_none());
     }
 
     #[test]
@@ -720,5 +798,52 @@ mod tests {
         cfg.layout.show_footer_site = false;
         assert!(contact_email(&cfg).is_none());
         assert!(site_link(&cfg).is_none());
+    }
+
+    #[test]
+    fn merge_json_overlay_wins_and_null_deletes() {
+        let base = serde_json::json!({"plugins":{"theme":"forest","layout":"card"}});
+        let over = serde_json::json!({"plugins":{"theme":"nord"}});
+        let merged = merge_json(base, over);
+        assert_eq!(merged["plugins"]["theme"], "nord");
+        assert_eq!(merged["plugins"]["layout"], "card");
+        let with_null = merge_json(
+            serde_json::json!({"brand":{"accent":"#fff","ink":"#000"}}),
+            serde_json::json!({"brand":{"accent":null}}),
+        );
+        assert!(with_null["brand"].get("accent").is_none());
+        assert_eq!(with_null["brand"]["ink"], "#000");
+    }
+
+    #[test]
+    fn env_overrides_plugin_slots() {
+        let cfg = load_config_with_env(|k| match k {
+            "MAIL_THEME" => "aurora".into(),
+            "MAIL_LAYOUT" => "compact".into(),
+            "MAIL_LOGO" => "none".into(),
+            _ => String::new(),
+        });
+        assert_eq!(cfg.plugins.theme, "aurora");
+        assert_eq!(cfg.plugins.layout, "compact");
+        assert_eq!(cfg.plugins.logo, "none");
+    }
+
+    #[test]
+    fn env_config_json_merges_before_slot_overrides() {
+        let cfg = load_config_with_env(|k| match k {
+            "MAIL_CONFIG_JSON" => r#"{"plugins":{"theme":"sunset","layout":"digest"}}"#.into(),
+            "MAIL_THEME" => "nord".into(),
+            _ => String::new(),
+        });
+        assert_eq!(cfg.plugins.theme, "nord");
+        assert_eq!(cfg.plugins.layout, "digest");
+    }
+
+    #[test]
+    fn monogram_mode_hides_image_src() {
+        let mut cfg = load_config();
+        cfg.plugins.logo = "monogram".into();
+        assert!(console_logo_src(&cfg).is_none());
+        assert!(configured_logo_url(&cfg).is_none());
     }
 }

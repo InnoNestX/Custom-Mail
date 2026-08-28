@@ -29,7 +29,7 @@ Source Markdown also lives under `docs/` (this folder) and `docs-site/docs/` (Vi
 
 ```text
 1. Fork / clone this repo
-2. Edit config/mail.json (host, brand, plugins, from address)
+2. Edit config/mail.json and drop-in files under plugins/
 3. Create KV namespace → update wrangler.jsonc
 4. wrangler secret put ADMIN_PASSWORD + provider API key
 5. npm run deploy

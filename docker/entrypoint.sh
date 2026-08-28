@@ -12,6 +12,10 @@ umask 077
   printf 'ALLOW_ANY_HOST=1\n'
   for name in \
     MAIL_PROVIDER \
+    MAIL_THEME \
+    MAIL_LAYOUT \
+    MAIL_LOGO \
+    MAIL_CONFIG_JSON \
     MAIL_API_KEY \
     BREVO_API_KEY \
     RESEND_API_KEY \

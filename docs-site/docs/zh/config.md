@@ -1,29 +1,32 @@
 # 配置说明
 
-Custom Mail 通过仓库根目录的 **`config/mail.json`** 配置。Worker 在构建 / 部署时读取该文件，修改后需重新 `npm run deploy`。
+Custom Mail 通过仓库根目录的 **`config/mail.json`** 与 **`plugins/`** 下的可插拔文件配置。Worker 在构建 / 部署时编译这些文件，修改后需重新 `npm run deploy`。
 
 空字段或 `false` 的功能/版式开关会**省略**对应区块。最少需要 `host`、`app.title`、`mail.fromEmail` / `fromNameDefault`。
 
-## `plugins` — 主题 / 版式 / 发信服务商
+无需重建即可覆盖插件槽：`MAIL_PROVIDER`、`MAIL_THEME`、`MAIL_LAYOUT`、`MAIL_LOGO`、`MAIL_CONFIG_JSON`。
 
-全部插件编译进 Worker，部署时在 `mail.json` 里选一个即可。未配置的区块（页脚联系方式、站点、Logo、附件栏等）不会渲染。
+## `plugins` — 服务商 / 主题 / 版式 / Logo
 
-| 字段 | 可选值 |
-|------|--------|
-| `provider` | `brevo` `resend` `sendgrid` `mailgun` `postmark` `mailersend` `smtp2go` `sparkpost` |
-| `theme` | `forest` `midnight` `ocean` `paper` `rose` `slate` |
-| `layout` | `card` `minimal` `banner` `digest` |
+把 JSON 放到 `plugins/providers|themes|layouts|features/`，把 Logo 文件放到 `plugins/logos/`。`mail.json` 里选出当前使用的 id。未配置的区块不会渲染。`GET /api/health` 的 `available` 列出已编译目录。
 
-对应密钥见下文「环境密钥」。`fromEmail` 须在所选服务商处授权。Docker 下可用环境变量 `MAIL_PROVIDER` 覆盖 `plugins.provider`，无需重建镜像。
+| 字段 | 说明 |
+|------|------|
+| `provider` | `plugins/providers/` 的 id。内置：`brevo` `resend` `sendgrid` `mailgun` `postmark` `mailersend` `smtp2go` `sparkpost` |
+| `theme` | `plugins/themes/` 的 id。内置：`forest` `midnight` `ocean` `paper` `rose` `slate` `aurora` `sunset` `nord` |
+| `layout` | `plugins/layouts/` 的 id。内置：`card` `minimal` `banner` `digest` `compact` |
+| `logo` | `auto`（有图用图，否则首字母，再否则省略）· `image` · `monogram` · `none` |
 
-页眉颜色用 `brand.heroFrom` / `heroTo` / `headerText`（也可继续用 `tile` / `tileEdge`）。Logo 用 `site.logoPath` 或 `logoUrl`；不配则控制台显示品牌名首字母，邮件里不放图片。浏览器标签图标用 `site.faviconPath`。
+对应密钥见下文「环境密钥」。`fromEmail` 须在所选服务商处授权。新增主题/版式只需 JSON；新增发信 HTTP API 还要在 Rust 里加发送适配。
+
+页眉颜色用 `brand.heroFrom` / `heroTo` / `headerText`（也可继续用 `tile` / `tileEdge`）。`config/overlays/*.json` 会在编译时深度合并进 `mail.json`。
 
 ## 文件结构
 
 ```jsonc
 {
   "host": "mail.example.com",
-  "plugins": { "provider": "brevo", "theme": "forest", "layout": "banner" },
+  "plugins": { "provider": "brevo", "theme": "forest", "layout": "banner", "logo": "image" },
   "features": { "attachments": true, "history": true, "addressBook": true, "markdown": true, "syntaxHelp": true },
   "layout": { "showHeader": true, "showLogo": true, "showSubject": true, "showFrom": true, "showFooterContact": true, "showFooterSite": true },
   "app": { /* 界面文案 */ },
@@ -71,10 +74,10 @@ Custom Mail 通过仓库根目录的 **`config/mail.json`** 配置。Worker 在�
 |------|------|
 | `url` / `label` | 页脚站点链接；`url` 为空则隐藏 |
 | `brandName` | 组织名称（缺省用 `app.title`） |
-| `logoPath` / `logoUrl` | Logo。空则用品牌名首字母，不用内置信封图 |
+| `logoPath` / `logoUrl` | Logo。空则用 `plugins/logos/` 中的文件，再退回品牌名首字母 |
 | `faviconPath` | 浏览器标签图标。空则用 `logoPath`，再退回生成的 `/favicon.svg` |
 
-Fork 后请替换 `public/images/logo.svg` 为自己的标志。
+Fork 后请替换 `public/images/logo.svg` 或在 `plugins/logos/` 放入自己的标志。
 
 ## `brand` — 颜色覆盖
 
@@ -90,7 +93,8 @@ Fork 后请替换 `public/images/logo.svg` 为自己的标志。
 |--------|------|------|
 | `ADMIN_PASSWORD` | `.dev.vars` / Worker secret | 登录密码 |
 | 服务商 API Key | `.dev.vars` / Worker secret | 与 `plugins.provider` 对应，或使用 `MAIL_API_KEY` |
-| `MAIL_PROVIDER` | `.dev.vars` / Worker 环境 | 运行时覆盖 `plugins.provider`（Docker 常用） |
+| `MAIL_PROVIDER` / `MAIL_THEME` / `MAIL_LAYOUT` / `MAIL_LOGO` | `.dev.vars` / Docker | 运行时覆盖插件槽 |
+| `MAIL_CONFIG_JSON` | `.dev.vars` / Docker | 运行时 JSON 覆盖 |
 
 切勿将密钥提交到 Git。
 

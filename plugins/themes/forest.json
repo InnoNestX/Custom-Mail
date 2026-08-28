@@ -1,0 +1,15 @@
+{
+  "id": "forest",
+  "label": "Forest",
+  "aliases": [],
+  "accent": "#15624f",
+  "accentDeep": "#0d3d32",
+  "accentSoft": "#e7f3ef",
+  "ink": "#10231d",
+  "muted": "#5b6f68",
+  "paper": "#f4f1ea",
+  "line": "#d5e4de",
+  "heroFrom": "#15624f",
+  "heroTo": "#0d3d32",
+  "headerText": "#ffffff"
+}

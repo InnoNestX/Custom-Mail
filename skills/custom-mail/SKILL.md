@@ -1,6 +1,6 @@
 ---
 name: custom-mail
-description: Run the Custom Mail console locally with Docker — compose, preview, attachments, send history, and a pluggable mail provider.
+description: Run the Custom Mail console locally with Docker — compose, preview, attachments, send history, and pluggable provider / theme / layout / logo.
 version: 0.2.0
 metadata:
   openclaw:
@@ -15,6 +15,15 @@ metadata:
       - name: MAIL_PROVIDER
         required: false
         description: Override plugins.provider (brevo, resend, sendgrid, mailgun, postmark, mailersend, smtp2go, sparkpost).
+      - name: MAIL_THEME
+        required: false
+        description: Override plugins.theme (forest, midnight, ocean, paper, rose, slate, aurora, sunset, nord).
+      - name: MAIL_LAYOUT
+        required: false
+        description: Override plugins.layout (card, minimal, banner, digest, compact).
+      - name: MAIL_LOGO
+        required: false
+        description: Override plugins.logo (auto, image, monogram, none).
       - name: BREVO_API_KEY
         required: false
         description: Brevo API key (default provider). Required to send unless another provider key is set.
@@ -38,7 +47,7 @@ metadata:
 
 ## What this skill does
 
-Spin up a **private web mail console** in Docker. Compose mail, preview CommonMark/GFM as HTML, attach files, and browse send history — without running a mail server. Outbound send uses the provider plugin selected in `config/mail.json` (or `MAIL_PROVIDER`).
+Spin up a **private web mail console** in Docker. Compose mail, preview CommonMark/GFM as HTML, attach files, and browse send history — without running a mail server. Outbound send uses the provider plugin selected in `config/mail.json` (or `MAIL_PROVIDER`). Theme, layout, and logo are the same kind of plugin (`MAIL_THEME`, `MAIL_LAYOUT`, `MAIL_LOGO`).
 
 Runtime is a **Rust** Cloudflare Worker (`workers-rs` → WASM) packaged with Wrangler for local use.
 
@@ -77,10 +86,13 @@ export BREVO_API_KEY='xkeysib-...'   # or another provider key; optional until s
 export PORT=8787
 ```
 
-Other providers without rebuilding the image:
+Other providers / theme / layout / logo without rebuilding the image:
 
 ```bash
 export MAIL_PROVIDER=resend
+export MAIL_THEME=nord
+export MAIL_LAYOUT=compact
+export MAIL_LOGO=monogram
 export RESEND_API_KEY='re_...'
 ```
 
@@ -103,7 +115,7 @@ Verify:
 curl -s http://localhost:8787/api/health
 ```
 
-Health includes `"provider"`, `"theme"`, and `"layout"`.
+Health includes `"plugins"` (provider, theme, layout, logo) and `"available"` catalogs.
 
 ## Docker Compose
 
@@ -115,7 +127,7 @@ export BREVO_API_KEY='xkeysib-...'
 docker compose up -d
 ```
 
-Branding, theme, layout, logo, and the default provider are baked from `config/mail.json` at image build. Edit that file (and `public/` for logo/favicon) then `docker compose build` to apply.
+Branding and default plugin ids are baked from `config/mail.json` and `plugins/` at image build. Edit those files then `docker compose build` to add JSON/logo files. Slot env vars switch the active plugin without a rebuild.
 
 ## Environment
 
@@ -123,6 +135,8 @@ Branding, theme, layout, logo, and the default provider are baked from `config/m
 | --- | --- | --- |
 | `ADMIN_PASSWORD` | *(required)* | Console login password |
 | `MAIL_PROVIDER` | empty | Overrides `plugins.provider` |
+| `MAIL_THEME` / `MAIL_LAYOUT` / `MAIL_LOGO` | empty | Override theme, layout, logo slots |
+| `MAIL_CONFIG_JSON` | empty | Runtime JSON overlay on `mail.json` |
 | `BREVO_API_KEY` | empty | Default provider key; UI loads without it, send needs a key |
 | `RESEND_API_KEY` / `SENDGRID_API_KEY` / `MAILGUN_API_KEY` / `POSTMARK_SERVER_TOKEN` / `MAILERSEND_API_KEY` / `SMTP2GO_API_KEY` / `SPARKPOST_API_KEY` | empty | Provider-specific keys |
 | `MAILGUN_DOMAIN` | empty | Required for Mailgun if `mail.providerDomain` is empty |
@@ -136,7 +150,7 @@ Pull and run Custom Mail on port 8787 with ADMIN_PASSWORD=dev-secret and my Brev
 ```
 
 ```
-Start the custom-mail Docker container with MAIL_PROVIDER=resend and RESEND_API_KEY.
+Start the custom-mail Docker container with MAIL_PROVIDER=resend, MAIL_THEME=nord, and RESEND_API_KEY.
 ```
 
 ```

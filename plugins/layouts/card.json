@@ -1,0 +1,8 @@
+{
+  "id": "card",
+  "label": "Card",
+  "aliases": [],
+  "headerStyle": "plain",
+  "bodyPadding": "20px 28px 8px",
+  "cardShadow": "0 18px 40px rgba(16,35,29,.12)"
+}

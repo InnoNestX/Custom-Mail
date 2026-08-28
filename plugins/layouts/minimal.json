@@ -1,0 +1,10 @@
+{
+  "id": "minimal",
+  "label": "Minimal",
+  "aliases": [
+    "plain"
+  ],
+  "headerStyle": "plain",
+  "bodyPadding": "16px 20px 20px",
+  "cardShadow": "none"
+}

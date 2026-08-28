@@ -59,7 +59,7 @@ Visit `https://<host>` from `mail.json` and sign in.
 
 ## Docker (local)
 
-The published image is for trying the console locally. Pass `ADMIN_PASSWORD` and the API key for the active provider. `MAIL_PROVIDER` overrides `plugins.provider` without rebuilding. Branding, theme, layout, and logo are baked from `config/mail.json` at image build.
+The published image is for trying the console locally. Pass `ADMIN_PASSWORD` and the API key for the active provider. `MAIL_PROVIDER`, `MAIL_THEME`, `MAIL_LAYOUT`, `MAIL_LOGO`, and `MAIL_CONFIG_JSON` override the matching `mail.json` slots without rebuilding. Adding a new theme/layout JSON or logo file still needs an image rebuild.
 
 See [docker/DOCKERHUB.md](../docker/DOCKERHUB.md) and the OpenClaw skill `skills/custom-mail/SKILL.md`.
 

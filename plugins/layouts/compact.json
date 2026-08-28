@@ -1,0 +1,8 @@
+{
+  "id": "compact",
+  "label": "Compact",
+  "aliases": [],
+  "headerStyle": "plain",
+  "bodyPadding": "12px 16px 12px",
+  "cardShadow": "none"
+}

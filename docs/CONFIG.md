@@ -1,8 +1,12 @@
 # Configuration
 
-Custom Mail is configured through **`config/mail.json`** at the repository root. The Worker reads this file at build/deploy time; change it before `npm run deploy`.
+Custom Mail is configured through **`config/mail.json`** plus drop-in files under **`plugins/`**. The Worker compiles those files at build/deploy time; change them before `npm run deploy`.
 
 Empty optional fields (and `false` feature/layout flags) **omit** that chrome. Nothing is required beyond `host`, `app.title`, and `mail.fromEmail` / `fromNameDefault`.
+
+Runtime overrides (no rebuild): `MAIL_PROVIDER`, `MAIL_THEME`, `MAIL_LAYOUT`, `MAIL_LOGO`, and `MAIL_CONFIG_JSON` in `.dev.vars` or Docker.
+
+Full plugin guide: [plugins/README.md](../plugins/README.md).
 
 ## File overview
 
@@ -10,9 +14,10 @@ Empty optional fields (and `false` feature/layout flags) **omit** that chrome. N
 {
   "host": "mail.example.com",
   "plugins": {
-    "provider": "brevo",      // brevo | resend | sendgrid | mailgun | postmark | mailersend | smtp2go | sparkpost
-    "theme": "forest",        // forest | midnight | ocean | paper | rose | slate
-    "layout": "banner"        // card | minimal | banner | digest
+    "provider": "brevo",      // ids in plugins/providers/
+    "theme": "forest",        // ids in plugins/themes/
+    "layout": "banner",       // ids in plugins/layouts/
+    "logo": "image"           // auto | image | monogram | none
   },
   "features": {
     "attachments": true,
@@ -39,15 +44,19 @@ Empty optional fields (and `false` feature/layout flags) **omit** that chrome. N
 }
 ```
 
+Omit any object you do not need. Overlay JSON in `config/overlays/*.json` is deep-merged at compile time (overlay wins; `null` deletes a key).
+
 ## `host`
 
 Public hostname users open in the browser. Must equal the custom domain in `wrangler.jsonc` `routes`.
 
 ## `plugins`
 
-All plugins are compiled into the Worker. You choose which one is active at deploy time.
+Catalog JSON under `plugins/` is compiled into the Worker. You choose which id is **active** in `mail.json` (or via env). `GET /api/health` lists `available.*` from that catalog.
 
 ### `plugins.provider` — outbound API
+
+Drop a JSON file in `plugins/providers/` to register metadata. Sending still needs a matching adapter in `src/plugins/provider.rs`.
 
 | Id | Secret(s) | Notes |
 |----|-----------|--------|
@@ -66,20 +75,19 @@ If the provider-specific secret is empty, `MAIL_API_KEY` is used as a fallback.
 
 ### `plugins.theme` — console + header colors
 
-| Id | Look |
-|----|------|
-| `forest` | Green (default, matches the historical palette) |
-| `midnight` | Dark indigo |
-| `ocean` | Cyan / sky |
-| `paper` | Warm stone |
-| `rose` | Crimson |
-| `slate` | Neutral gray |
+Drop a JSON palette in `plugins/themes/` (no Rust change). Bundled ids:
 
-Set any `brand.*` color to override a theme token. Leave a field empty to keep the theme default.
+`forest` · `midnight` · `ocean` · `paper` · `rose` · `slate` · `aurora` · `sunset` · `nord`
+
+Aliases: `dark` → midnight, `blue` → ocean, `light` → paper, `pink` → rose, `gray`/`grey`/`neutral` → slate, `polar` → nord.
+
+Unknown ids fall back to `forest`. Set any `brand.*` color to override a token. Leave a field empty to keep the theme default.
 
 Header / “bar before send” colors are `brand.heroFrom`, `brand.heroTo`, and `brand.headerText` (legacy `tile` / `tileEdge` still map onto the header gradient).
 
 ### `plugins.layout` — HTML shell for outbound mail
+
+Drop JSON in `plugins/layouts/` to add a shell that only needs header style, body padding, and card shadow.
 
 | Id | Look |
 |----|------|
@@ -87,10 +95,24 @@ Header / “bar before send” colors are `brand.heroFrom`, `brand.heroTo`, and 
 | `minimal` | Tighter padding, no shadow |
 | `banner` | Colored header bar (from/to gradient) |
 | `digest` | Same header treatment, newsletter-like spacing |
+| `compact` | Tight padding, no shadow, plain header |
+
+Unknown ids fall back to `card`.
+
+### `plugins.logo` — brand mark
+
+| Value | Behavior |
+|-------|----------|
+| `auto` (default) | Image if `site.logoPath` / `logoUrl` / a file in `plugins/logos/` exists; otherwise a monogram from `site.brandName`; otherwise omit |
+| `image` | Configured or first bundled image; monogram if the file is missing |
+| `monogram` | Letter mark only |
+| `none` | No mark (even if a file is configured) |
+
+Drop files in `plugins/logos/`; they are copied to `/plugins/logos/<filename>` at build. `layout.showLogo: false` still hides the mark.
 
 ## `features`
 
-Set a flag to `false` to hide that UI and skip the matching server path (attachments rejected, history not stored, address book cleared, markdown rendered as escaped text, syntax chips omitted).
+Set a flag to `false` to hide that UI and skip the matching server path (attachments rejected, history not stored, address book cleared, markdown rendered as escaped text, syntax chips omitted). Catalog: `plugins/features/*.json`.
 
 ## `layout` flags (email chrome)
 
@@ -127,11 +149,11 @@ All strings are plain text; HTML is not interpreted in labels.
 |-------|-------------|
 | `url` / `label` | Footer site link; omit `url` to hide |
 | `brandName` | Organization name (falls back to `app.title`) |
-| `logoPath` | Path under `public/` (e.g. `/images/logo.svg`). Empty = no image; the console uses a monogram from `brandName`. |
+| `logoPath` | Path under `public/` or `/plugins/logos/…`. Empty uses a bundled plugin logo, then a monogram. |
 | `logoUrl` | Absolute image URL; takes precedence over `logoPath` |
 | `faviconPath` | Browser tab icon. Empty = `logoPath`, then generated `/favicon.svg`. |
 
-Do not leave a stock envelope or third-party logo in `public/` unless it is **your** mark. Replace `public/images/logo.svg` when you fork.
+Do not leave a stock envelope or third-party logo in `public/` unless it is **your** mark. Replace `public/images/logo.svg` when you fork, or drop a file in `plugins/logos/`.
 
 ## `brand` — color overrides
 
@@ -185,7 +207,11 @@ Array of `{ "address", "note" }` entries shown as quick-pick chips in the To fie
 | `ADMIN_PASSWORD` | Login password |
 | Provider key (see table above) | Outbound API |
 | `MAIL_API_KEY` | Fallback if the provider-specific key is unset |
-| `MAIL_PROVIDER` | Optional runtime override of `plugins.provider` (useful in Docker) |
+| `MAIL_PROVIDER` | Runtime override of `plugins.provider` |
+| `MAIL_THEME` | Runtime override of `plugins.theme` |
+| `MAIL_LAYOUT` | Runtime override of `plugins.layout` |
+| `MAIL_LOGO` | Runtime override of `plugins.logo` |
+| `MAIL_CONFIG_JSON` | JSON object deep-merged onto `mail.json` at runtime |
 | `MAILGUN_DOMAIN` | Mailgun domain (optional if `mail.providerDomain` is set) |
 | `ALLOW_ANY_HOST=1` | Local dev: skip Host header check |
 
@@ -198,4 +224,4 @@ npm run typecheck
 npm run deploy
 ```
 
-No restart needed for KV or secrets — only for `mail.json` and UI code changes.
+JSON under `plugins/` and `config/overlays/` also requires a rebuild. Slot env vars do not.

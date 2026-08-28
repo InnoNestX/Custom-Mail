@@ -1,0 +1,6 @@
+{
+  "id": "attachments",
+  "label": "Attachments",
+  "configKey": "attachments",
+  "default": true
+}

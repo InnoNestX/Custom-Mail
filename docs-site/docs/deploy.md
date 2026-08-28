@@ -55,7 +55,7 @@ Visit `https://<host>` and sign in.
 
 ## Docker (local)
 
-The published image is for trying the console locally. Pass `ADMIN_PASSWORD` and the API key for the active provider. `MAIL_PROVIDER` overrides `plugins.provider` without rebuilding. Branding is baked from `config/mail.json` at image build.
+The published image is for trying the console locally. Pass `ADMIN_PASSWORD` and the API key for the active provider. `MAIL_PROVIDER`, `MAIL_THEME`, `MAIL_LAYOUT`, `MAIL_LOGO`, and `MAIL_CONFIG_JSON` override `mail.json` plugin slots without rebuilding. New theme/layout JSON or logo files still need an image rebuild.
 
 Details: the repo files `docker/DOCKERHUB.md` and `skills/custom-mail/SKILL.md`.
 

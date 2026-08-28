@@ -1,0 +1,17 @@
+{
+  "id": "midnight",
+  "label": "Midnight",
+  "aliases": [
+    "dark"
+  ],
+  "accent": "#7c9cff",
+  "accentDeep": "#1a2140",
+  "accentSoft": "#e8edff",
+  "ink": "#e8ecf8",
+  "muted": "#9aa3c2",
+  "paper": "#121624",
+  "line": "#2a3358",
+  "heroFrom": "#1a2140",
+  "heroTo": "#0d1224",
+  "headerText": "#ffffff"
+}

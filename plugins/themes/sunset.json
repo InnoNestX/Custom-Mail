@@ -1,0 +1,15 @@
+{
+  "id": "sunset",
+  "label": "Sunset",
+  "aliases": [],
+  "accent": "#ea580c",
+  "accentDeep": "#9a3412",
+  "accentSoft": "#ffedd5",
+  "ink": "#431407",
+  "muted": "#c2410c",
+  "paper": "#fff7ed",
+  "line": "#fed7aa",
+  "heroFrom": "#f97316",
+  "heroTo": "#be123c",
+  "headerText": "#ffffff"
+}

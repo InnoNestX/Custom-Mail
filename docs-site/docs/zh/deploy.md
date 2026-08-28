@@ -55,7 +55,7 @@ npm run deploy
 
 ## Docker（本地）
 
-发布的镜像用于本地试用。传入 `ADMIN_PASSWORD` 与当前服务商的 API 密钥。`MAIL_PROVIDER` 可覆盖 `plugins.provider` 而无需重建。品牌、主题、版式与 Logo 在构建镜像时从 `config/mail.json` 写入。
+发布的镜像用于本地试用。传入 `ADMIN_PASSWORD` 与当前服务商的 API 密钥。`MAIL_PROVIDER`、`MAIL_THEME`、`MAIL_LAYOUT`、`MAIL_LOGO`、`MAIL_CONFIG_JSON` 可覆盖 `mail.json` 的插件槽而无需重建。新增主题/版式 JSON 或 Logo 文件仍需重建镜像。
 
 详见仓库中的 `docker/DOCKERHUB.md` 与 `skills/custom-mail/SKILL.md`。
 

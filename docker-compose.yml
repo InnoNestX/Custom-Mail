@@ -7,6 +7,10 @@ services:
     environment:
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-changeme}
       MAIL_PROVIDER: ${MAIL_PROVIDER:-}
+      MAIL_THEME: ${MAIL_THEME:-}
+      MAIL_LAYOUT: ${MAIL_LAYOUT:-}
+      MAIL_LOGO: ${MAIL_LOGO:-}
+      MAIL_CONFIG_JSON: ${MAIL_CONFIG_JSON:-}
       MAIL_API_KEY: ${MAIL_API_KEY:-}
       BREVO_API_KEY: ${BREVO_API_KEY:-}
       RESEND_API_KEY: ${RESEND_API_KEY:-}

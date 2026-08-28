@@ -1,0 +1,6 @@
+{
+  "id": "address-book",
+  "label": "Address book",
+  "configKey": "addressBook",
+  "default": true
+}

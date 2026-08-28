@@ -1,0 +1,17 @@
+{
+  "id": "paper",
+  "label": "Paper",
+  "aliases": [
+    "light"
+  ],
+  "accent": "#44403c",
+  "accentDeep": "#1c1917",
+  "accentSoft": "#f5f5f4",
+  "ink": "#1c1917",
+  "muted": "#78716c",
+  "paper": "#fafaf9",
+  "line": "#e7e5e4",
+  "heroFrom": "#292524",
+  "heroTo": "#1c1917",
+  "headerText": "#fafaf9"
+}
