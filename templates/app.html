@@ -1747,16 +1747,39 @@
       const row = document.createElement("div");
       row.className = "attach-item";
       const isImg = f.type && f.type.startsWith("image/");
-      const visual = isImg
-        ? '<img class="attach-thumb" alt="" src="data:' + f.type + ';base64,' + f.content + '">'
-        : '<span class="attach-icon" aria-hidden="true">DOC</span>';
-      row.innerHTML = visual +
-        '<div class="attach-meta"><div class="attach-name">' + escapeText(f.name) + '</div><div class="attach-size">' + formatSize(f.size) + '</div></div>' +
-        '<button type="button" aria-label="remove">&times;</button>';
-      row.querySelector("button").onclick = () => {
+      if (isImg) {
+        const img = document.createElement("img");
+        img.className = "attach-thumb";
+        img.alt = "";
+        img.src = "data:" + f.type + ";base64," + f.content;
+        row.appendChild(img);
+      } else {
+        const icon = document.createElement("span");
+        icon.className = "attach-icon";
+        icon.setAttribute("aria-hidden", "true");
+        icon.textContent = "DOC";
+        row.appendChild(icon);
+      }
+      const meta = document.createElement("div");
+      meta.className = "attach-meta";
+      const nameEl = document.createElement("div");
+      nameEl.className = "attach-name";
+      nameEl.textContent = f.name;
+      const sizeEl = document.createElement("div");
+      sizeEl.className = "attach-size";
+      sizeEl.textContent = formatSize(f.size);
+      meta.appendChild(nameEl);
+      meta.appendChild(sizeEl);
+      row.appendChild(meta);
+      const removeBtn = document.createElement("button");
+      removeBtn.type = "button";
+      removeBtn.setAttribute("aria-label", "remove");
+      removeBtn.textContent = "×";
+      removeBtn.onclick = () => {
         pendingFiles.splice(i, 1);
         renderAttachments();
       };
+      row.appendChild(removeBtn);
       attachListEl.appendChild(row);
     }
   }
@@ -2118,21 +2141,40 @@
     return true;
   }
 
-  function buildLocalAttachPreviewHtml() {
-    if (!pendingFiles.length) return "";
-    const chips = pendingFiles.map((f) => {
-      const label = escapeText(f.name) + " · " + formatSize(f.size);
-      return '<span class="preview-attach-chip">' + label + "</span>";
-    }).join("");
-    return '<div class="preview-attach-chips">' + chips + "</div>";
+  function appendPreviewMetaRow(parent, label, value) {
+    const row = document.createElement("div");
+    const labelEl = document.createElement("strong");
+    labelEl.textContent = label;
+    row.appendChild(labelEl);
+    row.appendChild(document.createTextNode(String(value)));
+    parent.appendChild(row);
   }
 
   function openPreviewModal(data) {
-    previewMeta.innerHTML =
-      "<div><strong>From</strong>" + escapeText(data.fromName) + " &lt;" + escapeText(data.fromEmail) + "&gt;</div>" +
-      "<div><strong>To</strong>" + escapeText((data.to || []).join(", ")) + "</div>" +
-      "<div><strong>Subject</strong>" + escapeText(data.subject) + "</div>" +
-      (pendingFiles.length ? "<div><strong>附件</strong></div>" + buildLocalAttachPreviewHtml() : "");
+    previewMeta.innerHTML = "";
+    appendPreviewMetaRow(
+      previewMeta,
+      "From",
+      String(data.fromName) + " <" + String(data.fromEmail) + ">",
+    );
+    appendPreviewMetaRow(previewMeta, "To", (data.to || []).join(", "));
+    appendPreviewMetaRow(previewMeta, "Subject", data.subject);
+    if (pendingFiles.length) {
+      const attachLabel = document.createElement("div");
+      const attachStrong = document.createElement("strong");
+      attachStrong.textContent = "附件";
+      attachLabel.appendChild(attachStrong);
+      previewMeta.appendChild(attachLabel);
+      const chipsWrap = document.createElement("div");
+      chipsWrap.className = "preview-attach-chips";
+      for (const f of pendingFiles) {
+        const chip = document.createElement("span");
+        chip.className = "preview-attach-chip";
+        chip.textContent = f.name + " · " + formatSize(f.size);
+        chipsWrap.appendChild(chip);
+      }
+      previewMeta.appendChild(chipsWrap);
+    }
     previewFrame.srcdoc = data.html || "";
     previewOverlay.classList.remove("hidden");
   }
