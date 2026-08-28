@@ -38,7 +38,7 @@ OpenClaw 会从这些目录加载 `SKILL.md`。详见 [Skills](https://docs.open
 1. 确认 Docker 可用。
 2. 设置必填的 `ADMIN_PASSWORD`，以及你提供的服务商 API 密钥。
 3. 按需设置 `MAIL_PROVIDER`、`MAIL_THEME`、`MAIL_LAYOUT`、`MAIL_LOGO`。
-4. `docker pull` `xuxuclassmate/custom-mail:latest`（或 GHCR）。
+4. `docker pull` `xuxuclassmate/custom-mail:1.0.0`（或 `:latest` / GHCR `ghcr.io/innonestx/custom-mail:1.0.0`）。
 5. 在 **8787**（或 `PORT`）上 `docker run`。
 6. 告诉你打开 http://localhost:8787 并登录。
 

@@ -1,6 +1,6 @@
 services:
   mail:
-    image: xuxuclassmate/custom-mail:latest
+    image: xuxuclassmate/custom-mail:1.0.0
     build: .
     ports:
       - "8787:8787"

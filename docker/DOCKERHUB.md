@@ -31,10 +31,10 @@ Custom Mail is a self-hosted outbound mail workspace. Run it locally in Docker t
 ### 1. Pull the image
 
 ```bash
-docker pull xuxuclassmate/custom-mail:latest
+docker pull xuxuclassmate/custom-mail:1.0.0
 ```
 
-Also on GHCR: `ghcr.io/innonestx/custom-mail:latest`
+Or `:latest`. GHCR: `ghcr.io/innonestx/custom-mail:1.0.0`
 
 ### 2. Set your secrets
 
@@ -66,7 +66,7 @@ Foreground (good for a quick try):
 docker run --rm -p 8787:8787 \
   -e ADMIN_PASSWORD="$ADMIN_PASSWORD" \
   -e BREVO_API_KEY="$BREVO_API_KEY" \
-  xuxuclassmate/custom-mail:latest
+  xuxuclassmate/custom-mail:1.0.0
 ```
 
 Background:
@@ -77,7 +77,7 @@ docker run -d \
   -p 8787:8787 \
   -e ADMIN_PASSWORD="$ADMIN_PASSWORD" \
   -e BREVO_API_KEY="$BREVO_API_KEY" \
-  xuxuclassmate/custom-mail:latest
+  xuxuclassmate/custom-mail:1.0.0
 ```
 
 Open [http://localhost:8787](http://localhost:8787) and sign in with `ADMIN_PASSWORD`.
@@ -138,10 +138,10 @@ Product copy, colors, footer, and the default plugin ids live in `config/mail.js
 
 ## Image Tags
 
-- `xuxuclassmate/custom-mail:latest`
 - `xuxuclassmate/custom-mail:1.0.0`
-- `ghcr.io/innonestx/custom-mail:latest`
+- `xuxuclassmate/custom-mail:latest` (same release)
 - `ghcr.io/innonestx/custom-mail:1.0.0`
+- `ghcr.io/innonestx/custom-mail:latest`
 
 ## OpenClaw
 

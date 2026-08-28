@@ -4,9 +4,8 @@ Run the same Rust Worker locally in a container. You do not need Rust or `wasm32
 
 Images:
 
-- Docker Hub: `xuxuclassmate/custom-mail:latest`
-- GHCR: `ghcr.io/innonestx/custom-mail:latest`
-- Version tags: `xuxuclassmate/custom-mail:1.0.0` (and the same on GHCR)
+- Docker Hub / GHCR: `xuxuclassmate/custom-mail:1.0.0` and `ghcr.io/innonestx/custom-mail:1.0.0`
+- Moving tag: `:latest` (same release)
 
 The image sets `ALLOW_ANY_HOST=1` so Host-header checks do not block `localhost`.
 
@@ -15,13 +14,13 @@ The image sets `ALLOW_ANY_HOST=1` so Host-header checks do not block `localhost`
 ### 1. Pull
 
 ```bash
-docker pull xuxuclassmate/custom-mail:latest
+docker pull xuxuclassmate/custom-mail:1.0.0
 ```
 
 GHCR mirror:
 
 ```bash
-docker pull ghcr.io/innonestx/custom-mail:latest
+docker pull ghcr.io/innonestx/custom-mail:1.0.0
 ```
 
 ### 2. Secrets
@@ -54,7 +53,7 @@ Foreground:
 docker run --rm -p 8787:8787 \
   -e ADMIN_PASSWORD="$ADMIN_PASSWORD" \
   -e BREVO_API_KEY="$BREVO_API_KEY" \
-  xuxuclassmate/custom-mail:latest
+  xuxuclassmate/custom-mail:1.0.0
 ```
 
 Background:
@@ -65,7 +64,7 @@ docker run -d \
   -p 8787:8787 \
   -e ADMIN_PASSWORD="$ADMIN_PASSWORD" \
   -e BREVO_API_KEY="$BREVO_API_KEY" \
-  xuxuclassmate/custom-mail:latest
+  xuxuclassmate/custom-mail:1.0.0
 ```
 
 Open [http://localhost:8787](http://localhost:8787) and sign in with `ADMIN_PASSWORD`. See [Console](./console) for compose, preview, attachments, and history.

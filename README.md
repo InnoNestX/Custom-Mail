@@ -89,14 +89,14 @@ Open **http://localhost:8790** and sign in with `ADMIN_PASSWORD`. Health reports
 
 Images:
 
-- Docker Hub: `xuxuclassmate/custom-mail:latest`
-- GHCR: `ghcr.io/innonestx/custom-mail:latest`
+- Docker Hub: `xuxuclassmate/custom-mail:1.0.0` (`:latest` tracks the same)
+- GHCR: `ghcr.io/innonestx/custom-mail:1.0.0`
 
 ```bash
 docker run --rm -p 8787:8787 \
   -e ADMIN_PASSWORD='your-password' \
   -e BREVO_API_KEY='xkeysib-...' \
-  xuxuclassmate/custom-mail:latest
+  xuxuclassmate/custom-mail:1.0.0
 ```
 
 Open **http://127.0.0.1:8787**. Or: `docker compose up`.
