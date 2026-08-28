@@ -22,6 +22,9 @@ pub struct MailConfig {
     pub mail: MailSettings,
     #[serde(default)]
     pub site: SiteConfig,
+    /// Publisher / organization chrome (login + app footer), e.g. InnoNestX.
+    #[serde(default)]
+    pub org: OrgConfig,
     #[serde(default)]
     pub brand: BrandOverrides,
     #[serde(default)]
@@ -30,6 +33,44 @@ pub struct MailConfig {
     pub syntax: SyntaxConfig,
     #[serde(default, rename = "addressBook")]
     pub address_book: Vec<AddressBookEntry>,
+}
+
+/// Org attribution shown before and after login (Gitea / Grafana style chrome).
+#[derive(Debug, Clone, Deserialize)]
+pub struct OrgConfig {
+    #[serde(default = "default_org_name")]
+    pub name: String,
+    #[serde(default = "default_org_url")]
+    pub url: String,
+    #[serde(default = "default_org_tagline")]
+    pub tagline: String,
+    /// Optional releases / docs link used by the version chip.
+    #[serde(default = "default_org_releases")]
+    pub releases: String,
+}
+
+impl Default for OrgConfig {
+    fn default() -> Self {
+        Self {
+            name: default_org_name(),
+            url: default_org_url(),
+            tagline: default_org_tagline(),
+            releases: default_org_releases(),
+        }
+    }
+}
+
+fn default_org_name() -> String {
+    "InnoNestX".into()
+}
+fn default_org_url() -> String {
+    "https://github.com/InnoNestX".into()
+}
+fn default_org_tagline() -> String {
+    "Innovation Nest for Excellence".into()
+}
+fn default_org_releases() -> String {
+    "https://github.com/InnoNestX/Custom-Mail/releases".into()
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -582,6 +623,19 @@ fn finish_config(value: serde_json::Value) -> MailConfig {
     cfg.mail.from_email = cfg.mail.from_email.trim().to_lowercase();
     cfg.mail.contact_email = cfg.mail.contact_email.trim().to_lowercase();
     cfg.site.url = cfg.site.url.trim_end_matches('/').to_string();
+    cfg.org.name = cfg.org.name.trim().to_string();
+    cfg.org.url = cfg.org.url.trim_end_matches('/').to_string();
+    cfg.org.tagline = cfg.org.tagline.trim().to_string();
+    cfg.org.releases = cfg.org.releases.trim_end_matches('/').to_string();
+    if cfg.org.name.is_empty() {
+        cfg.org.name = default_org_name();
+    }
+    if cfg.org.url.is_empty() {
+        cfg.org.url = default_org_url();
+    }
+    if cfg.org.releases.is_empty() {
+        cfg.org.releases = default_org_releases();
+    }
     if !cfg.site.logo_path.is_empty() && !cfg.site.logo_path.starts_with('/') {
         cfg.site.logo_path = format!("/{}", cfg.site.logo_path);
     }

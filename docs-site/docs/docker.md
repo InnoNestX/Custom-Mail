@@ -6,7 +6,7 @@ Images:
 
 - Docker Hub: `xuxuclassmate/custom-mail:latest`
 - GHCR: `ghcr.io/innonestx/custom-mail:latest`
-- Version tags: `xuxuclassmate/custom-mail:0.2.0` (and the same on GHCR)
+- Version tags: `xuxuclassmate/custom-mail:1.0.0` (and the same on GHCR)
 
 The image sets `ALLOW_ANY_HOST=1` so Host-header checks do not block `localhost`.
 

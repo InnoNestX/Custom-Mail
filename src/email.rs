@@ -336,10 +336,12 @@ pub fn snippet_page_html(code: &str) -> String {
 <style>
   body {{ margin:0; padding:24px 16px; background:#f7f4ee; font-family:ui-sans-serif,system-ui,sans-serif; color:#1c1917; }}
   .wrap {{ max-width:720px; margin:0 auto; }}
-  .bar {{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; }}
+  .bar {{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px; }}
   h1 {{ margin:0; font-size:15px; font-weight:800; }}
+  .hint {{ margin:0 0 12px; font-size:12px; color:#78716c; line-height:1.4; }}
   button {{ font:inherit; cursor:pointer; border:1px solid #e7e5e4; background:#fff; border-radius:8px; padding:8px 14px; font-weight:700; font-size:13px; }}
   button:hover {{ border-color:#8dcfb8; color:#15624f; }}
+  button.ok {{ border-color:#8dcfb8; color:#15624f; background:#eef7f3; }}
   pre {{ margin:0; padding:16px; background:#fff; border:1px solid #e7e0d6; border-radius:12px;
     font-family:Consolas,Courier,monospace; font-size:12px; line-height:1.55; white-space:pre-wrap; word-break:break-word; }}
 </style>
@@ -350,18 +352,54 @@ pub fn snippet_page_html(code: &str) -> String {
       <h1>Code snippet</h1>
       <button type="button" id="copyBtn">Copy</button>
     </div>
+    <p class="hint" id="hint">Email apps cannot write to the clipboard, so this page copies for you.</p>
     <pre id="code">{escaped}</pre>
   </div>
   <script>
     (function () {{
       var text = {json};
       var btn = document.getElementById("copyBtn");
-      btn.addEventListener("click", function () {{
-        navigator.clipboard.writeText(text).then(function () {{
-          btn.textContent = "Copied";
-          setTimeout(function () {{ btn.textContent = "Copy"; }}, 1200);
-        }});
-      }});
+      var hint = document.getElementById("hint");
+      function setCopied() {{
+        btn.textContent = "Copied";
+        btn.className = "ok";
+        hint.textContent = "Copied to your clipboard.";
+        setTimeout(function () {{
+          btn.textContent = "Copy";
+          btn.className = "";
+        }}, 1600);
+      }}
+      function copyFallback() {{
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed";
+        ta.style.left = "-9999px";
+        document.body.appendChild(ta);
+        ta.select();
+        ta.setSelectionRange(0, ta.value.length);
+        var ok = false;
+        try {{ ok = document.execCommand("copy"); }} catch (e) {{ ok = false; }}
+        document.body.removeChild(ta);
+        return ok;
+      }}
+      function copyText() {{
+        if (navigator.clipboard && navigator.clipboard.writeText) {{
+          return navigator.clipboard.writeText(text).then(function () {{
+            setCopied();
+            return true;
+          }}).catch(function () {{
+            if (copyFallback()) {{ setCopied(); return true; }}
+            hint.textContent = "Tap Copy to put this code on your clipboard.";
+            return false;
+          }});
+        }}
+        if (copyFallback()) {{ setCopied(); return Promise.resolve(true); }}
+        hint.textContent = "Tap Copy to put this code on your clipboard.";
+        return Promise.resolve(false);
+      }}
+      btn.addEventListener("click", function () {{ copyText(); }});
+      copyText();
     }})();
   </script>
 </body>

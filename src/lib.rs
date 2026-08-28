@@ -195,6 +195,8 @@ async fn main(mut req: Request, env: Env, _ctx: Context) -> Result<Response> {
                 "ok": true,
                 "service": "mail",
                 "runtime": "rust",
+                "version": env!("CARGO_PKG_VERSION"),
+                "org": cfg.org.name,
                 "from": format!("{from_name} <{from_email}>"),
                 "provider": provider_id.as_str(),
                 "theme": resolve_theme_id(&cfg.plugins.theme),

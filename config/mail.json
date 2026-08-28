@@ -50,6 +50,12 @@
     "logoPath": "/images/logo.svg",
     "faviconPath": "/images/logo.svg"
   },
+  "org": {
+    "name": "InnoNestX",
+    "url": "https://github.com/InnoNestX",
+    "tagline": "Innovation Nest for Excellence",
+    "releases": "https://github.com/InnoNestX/Custom-Mail/releases"
+  },
   "brand": {
     "tile": "#15624f",
     "tileEdge": "#1a7a62",

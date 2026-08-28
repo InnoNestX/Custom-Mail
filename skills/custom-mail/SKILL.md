@@ -1,7 +1,7 @@
 ---
 name: custom-mail
 description: Run the Custom Mail console locally with Docker — compose, preview, attachments, send history, and pluggable provider / theme / layout / logo.
-version: 0.2.0
+version: 1.0.0
 metadata:
   openclaw:
     requires:
