@@ -48,7 +48,7 @@ Raw HTML in the source is ignored. `javascript:` and `data:` URLs are not turned
 
 ## How do I run this in Docker?
 
-See the [Docker](./docker) guide: `docker pull xuxuclassmate/custom-mail:latest`, set `ADMIN_PASSWORD`, then `docker run -p 8787:8787`. Compose and env vars are on that page.
+See the [Docker](./docker) guide: `docker pull xuxuclassmate/custom-mail:1.0.0`, set `ADMIN_PASSWORD`, then `docker run -p 8787:8787`. Compose and env vars are on that page.
 
 ## How do I use the OpenClaw / Claw skill?
 

@@ -4,9 +4,8 @@
 
 镜像：
 
-- Docker Hub：`xuxuclassmate/custom-mail:latest`
-- GHCR：`ghcr.io/innonestx/custom-mail:latest`
-- 版本标签：`xuxuclassmate/custom-mail:1.0.0`（GHCR 同名）
+- Docker Hub / GHCR：`xuxuclassmate/custom-mail:1.0.0` 与 `ghcr.io/innonestx/custom-mail:1.0.0`
+- 滚动标签：`:latest`（同一次发版）
 
 镜像内已设置 `ALLOW_ANY_HOST=1`，`localhost` 不会被 Host 检查拦住。
 
@@ -15,13 +14,13 @@
 ### 1. 拉取
 
 ```bash
-docker pull xuxuclassmate/custom-mail:latest
+docker pull xuxuclassmate/custom-mail:1.0.0
 ```
 
 GHCR：
 
 ```bash
-docker pull ghcr.io/innonestx/custom-mail:latest
+docker pull ghcr.io/innonestx/custom-mail:1.0.0
 ```
 
 ### 2. 密钥
@@ -54,7 +53,7 @@ export RESEND_API_KEY='re_...'
 docker run --rm -p 8787:8787 \
   -e ADMIN_PASSWORD="$ADMIN_PASSWORD" \
   -e BREVO_API_KEY="$BREVO_API_KEY" \
-  xuxuclassmate/custom-mail:latest
+  xuxuclassmate/custom-mail:1.0.0
 ```
 
 后台：
@@ -65,7 +64,7 @@ docker run -d \
   -p 8787:8787 \
   -e ADMIN_PASSWORD="$ADMIN_PASSWORD" \
   -e BREVO_API_KEY="$BREVO_API_KEY" \
-  xuxuclassmate/custom-mail:latest
+  xuxuclassmate/custom-mail:1.0.0
 ```
 
 打开 [http://localhost:8787](http://localhost:8787)，用 `ADMIN_PASSWORD` 登录。撰写、预览、附件、历史见[控制台](./console)。

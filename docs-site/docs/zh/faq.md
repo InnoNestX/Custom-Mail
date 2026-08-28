@@ -48,7 +48,7 @@
 
 ## 怎样用 Docker 跑？
 
-见 [Docker](./docker)：`docker pull xuxuclassmate/custom-mail:latest`，设置 `ADMIN_PASSWORD`，再 `docker run -p 8787:8787`。Compose 与环境变量也在那一页。
+见 [Docker](./docker)：`docker pull xuxuclassmate/custom-mail:1.0.0`，设置 `ADMIN_PASSWORD`，再 `docker run -p 8787:8787`。Compose 与环境变量也在那一页。
 
 ## 怎样用 OpenClaw / Claw 技能？
 

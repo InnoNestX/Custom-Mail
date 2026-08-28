@@ -73,10 +73,10 @@ Trigger phrases (examples):
 ### 1. Pull
 
 ```bash
-docker pull xuxuclassmate/custom-mail:latest
+docker pull xuxuclassmate/custom-mail:1.0.0
 ```
 
-GHCR mirror: `ghcr.io/innonestx/custom-mail:latest`
+Or `:latest`. GHCR: `ghcr.io/innonestx/custom-mail:1.0.0`
 
 ### 2. Export secrets
 
@@ -104,7 +104,7 @@ docker run -d \
   -p 8787:8787 \
   -e ADMIN_PASSWORD="$ADMIN_PASSWORD" \
   -e BREVO_API_KEY="$BREVO_API_KEY" \
-  xuxuclassmate/custom-mail:latest
+  xuxuclassmate/custom-mail:1.0.0
 ```
 
 Open http://localhost:8787 — sign in with `ADMIN_PASSWORD`.

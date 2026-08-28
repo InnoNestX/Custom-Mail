@@ -38,7 +38,7 @@ When you ask to run Custom Mail locally, the agent should:
 1. Confirm Docker is available.
 2. Set `ADMIN_PASSWORD` (required) and the provider API key you give it.
 3. Optionally set `MAIL_PROVIDER`, `MAIL_THEME`, `MAIL_LAYOUT`, `MAIL_LOGO`.
-4. `docker pull` `xuxuclassmate/custom-mail:latest` (or the GHCR mirror).
+4. `docker pull` `xuxuclassmate/custom-mail:1.0.0` (or `:latest` / GHCR `ghcr.io/innonestx/custom-mail:1.0.0`).
 5. `docker run` on port **8787** (or `PORT`).
 6. Tell you to open http://localhost:8787 and sign in.
 
