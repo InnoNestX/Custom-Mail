@@ -1,7 +1,7 @@
 ---
 name: custom-mail
-description: Run Custom Mail (Rust Cloudflare Worker mail console) via Docker Hub or GHCR, or deploy with wrangler.
-version: 1.2.0
+description: Run the Custom Mail Brevo console locally with Docker — compose, preview, attachments, and send history.
+version: 1.3.0
 metadata:
   openclaw:
     requires:
@@ -24,79 +24,116 @@ metadata:
 
 # Custom Mail
 
-[Custom Mail](https://github.com/InnoNestX/Custom-Mail) is a private Brevo webmail console. Runtime is a **Rust** Cloudflare Worker (`workers-rs` → WASM): compose, Markdown preview, attachments, and send history.
+## What this skill does
 
-| | |
-|---|---|
-| **Repo** | https://github.com/InnoNestX/Custom-Mail |
-| **Docs** | https://innonestx.github.io/Custom-Mail/ |
-| **Demo** | https://mail.xuxuclassmate.com |
-| **Docker Hub** | `xuxuclassmate/custom-mail` |
-| **GHCR** | `ghcr.io/innonestx/custom-mail` |
+Spin up a **private Brevo mail console** in Docker. Compose mail, preview Markdown as HTML, attach files, and browse send history — without running a mail server.
 
-## Images
+Runtime is a **Rust** Cloudflare Worker (`workers-rs` → WASM) packaged with Wrangler for local use.
 
-```text
-xuxuclassmate/custom-mail:latest
-xuxuclassmate/custom-mail:0.2.0
-ghcr.io/innonestx/custom-mail:latest
-ghcr.io/innonestx/custom-mail:0.2.0
-```
+## When to use this skill
 
-Prefer Docker Hub for anonymous pulls. GHCR is the same image from GitHub Actions on `main`.
+Use it when the user wants to:
 
-## Run (Docker)
+- run Custom Mail locally or in Docker
+- send mail through Brevo from a self-hosted console
+- try the compose / preview / history UI before Cloudflare deploy
+- set up a lightweight mail workspace with one password login
+
+Trigger phrases (examples):
+
+- "start custom mail in docker"
+- "run the mail console locally"
+- "deploy custom-mail container"
+- "帮我本地跑一下 Custom Mail"
+- "用 Docker 启动发信控制台"
+
+## Docker Quick Start
+
+### 1. Pull
 
 ```bash
-docker run --rm -p 8787:8787 \
-  -e ADMIN_PASSWORD='your-password' \
-  -e BREVO_API_KEY='xkeysib-...' \
+docker pull xuxuclassmate/custom-mail:latest
+```
+
+GHCR mirror: `ghcr.io/innonestx/custom-mail:latest`
+
+### 2. Export secrets
+
+```bash
+export ADMIN_PASSWORD='choose-a-strong-password'
+export BREVO_API_KEY='xkeysib-...'   # optional until send is needed
+export PORT=8787
+```
+
+### 3. Run
+
+```bash
+docker run -d \
+  --name custom-mail \
+  -p 8787:8787 \
+  -e ADMIN_PASSWORD="$ADMIN_PASSWORD" \
+  -e BREVO_API_KEY="$BREVO_API_KEY" \
   xuxuclassmate/custom-mail:latest
 ```
 
-Open http://127.0.0.1:8787 — sign in with `ADMIN_PASSWORD`.
+Open http://localhost:8787 — sign in with `ADMIN_PASSWORD`.
+
+Verify:
 
 ```bash
-curl -s http://127.0.0.1:8787/api/health
-# {"ok":true,"runtime":"rust","service":"mail",...}
+curl -s http://localhost:8787/api/health
 ```
 
-### Compose
+## Docker Compose
 
 ```bash
 git clone https://github.com/InnoNestX/Custom-Mail.git
 cd Custom-Mail
-export ADMIN_PASSWORD='your-password'
+export ADMIN_PASSWORD='choose-a-strong-password'
 export BREVO_API_KEY='xkeysib-...'
-docker compose up
+docker compose up -d
 ```
 
 ## Environment
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `ADMIN_PASSWORD` | yes | Console login password |
-| `BREVO_API_KEY` | no* | Brevo key to send mail |
-| `PORT` | no | Listen port (default `8787`) |
+| Variable | Default | Description |
+| --- | --- | --- |
+| `ADMIN_PASSWORD` | *(required)* | Console login password |
+| `BREVO_API_KEY` | empty | Brevo key; UI loads without it, send needs it |
+| `PORT` | `8787` | Listen port |
 
-\* UI works without Brevo; send fails until the key is set.
+## Example invocations
 
-## Deploy (Cloudflare Worker)
+```
+Pull and run Custom Mail on port 8787 with ADMIN_PASSWORD=dev-secret and my Brevo key.
+```
+
+```
+Start the custom-mail Docker container in the background and tell me the health check URL.
+```
+
+```
+Clone InnoNestX/Custom-Mail and bring it up with docker compose.
+```
+
+## Production (Cloudflare)
+
+For edge deploy instead of Docker:
 
 ```bash
 git clone https://github.com/InnoNestX/Custom-Mail.git
 cd Custom-Mail
-cargo test --lib
-npm install
+cargo test --lib && npm install
 npx wrangler secret put ADMIN_PASSWORD
 npx wrangler secret put BREVO_API_KEY
 npm run deploy
 ```
 
-Needs Rust (`wasm32-unknown-unknown`), `worker-build`, and Wrangler. Branding lives in `config/mail.json`.
+Branding: `config/mail.json` · Docs: https://innonestx.github.io/Custom-Mail/
 
-## More
+## Links
 
-- Config: https://innonestx.github.io/Custom-Mail/config.html
-- Deploy guide: https://innonestx.github.io/Custom-Mail/deploy.html
-- License: MIT
+- GitHub: https://github.com/InnoNestX/Custom-Mail
+- Docker Hub: https://hub.docker.com/r/xuxuclassmate/custom-mail
+- Docs: https://innonestx.github.io/Custom-Mail/
+- Demo: https://mail.xuxuclassmate.com
