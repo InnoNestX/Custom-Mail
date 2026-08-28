@@ -26,24 +26,33 @@ const copy = isZh
       deployHref: withBase('/zh/deploy.html'),
       faqHref: withBase('/zh/faq.html'),
       demo: '在线演示',
-      treeTitle: '仓库目录',
-      treeHint: '往对应文件夹丢文件，再在 mail.json 里选中。',
-      tree: [
-        { kind: 'dir', name: 'plugins/' },
-        { kind: 'item', name: 'providers/', detail: 'brevo.json · resend.json · sendgrid.json …' },
-        { kind: 'item', name: 'themes/', detail: 'forest.json · nord.json · aurora.json …' },
-        { kind: 'item', name: 'layouts/', detail: 'banner.json · compact.json · card.json …' },
-        { kind: 'item', name: 'features/', detail: 'markdown.json · history.json · attachments.json' },
-        { kind: 'item', name: 'logos/', detail: '放入 SVG / PNG，构建后走 /plugins/logos/' },
-        { kind: 'dir', name: 'config/' },
-        { kind: 'item', name: 'mail.json', detail: '当前启用的 provider / theme / layout / logo' },
-        { kind: 'item', name: 'overlays/', detail: '可选 JSON，编译时深度合并' },
+      treeTitle: '插件目录',
+      treeHint: '把文件丢进对应文件夹，再在 mail.json 里选中它的 id。',
+      folders: [
+        {
+          name: 'plugins/',
+          children: [
+            { name: 'providers/', detail: 'brevo · resend · sendgrid' },
+            { name: 'themes/', detail: 'forest · nord · aurora' },
+            { name: 'layouts/', detail: 'banner · compact · card' },
+            { name: 'features/', detail: 'markdown · history · attachments' },
+            { name: 'logos/', detail: 'SVG / PNG，构建后走 /plugins/logos/' },
+          ],
+        },
+        {
+          name: 'config/',
+          children: [
+            { name: 'mail.json', detail: '当前 provider / theme / layout / logo' },
+            { name: 'overlays/', detail: '可选，编译时深度合并' },
+          ],
+        },
       ],
       stepsTitle: '三步上手',
+      stepsHint: '从克隆到上线，配置都在仓库里。',
       steps: [
         ['克隆仓库', '安装依赖，复制 .dev.vars'],
-        ['编辑 mail.json 与 plugins/', '域名、品牌、主题、版式、Logo、服务商'],
-        ['部署 Worker', '写入密钥，npm run deploy'],
+        ['选出插件', '编辑 mail.json，或往 plugins/ 添加文件'],
+        ['部署 Worker', '写入密钥，然后 npm run deploy'],
       ],
       urlsTitle: '地址',
       docsUrl: 'https://innonestx.github.io/Custom-Mail/',
@@ -64,24 +73,33 @@ const copy = isZh
       deployHref: withBase('/deploy.html'),
       faqHref: withBase('/faq.html'),
       demo: 'Live demo',
-      treeTitle: 'Repository layout',
+      treeTitle: 'Plugin folders',
       treeHint: 'Drop a file in the matching folder, then select its id in mail.json.',
-      tree: [
-        { kind: 'dir', name: 'plugins/' },
-        { kind: 'item', name: 'providers/', detail: 'brevo.json · resend.json · sendgrid.json …' },
-        { kind: 'item', name: 'themes/', detail: 'forest.json · nord.json · aurora.json …' },
-        { kind: 'item', name: 'layouts/', detail: 'banner.json · compact.json · card.json …' },
-        { kind: 'item', name: 'features/', detail: 'markdown.json · history.json · attachments.json' },
-        { kind: 'item', name: 'logos/', detail: 'drop an SVG/PNG → /plugins/logos/' },
-        { kind: 'dir', name: 'config/' },
-        { kind: 'item', name: 'mail.json', detail: 'active provider / theme / layout / logo' },
-        { kind: 'item', name: 'overlays/', detail: 'optional JSON, deep-merged at build' },
+      folders: [
+        {
+          name: 'plugins/',
+          children: [
+            { name: 'providers/', detail: 'brevo · resend · sendgrid' },
+            { name: 'themes/', detail: 'forest · nord · aurora' },
+            { name: 'layouts/', detail: 'banner · compact · card' },
+            { name: 'features/', detail: 'markdown · history · attachments' },
+            { name: 'logos/', detail: 'SVG / PNG → /plugins/logos/' },
+          ],
+        },
+        {
+          name: 'config/',
+          children: [
+            { name: 'mail.json', detail: 'active provider / theme / layout / logo' },
+            { name: 'overlays/', detail: 'optional JSON, deep-merged at build' },
+          ],
+        },
       ],
       stepsTitle: 'Three steps',
+      stepsHint: 'Clone, pick plugins, deploy. Nothing lives outside the repo.',
       steps: [
         ['Clone the repo', 'Install deps, copy .dev.vars'],
-        ['Edit mail.json + plugins/', 'Host, brand, theme, layout, logo, provider'],
-        ['Deploy the Worker', 'Set secrets, npm run deploy'],
+        ['Pick plugins', 'Set ids in mail.json, or drop files under plugins/'],
+        ['Deploy the Worker', 'Set secrets, then npm run deploy'],
       ],
       urlsTitle: 'Addresses',
       docsUrl: 'https://innonestx.github.io/Custom-Mail/',
@@ -94,7 +112,6 @@ const copy = isZh
     <div class="cm-home__atmosphere" aria-hidden="true">
       <span class="cm-orb cm-orb--a"></span>
       <span class="cm-orb cm-orb--b"></span>
-      <span class="cm-envelope"></span>
     </div>
 
     <section class="cm-home__hero">
@@ -112,41 +129,48 @@ const copy = isZh
       </div>
     </section>
 
-    <section class="cm-home__tree" :aria-label="copy.treeTitle">
-      <h2>{{ copy.treeTitle }}</h2>
-      <p class="cm-home__tree-hint">{{ copy.treeHint }}</p>
-      <ol class="cm-tree">
-        <li
-          v-for="row in copy.tree"
-          :key="row.name + row.kind"
-          :class="['cm-tree__row', 'cm-tree__row--' + row.kind]"
-        >
-          <code class="cm-tree__name">{{ row.name }}</code>
-          <span v-if="row.detail" class="cm-tree__detail">{{ row.detail }}</span>
-        </li>
-      </ol>
-      <div class="cm-home__links">
-        <a :href="copy.pluginsHref">{{ copy.plugins }} →</a>
-        <a :href="copy.deployHref">{{ copy.deploy }} →</a>
-        <a :href="copy.faqHref">FAQ →</a>
-      </div>
-    </section>
+    <div class="cm-home__board">
+      <section class="cm-panel" :aria-label="copy.treeTitle">
+        <header class="cm-panel__head">
+          <h2>{{ copy.treeTitle }}</h2>
+          <p>{{ copy.treeHint }}</p>
+        </header>
+        <div class="cm-folders">
+          <article v-for="folder in copy.folders" :key="folder.name" class="cm-folder">
+            <h3 class="cm-folder__name">{{ folder.name }}</h3>
+            <ul class="cm-folder__files">
+              <li v-for="child in folder.children" :key="child.name" class="cm-file">
+                <span class="cm-file__name">{{ child.name }}</span>
+                <span class="cm-file__meta">{{ child.detail }}</span>
+              </li>
+            </ul>
+          </article>
+        </div>
+      </section>
 
-    <section class="cm-home__steps" :aria-label="copy.stepsTitle">
-      <h2>{{ copy.stepsTitle }}</h2>
-      <ol>
-        <li v-for="(step, i) in copy.steps" :key="step[0]">
-          <span class="cm-home__n">{{ String(i + 1).padStart(2, '0') }}</span>
-          <div>
-            <strong>{{ step[0] }}</strong>
-            <span>{{ step[1] }}</span>
-          </div>
-        </li>
-      </ol>
-    </section>
+      <section class="cm-panel cm-panel--steps" :aria-label="copy.stepsTitle">
+        <header class="cm-panel__head">
+          <h2>{{ copy.stepsTitle }}</h2>
+          <p>{{ copy.stepsHint }}</p>
+        </header>
+        <ol class="cm-steps">
+          <li v-for="(step, i) in copy.steps" :key="step[0]">
+            <span class="cm-steps__n" aria-hidden="true">{{ String(i + 1).padStart(2, '0') }}</span>
+            <div>
+              <strong>{{ step[0] }}</strong>
+              <span>{{ step[1] }}</span>
+            </div>
+          </li>
+        </ol>
+        <nav class="cm-home__links" :aria-label="copy.stepsTitle">
+          <a :href="copy.pluginsHref">{{ copy.plugins }}</a>
+          <a :href="copy.deployHref">{{ copy.deploy }}</a>
+          <a :href="copy.faqHref">FAQ</a>
+        </nav>
+      </section>
+    </div>
 
     <section class="cm-home__urls" :aria-label="copy.urlsTitle">
-      <h2>{{ copy.urlsTitle }}</h2>
       <p>
         <span>Docs</span>
         <a :href="copy.docsUrl">{{ copy.docsUrl }}</a>
