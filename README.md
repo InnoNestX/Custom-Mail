@@ -91,6 +91,7 @@ Images:
 
 - Docker Hub: `xuxuclassmate/custom-mail:1.0.0` (`:latest` tracks the same)
 - GHCR: `ghcr.io/innonestx/custom-mail:1.0.0`
+- Platforms: `linux/amd64`, `linux/arm64`, `linux/arm/v7`
 
 ```bash
 docker run --rm -p 8787:8787 \
