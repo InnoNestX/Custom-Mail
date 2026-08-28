@@ -83,6 +83,9 @@ export default defineConfig({
           items: [
             { text: 'Overview', link: '/' },
             { text: 'Quick start', link: '/quick-start' },
+            { text: 'Console', link: '/console' },
+            { text: 'Docker', link: '/docker' },
+            { text: 'OpenClaw skill', link: '/openclaw' },
             { text: 'Plugins', link: '/plugins' },
             { text: 'Configuration', link: '/config' },
             { text: 'Deploy', link: '/deploy' },
@@ -96,6 +99,9 @@ export default defineConfig({
           items: [
             { text: '概览', link: '/zh/' },
             { text: '快速开始', link: '/zh/quick-start' },
+            { text: '控制台', link: '/zh/console' },
+            { text: 'Docker', link: '/zh/docker' },
+            { text: 'OpenClaw 技能', link: '/zh/openclaw' },
             { text: '插件', link: '/zh/plugins' },
             { text: '配置说明', link: '/zh/config' },
             { text: '部署', link: '/zh/deploy' },
@@ -147,6 +153,9 @@ export default defineConfig({
             items: [
               { text: '概览', link: '/zh/' },
               { text: '快速开始', link: '/zh/quick-start' },
+              { text: '控制台', link: '/zh/console' },
+              { text: 'Docker', link: '/zh/docker' },
+              { text: 'OpenClaw 技能', link: '/zh/openclaw' },
               { text: '插件', link: '/zh/plugins' },
               { text: '配置说明', link: '/zh/config' },
               { text: '部署', link: '/zh/deploy' },

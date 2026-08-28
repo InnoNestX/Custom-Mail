@@ -24,6 +24,12 @@ const copy = isZh
       pluginsHref: withBase('/zh/plugins.html'),
       deploy: '部署',
       deployHref: withBase('/zh/deploy.html'),
+      docker: 'Docker',
+      dockerHref: withBase('/zh/docker.html'),
+      skill: 'OpenClaw',
+      skillHref: withBase('/zh/openclaw.html'),
+      console: '控制台',
+      consoleHref: withBase('/zh/console.html'),
       faqHref: withBase('/zh/faq.html'),
       demo: '在线演示',
       treeTitle: '插件目录',
@@ -71,6 +77,12 @@ const copy = isZh
       pluginsHref: withBase('/plugins.html'),
       deploy: 'Deploy',
       deployHref: withBase('/deploy.html'),
+      docker: 'Docker',
+      dockerHref: withBase('/docker.html'),
+      skill: 'OpenClaw',
+      skillHref: withBase('/openclaw.html'),
+      console: 'Console',
+      consoleHref: withBase('/console.html'),
       faqHref: withBase('/faq.html'),
       demo: 'Live demo',
       treeTitle: 'Plugin folders',
@@ -163,6 +175,9 @@ const copy = isZh
           </li>
         </ol>
         <nav class="cm-home__links" :aria-label="copy.stepsTitle">
+          <a :href="copy.consoleHref">{{ copy.console }}</a>
+          <a :href="copy.dockerHref">{{ copy.docker }}</a>
+          <a :href="copy.skillHref">{{ copy.skill }}</a>
           <a :href="copy.pluginsHref">{{ copy.plugins }}</a>
           <a :href="copy.deployHref">{{ copy.deploy }}</a>
           <a :href="copy.faqHref">FAQ</a>

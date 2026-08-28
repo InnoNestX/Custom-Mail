@@ -46,6 +46,18 @@
 
 源文中的原始 HTML 会被忽略。`javascript:` 与 `data:` 不会变成链接。
 
+## 怎样用 Docker 跑？
+
+见 [Docker](./docker)：`docker pull xuxuclassmate/custom-mail:latest`，设置 `ADMIN_PASSWORD`，再 `docker run -p 8787:8787`。Compose 与环境变量也在那一页。
+
+## 怎样用 OpenClaw / Claw 技能？
+
+```bash
+clawhub install custom-mail
+```
+
+或把 `skills/custom-mail/` 拷到 `~/.openclaw/workspace/skills/`。技能需要 Docker。详见 [OpenClaw 技能](./openclaw)。
+
 ## 安全提示
 
 - 不要在公网暴露弱密码控制台。

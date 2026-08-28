@@ -149,6 +149,8 @@ Product copy, colors, footer, and the default plugin ids live in `config/mail.js
 clawhub install custom-mail
 ```
 
+Usage on the docs site: [OpenClaw skill](https://innonestx.github.io/Custom-Mail/openclaw.html).
+
 ## Links
 
 - GitHub: https://github.com/InnoNestX/Custom-Mail
