@@ -69,13 +69,13 @@
     width: 42px; height: 42px;
     flex-shrink: 0; line-height: 0;
   }
+  .mark-badge:empty { display: none; }
   .mark-badge svg,
   .mark-badge img.logo-mark {
     display: block; width: 100%; height: 100%;
     object-fit: cover;
     border-radius: 12px;
-  }
-    filter: drop-shadow(0 6px 16px rgba(21,98,79,.35));
+    filter: drop-shadow(0 6px 16px color-mix(in srgb, var(--accent) 35%, transparent));
   }
   .mark h1 { margin: 0; font-size: 22px; letter-spacing: -.04em; font-weight: 800; }
   .mark p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
@@ -102,9 +102,9 @@
     flex: 0 0 auto;
     padding: 0 22px 16px;
     background:
-      radial-gradient(720px 480px at 8% -10%, rgba(47,158,123,.14) 0%, transparent 58%),
-      radial-gradient(520px 360px at 92% 100%, rgba(243,214,168,.28) 0%, transparent 62%),
-      linear-gradient(180deg, rgba(228,244,238,.42) 0%, rgba(247,244,238,0) 100%);
+      radial-gradient(720px 480px at 8% -10%, color-mix(in srgb, var(--accent) 16%, transparent) 0%, transparent 58%),
+      radial-gradient(520px 360px at 92% 100%, color-mix(in srgb, var(--paper) 70%, #f3d6a8) 0%, transparent 62%),
+      linear-gradient(180deg, color-mix(in srgb, var(--accent-soft) 70%, transparent) 0%, rgba(247,244,238,0) 100%);
   }
   .login-hero-inner {
     max-width: 520px;
@@ -169,7 +169,7 @@
     height: 7px;
     border-radius: 50%;
     background: var(--accent-2);
-    box-shadow: 0 0 0 4px rgba(47,158,123,.14);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 16%, transparent);
   }
   .login-panel {
     display: flex;
@@ -310,10 +310,10 @@
     border: 1px solid transparent; padding: 11px 16px; font-weight: 700;
   }
   button.primary {
-    background: var(--ink); color: #fff;
-    box-shadow: 0 10px 22px rgba(26,28,25,.18);
+    background: var(--accent); color: var(--header-text);
+    box-shadow: 0 10px 22px color-mix(in srgb, var(--accent-deep) 28%, transparent);
   }
-  button.primary:hover { background: #2a2e27; }
+  button.primary:hover { background: var(--accent-deep); }
   button.primary:disabled { opacity: .55; cursor: not-allowed; }
   button.secondary {
     background: #fff; border-color: var(--line); color: var(--ink-soft);
@@ -339,6 +339,33 @@
   .app-brand .mark-badge { width: 36px; height: 36px; }
   .app-brand h1 { margin: 0; font-size: 16px; letter-spacing: -.03em; font-weight: 800; line-height: 1.2; }
   .app-brand p { margin: 1px 0 0; color: var(--muted); font-size: 11px; line-height: 1.3; }
+  .plugin-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 6px;
+  }
+  .plugin-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--accent-soft);
+    color: var(--accent-deep);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .01em;
+    line-height: 1.4;
+  }
+  .plugin-chip-k {
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    opacity: .62;
+    font-weight: 800;
+    font-size: 9px;
+  }
   .app-tabs {
     display: inline-flex; gap: 2px; padding: 3px;
     margin-left: auto;
@@ -351,7 +378,7 @@
   }
   .tab.active {
     background: var(--accent-soft); color: var(--accent);
-    box-shadow: inset 0 0 0 1px #8dcfb8;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 45%, var(--line));
   }
   .app-header .ghost {
     border: 1px solid var(--line); background: #fff;
@@ -369,7 +396,7 @@
     display: flex; align-items: flex-start; justify-content: space-between;
     gap: 16px; padding: 22px 24px 18px;
     border-bottom: 1px solid var(--line);
-    background: linear-gradient(180deg, rgba(228,244,238,.45) 0%, rgba(255,252,247,0) 100%);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--accent-soft) 70%, transparent) 0%, rgba(255,252,247,0) 100%);
     flex-shrink: 0;
   }
   .workspace-head h2 {
@@ -802,6 +829,7 @@
     .app-brand .mark-badge { width: 32px; height: 32px; }
     .app-brand h1 { font-size: 15px; }
     .app-brand p { display: none; }
+    .plugin-chips { display: none; }
     .app-tabs { margin-left: 0; width: auto; flex: 1; min-width: 140px; }
     .app-tabs .tab { flex: 1; text-align: center; padding: 8px 10px; font-size: 12px; }
     .app-header .ghost {
@@ -934,11 +962,11 @@
     border-color: var(--accent-2); color: var(--accent); background: var(--accent-soft);
   }
   .book button.active {
-    background: var(--accent-soft); border-color: #8dcfb8; color: var(--accent);
+    background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); color: var(--accent);
   }
   .attach-drop {
     border: 1.5px dashed #b8cfc0; border-radius: 14px;
-    background: linear-gradient(180deg, rgba(228,244,238,.35), rgba(255,252,247,.5));
+    background: linear-gradient(180deg, color-mix(in srgb, var(--accent-soft) 55%, transparent), rgba(255,252,247,.5));
     padding: 18px 16px; text-align: center;
     transition: border-color .15s, background .15s, transform .15s;
     cursor: pointer;
@@ -1163,9 +1191,9 @@
     border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px;
     background: #fff; cursor: pointer; transition: border-color .15s, background .15s, transform .12s;
   }
-  .hist-row:hover { border-color: #8dcfb8; transform: translateY(-1px); }
+  .hist-row:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); transform: translateY(-1px); }
   .hist-row.active {
-    border-color: #8dcfb8; background: var(--accent-soft);
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); background: var(--accent-soft);
     box-shadow: 0 0 0 3px rgba(31,111,91,.08);
   }
   .hist-meta { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
@@ -1311,7 +1339,7 @@
             <div class="mark-badge">___BRAND_MARK_HERO___</div>
             <div>
               <h1>___APP_TITLE___</h1>
-              <p>___LOGIN_TAGLINE___</p>
+              ___LOGIN_TAGLINE_P___
             </div>
           </div>
           <h2 class="login-headline">___LOGIN_HEADLINE___</h2>
@@ -1343,6 +1371,7 @@
           <div>
             <h1>___APP_TITLE___</h1>
             ___APP_SUBTITLE_P___
+            ___PLUGIN_CHIPS___
           </div>
         </div>
         <div class="app-tabs">

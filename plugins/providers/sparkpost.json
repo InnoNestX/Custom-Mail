@@ -1,0 +1,12 @@
+{
+  "id": "sparkpost",
+  "label": "SparkPost",
+  "aliases": [
+    "spark-post"
+  ],
+  "secrets": [
+    "SPARKPOST_API_KEY",
+    "MAIL_API_KEY"
+  ],
+  "needsDomain": false
+}

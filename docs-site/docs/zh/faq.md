@@ -6,11 +6,11 @@
 - **本地：** 检查 `.dev.vars` 并重启 `npm run dev`。
 - 尝试次数过多会临时锁定，稍后再试。
 
-## 发送失败 / Brevo 报错
+## 发送失败 / 服务商报错
 
-- 确认 Worker 上有正确的 `BREVO_API_KEY`。
-- `mail.json` 中的 `fromEmail` 须在 Brevo 授权。
-- 在 Brevo 控制台查看限额或域名验证状态。
+- 确认 Worker 上有与 `plugins.provider`（或 `MAIL_PROVIDER`）对应的 API 密钥。
+- `mail.json` 中的 `fromEmail` 须在该服务商处授权。
+- 在服务商控制台查看限额或域名验证状态。
 
 ## CI 部署失败
 
@@ -28,7 +28,11 @@
 
 ## 能否换成非 Brevo 的邮件服务？
 
-可以。在 `config/mail.json` 里设置 `plugins.provider` 为 `brevo`、`resend`、`sendgrid`、`mailgun`、`postmark`、`mailersend`、`smtp2go` 或 `sparkpost`，并在 Worker 上配置对应密钥（见[配置说明](./config)）。`fromEmail` 须在该服务商处授权。
+可以。在 `config/mail.json` 里设置 `plugins.provider`（或环境变量 `MAIL_PROVIDER`）为 `plugins/providers/` 下的 id（内置：`brevo`、`resend`、`sendgrid`、`mailgun`、`postmark`、`mailersend`、`smtp2go`、`sparkpost`），并在 Worker 上配置对应密钥（见[配置说明](./config)）。`fromEmail` 须在该服务商处授权。
+
+## 如何增加主题、版式或 Logo？
+
+在 `plugins/themes/` 或 `plugins/layouts/` 放入 JSON，或在 `plugins/logos/` 放入图片，再设置 `plugins.theme` / `layout` / `logo`（也可用 `MAIL_THEME`、`MAIL_LAYOUT`、`MAIL_LOGO`）。详见[配置说明](./config)。
 
 ## 支持哪些 Markdown？
 

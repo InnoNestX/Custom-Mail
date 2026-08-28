@@ -5,7 +5,7 @@ Custom Mail 以单个 **Cloudflare Worker** 运行，配合 **KV** 与 **Workers
 ## 前置条件
 
 - 已开通 Workers 的 Cloudflare 账号
-- [Brevo](https://www.brevo.com/) 账号与已验证发信域名
+- [Brevo](https://www.brevo.com/)（默认）或其他已支持的发信服务商 — 见[配置说明](./config)
 - Rust stable（`wasm32-unknown-unknown`）与 `worker-build` 0.8.5
 - Node.js 22+ 与 `npm`
 
@@ -14,8 +14,8 @@ Custom Mail 以单个 **Cloudflare Worker** 运行，配合 **KV** 与 **Workers
 编辑 `config/mail.json`：
 
 - 设置 `host` 为邮件子域名
-- 设置 `mail.fromEmail` 为 Brevo 已授权地址
-- 自定义 `app`、`brand`、`addressBook`
+- 设置 `mail.fromEmail` 为所选服务商已授权地址
+- 自定义 `plugins`、`app`、`brand`、`site`、`i18n`、`addressBook`
 
 编辑 `wrangler.jsonc`：
 
@@ -41,7 +41,7 @@ cp .dev.vars.example .dev.vars
 
 ```bash
 npx wrangler secret put ADMIN_PASSWORD
-npx wrangler secret put BREVO_API_KEY
+npx wrangler secret put BREVO_API_KEY   # 或与 plugins.provider 对应的密钥
 ```
 
 ## 3. 发布
@@ -52,6 +52,12 @@ npm run deploy
 ```
 
 访问 `https://<host>` 并登录。
+
+## Docker（本地）
+
+发布的镜像用于本地试用。传入 `ADMIN_PASSWORD` 与当前服务商的 API 密钥。`MAIL_PROVIDER`、`MAIL_THEME`、`MAIL_LAYOUT`、`MAIL_LOGO`、`MAIL_CONFIG_JSON` 可覆盖 `mail.json` 的插件槽而无需重建。新增主题/版式 JSON 或 Logo 文件仍需重建镜像。
+
+详见仓库中的 `docker/DOCKERHUB.md` 与 `skills/custom-mail/SKILL.md`。
 
 ## 自定义域名
 
@@ -76,6 +82,6 @@ Cloudflare 部署所需 GitHub Secrets：`CLOUDFLARE_API_TOKEN`、`CLOUDFLARE_AC
 
 - [ ] `mail.json` 的 `host` 与 `wrangler.jsonc` 路由一致
 - [ ] KV ID 为真实值
-- [ ] Worker 已设置 `ADMIN_PASSWORD` 与 `BREVO_API_KEY`
-- [ ] Brevo 已验证 `fromEmail`
+- [ ] Worker 已设置 `ADMIN_PASSWORD` 与 `plugins.provider` 对应的 API 密钥
+- [ ] 服务商已验证 `fromEmail`
 - [ ] `main` 上 CI `check` 通过

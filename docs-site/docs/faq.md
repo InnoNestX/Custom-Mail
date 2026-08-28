@@ -6,11 +6,11 @@
 - **Local:** check `.dev.vars` and restart `npm run dev`.
 - Too many attempts trigger a temporary lockout — wait and retry.
 
-## Send fails / Brevo errors
+## Send fails / provider errors
 
-- Verify `BREVO_API_KEY` on the Worker.
-- `fromEmail` in `mail.json` must be authorized in Brevo.
-- Check Brevo for rate limits or domain verification.
+- Verify the API secret that matches `plugins.provider` (or `MAIL_PROVIDER`) on the Worker.
+- `fromEmail` in `mail.json` must be authorized with that provider.
+- Check the provider dashboard for rate limits or domain verification.
 
 ## Deploy fails on CI
 
@@ -28,7 +28,11 @@ Send history uses list → full-screen detail on narrow screens. Desktop uses si
 
 ## Can I use another ESP instead of Brevo?
 
-Yes. Set `plugins.provider` in `config/mail.json` to `brevo`, `resend`, `sendgrid`, `mailgun`, `postmark`, `mailersend`, `smtp2go`, or `sparkpost`, and put the matching API secret on the Worker (see [configuration](./config)). `fromEmail` must be authorized with that provider.
+Yes. Set `plugins.provider` in `config/mail.json` (or `MAIL_PROVIDER`) to an id from `plugins/providers/` — bundled: `brevo`, `resend`, `sendgrid`, `mailgun`, `postmark`, `mailersend`, `smtp2go`, `sparkpost` — and put the matching API secret on the Worker (see [configuration](./config)). `fromEmail` must be authorized with that provider.
+
+## How do I add a theme, layout, or logo?
+
+Add JSON under `plugins/themes/` or `plugins/layouts/`, or drop a file in `plugins/logos/`. Set `plugins.theme` / `layout` / `logo` (or `MAIL_THEME` / `MAIL_LAYOUT` / `MAIL_LOGO`). See the [configuration](./config) guide.
 
 ## Which Markdown is supported?
 

@@ -2,7 +2,7 @@
 
 <div align="center">
 
-**Private Brevo mail console — compose, preview, attachments, and send history**
+**Private web mail console — compose, preview, attachments, and send history**
 
 [![Version](https://img.shields.io/github/v/release/InnoNestX/Custom-Mail?label=version)](https://github.com/InnoNestX/Custom-Mail/releases)
 [![Docker Pulls](https://img.shields.io/docker/pulls/xuxuclassmate/custom-mail)](https://hub.docker.com/r/xuxuclassmate/custom-mail)
@@ -22,7 +22,8 @@ Custom Mail is a self-hosted outbound mail workspace. Run it locally in Docker t
 - Attachments up to 8 files · 8 MB each · 15 MB total
 - Send history with detail view (desktop + mobile)
 - Session login, login rate limit, HttpOnly cookies
-- Delivered through **Brevo** — no mail server to maintain
+- Pluggable ESP (Brevo, Resend, SendGrid, Mailgun, Postmark, MailerSend, SMTP2GO, SparkPost)
+- Drop-in themes, layouts, logo, features, and config overlays (`plugins/` + `config/mail.json`)
 - Runtime: **Rust** Cloudflare Worker (`workers-rs` → WASM) inside a slim image
 
 ## Docker Quick Start
@@ -37,15 +38,25 @@ Also on GHCR: `ghcr.io/innonestx/custom-mail:latest`
 
 ### 2. Set your secrets
 
-You need at least a console password. Add a Brevo API key when you want to actually send mail.
+You need a console password. Add the API key for the provider selected in `config/mail.json` (`plugins.provider`, default `brevo`) when you want to send.
 
 ```bash
 export ADMIN_PASSWORD='choose-a-strong-password'
-export BREVO_API_KEY='xkeysib-...'   # optional for UI-only testing
-export PORT=8787                        # optional, default 8787
+export BREVO_API_KEY='xkeysib-...'   # or RESEND_API_KEY / SENDGRID_API_KEY / MAIL_API_KEY / …
+export PORT=8787                      # optional, default 8787
 ```
 
-Get a Brevo key from [Brevo → SMTP & API](https://app.brevo.com/settings/keys/api).
+To use another provider, theme, layout, or logo **without rebuilding** the image:
+
+```bash
+export MAIL_PROVIDER=resend
+export MAIL_THEME=nord
+export MAIL_LAYOUT=compact
+export MAIL_LOGO=monogram
+export RESEND_API_KEY='re_...'
+```
+
+These override the matching `plugins.*` slots baked into the image. `MAIL_CONFIG_JSON='{"site":{"brandName":"Desk"}}'` deep-merges extra JSON. Adding a new theme JSON file still needs `docker compose build`.
 
 ### 3. Run the container
 
@@ -75,7 +86,7 @@ Quick health check:
 
 ```bash
 curl -s http://localhost:8787/api/health
-# {"ok":true,"runtime":"rust","service":"mail",...}
+# {"ok":true,"runtime":"rust","plugins":{"provider":"brevo","theme":"forest","layout":"banner","logo":"image"},...}
 ```
 
 ## Docker Compose
@@ -96,19 +107,34 @@ Stop the service:
 docker compose down
 ```
 
+To change **branding or add plugin JSON/logo files**, edit `config/mail.json` / `plugins/` and rebuild (`docker compose build`). Slot env vars above switch the active plugin without a rebuild.
+
 ## Environment Variables
 
 | Variable | Default | Description |
 | --- | --- | --- |
 | `ADMIN_PASSWORD` | *(required)* | Login password for the mail console |
-| `BREVO_API_KEY` | empty | Brevo API key (`xkeysib-…`). UI works without it; send fails until set |
+| `MAIL_PROVIDER` | empty | Overrides `plugins.provider` (`brevo`, `resend`, `sendgrid`, `mailgun`, `postmark`, `mailersend`, `smtp2go`, `sparkpost`) |
+| `MAIL_THEME` | empty | Overrides `plugins.theme` (`forest`, `midnight`, `ocean`, `paper`, `rose`, `slate`, `aurora`, `sunset`, `nord`, …) |
+| `MAIL_LAYOUT` | empty | Overrides `plugins.layout` (`card`, `minimal`, `banner`, `digest`, `compact`) |
+| `MAIL_LOGO` | empty | Overrides `plugins.logo` (`auto`, `image`, `monogram`, `none`) |
+| `MAIL_CONFIG_JSON` | empty | JSON object deep-merged onto `mail.json` at runtime |
+| `BREVO_API_KEY` | empty | Brevo key. UI works without a key; send needs the key for the active provider |
+| `RESEND_API_KEY` | empty | Resend |
+| `SENDGRID_API_KEY` | empty | SendGrid |
+| `MAILGUN_API_KEY` / `MAILGUN_DOMAIN` | empty | Mailgun |
+| `POSTMARK_SERVER_TOKEN` | empty | Postmark |
+| `MAILERSEND_API_KEY` | empty | MailerSend |
+| `SMTP2GO_API_KEY` | empty | SMTP2GO |
+| `SPARKPOST_API_KEY` | empty | SparkPost |
+| `MAIL_API_KEY` | empty | Fallback if the provider-specific key is unset |
 | `PORT` | `8787` | Port Wrangler listens on inside the container |
 
 The image sets `ALLOW_ANY_HOST=1` so local Docker works without tweaking Host headers.
 
 ## Branding & config
 
-Product copy, colors, login text, and address book live in `config/mail.json` inside the image. For production on Cloudflare, edit that file in the repo and redeploy — see the [config guide](https://innonestx.github.io/Custom-Mail/config.html).
+Product copy, colors, footer, and the default plugin ids live in `config/mail.json`. Drop-in catalogs live in `plugins/` (themes, layouts, providers, logos). For a custom brand, edit those files then rebuild. On Cloudflare, edit the repo and redeploy — see the [config guide](https://innonestx.github.io/Custom-Mail/config.html).
 
 ## Image Tags
 

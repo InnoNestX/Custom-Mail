@@ -1,0 +1,6 @@
+{
+  "id": "history",
+  "label": "Send history",
+  "configKey": "history",
+  "default": true
+}

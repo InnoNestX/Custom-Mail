@@ -29,7 +29,7 @@
 
 ---
 
-**Custom Mail** is a self-hosted outbound mail workspace written in **Rust** (`workers-rs`). Run it on your own Cloudflare account, brand it with JSON config (name, domain, colors, logo, favicon, footer, copy), pick a theme / layout / mail-provider plugin, and send without maintaining a mail server.
+**Custom Mail** is a self-hosted outbound mail workspace written in **Rust** (`workers-rs`). Run it on your own Cloudflare account, brand it with JSON config (name, domain, colors, logo, favicon, footer, copy), drop in theme / layout / provider / logo plugins, and send without maintaining a mail server.
 
 **Docs:** [English](https://innonestx.github.io/Custom-Mail/) · [中文](https://innonestx.github.io/Custom-Mail/zh/)  
 **Docs URL:** https://innonestx.github.io/Custom-Mail/
@@ -44,7 +44,7 @@
 - **No VPS** — Worker + KV + static assets on the edge
 - **One password** — session login for a private compose UI
 - **Brandable** — title, domain, header colors, logo, favicon, footer, and every label in `config/mail.json`; unused sections stay hidden
-- **Plugins** — pick a visual theme, HTML layout, and mail provider at deploy time
+- **Plugins** — drop-in `plugins/` catalogs for ESP, theme, layout, features, and logo; unused sections stay hidden
 - **Markdown body** — CommonMark + GitHub Flavored Markdown preview before send; optional attachments
 - **Audit trail** — last 10 sends stored in KV with detail view (desktop + mobile)
 
@@ -58,7 +58,7 @@
 | History | List + detail; mobile full-screen detail layout |
 | Security | HttpOnly session cookie, login rate limit, secrets on Worker |
 | CI | Rust tests + wasm check on every push; CodeQL scanning |
-| Runtime | Cloudflare Workers via `workers-rs` (Rust → WASM) |
+| Plugins | Theme, layout, ESP, logo, and features chosen in `config/mail.json` + `plugins/` |
 
 ## Markdown
 
@@ -101,10 +101,12 @@ docker run --rm -p 8787:8787 \
 
 Open **http://127.0.0.1:8787**. Or: `docker compose up`.
 
+To switch provider / theme / layout / logo without rebuilding: `-e MAIL_PROVIDER=resend -e MAIL_THEME=nord -e RESEND_API_KEY='re_...'`. New JSON under `plugins/` still needs a rebuild. See [plugins/README.md](plugins/README.md).
+
 OpenClaw skill: `clawhub install custom-mail`
 ## Configuration
 
-All product copy and mail defaults live in **`config/mail.json`**. Full reference on the docs site:
+All product copy and mail defaults live in **`config/mail.json`**. Drop-in catalogs live in **`plugins/`**. Full reference on the docs site:
 
 - https://innonestx.github.io/Custom-Mail/config.html
 
@@ -118,7 +120,7 @@ Also in-repo: [docs/CONFIG.md](docs/CONFIG.md) · [docs/DEPLOY.md](docs/DEPLOY.m
 
 ```bash
 npx wrangler secret put ADMIN_PASSWORD
-npx wrangler secret put BREVO_API_KEY
+npx wrangler secret put BREVO_API_KEY   # or the key for plugins.provider
 npm run deploy
 ```
 
@@ -129,7 +131,7 @@ npm run deploy
 | **CI** | Every push / PR — `npm run typecheck` |
 | **Deploy to Cloudflare Workers** | Manual **Run workflow** only |
 
-Org/repo secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`. Worker secrets stay on Cloudflare (`ADMIN_PASSWORD`, `BREVO_API_KEY`).
+Org/repo secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`. Worker secrets stay on Cloudflare (`ADMIN_PASSWORD` and the provider API key).
 
 Details: https://innonestx.github.io/Custom-Mail/deploy.html · [docs/DEPLOY.md](docs/DEPLOY.md)
 
@@ -139,7 +141,7 @@ Details: https://innonestx.github.io/Custom-Mail/deploy.html · [docs/DEPLOY.md]
 Browser ──► Cloudflare Worker (custom-mail)
               ├── Workers Assets (UI)
               ├── KV MAIL_LOG_KV (sessions + send log)
-              └── Brevo API (transactional send)
+              └── Provider API (Brevo, Resend, SendGrid, …)
 ```
 
 ## Community

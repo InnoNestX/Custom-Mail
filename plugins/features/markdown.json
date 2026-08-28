@@ -1,0 +1,6 @@
+{
+  "id": "markdown",
+  "label": "Markdown body",
+  "configKey": "markdown",
+  "default": true
+}

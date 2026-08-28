@@ -1,5 +1,12 @@
 ADMIN_PASSWORD=
-# Pick the secret that matches plugins.provider in config/mail.json.
+# Optional runtime overrides of config/mail.json plugin slots (no rebuild).
+MAIL_PROVIDER=
+MAIL_THEME=
+MAIL_LAYOUT=
+MAIL_LOGO=
+# Optional JSON object deep-merged onto mail.json at runtime.
+MAIL_CONFIG_JSON=
+# Pick the secret that matches plugins.provider (or MAIL_PROVIDER).
 # Unused keys can be left empty.
 BREVO_API_KEY=
 RESEND_API_KEY=

@@ -1,0 +1,19 @@
+{
+  "id": "slate",
+  "label": "Slate",
+  "aliases": [
+    "gray",
+    "grey",
+    "neutral"
+  ],
+  "accent": "#334155",
+  "accentDeep": "#1e293b",
+  "accentSoft": "#f1f5f9",
+  "ink": "#0f172a",
+  "muted": "#64748b",
+  "paper": "#f8fafc",
+  "line": "#e2e8f0",
+  "heroFrom": "#334155",
+  "heroTo": "#1e293b",
+  "headerText": "#ffffff"
+}

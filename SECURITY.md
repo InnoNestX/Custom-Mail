@@ -32,4 +32,4 @@ Include steps to reproduce, impact, and affected routes (`mail.*` host, Worker n
 
 In scope: authentication bypass, secret leakage, unauthorized send, XSS in compose UI, attachment handling.
 
-Out of scope: misconfigured `ADMIN_PASSWORD` on your deployment, Brevo account compromise, DNS misrouting outside this codebase.
+Out of scope: misconfigured `ADMIN_PASSWORD` on your deployment, mail-provider account compromise, DNS misrouting outside this codebase.

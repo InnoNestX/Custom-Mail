@@ -1,0 +1,15 @@
+{
+  "id": "aurora",
+  "label": "Aurora",
+  "aliases": [],
+  "accent": "#7c3aed",
+  "accentDeep": "#4c1d95",
+  "accentSoft": "#ede9fe",
+  "ink": "#1e1b4b",
+  "muted": "#6d28d9",
+  "paper": "#f5f3ff",
+  "line": "#ddd6fe",
+  "heroFrom": "#7c3aed",
+  "heroTo": "#0ea5e9",
+  "headerText": "#ffffff"
+}

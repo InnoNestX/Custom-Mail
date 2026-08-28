@@ -53,6 +53,12 @@ npm run deploy
 
 Visit `https://<host>` and sign in.
 
+## Docker (local)
+
+The published image is for trying the console locally. Pass `ADMIN_PASSWORD` and the API key for the active provider. `MAIL_PROVIDER`, `MAIL_THEME`, `MAIL_LAYOUT`, `MAIL_LOGO`, and `MAIL_CONFIG_JSON` override `mail.json` plugin slots without rebuilding. New theme/layout JSON or logo files still need an image rebuild.
+
+Details: the repo files `docker/DOCKERHUB.md` and `skills/custom-mail/SKILL.md`.
+
 ## Custom domain
 
 ```jsonc
@@ -83,6 +89,6 @@ Worker secrets stay on Cloudflare — not in GitHub.
 
 - [ ] `host` in `mail.json` matches `wrangler.jsonc` route
 - [ ] KV namespace ID is real
-- [ ] `ADMIN_PASSWORD` and `BREVO_API_KEY` on Worker
-- [ ] Brevo sender verified for `fromEmail`
+- [ ] `ADMIN_PASSWORD` and the API key for `plugins.provider` on the Worker
+- [ ] Provider has verified `fromEmail`
 - [ ] CI `check` passes on `main`

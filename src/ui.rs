@@ -1,7 +1,9 @@
 use crate::brand::brand_mark_html;
 use crate::config::MailConfig;
 use crate::markdown::escape_html;
-use crate::plugins::{resolve_theme, LayoutId, ProviderId, ThemeId};
+use crate::plugins::{
+    resolve_layout_id, resolve_provider_id, resolve_theme, resolve_theme_id, LogoMode,
+};
 
 const TEMPLATE: &str = include_str!("../templates/app.html");
 
@@ -50,6 +52,29 @@ fn syntax_chips_html(cfg: &MailConfig) -> String {
     rows
 }
 
+fn plugin_chips_html(cfg: &MailConfig) -> String {
+    let slots = [
+        ("provider", resolve_provider_id(&cfg.plugins.provider)),
+        ("theme", resolve_theme_id(&cfg.plugins.theme)),
+        ("layout", resolve_layout_id(&cfg.plugins.layout)),
+        (
+            "logo",
+            LogoMode::parse(&cfg.plugins.logo).as_str().to_string(),
+        ),
+    ];
+    let chips: String = slots
+        .iter()
+        .map(|(key, value)| {
+            format!(
+                r#"<span class="plugin-chip"><span class="plugin-chip-k">{}</span>{}</span>"#,
+                escape_html(key),
+                escape_html(value)
+            )
+        })
+        .collect();
+    format!(r#"<div class="plugin-chips" aria-label="Active plugins">{chips}</div>"#)
+}
+
 fn subtitle_block(text: &str, class: &str) -> String {
     if text.trim().is_empty() {
         String::new()
@@ -67,9 +92,10 @@ pub fn render_app_html(cfg: &MailConfig, from_name: &str, from_email: &str) -> S
         "features": cfg.features,
         "i18n": cfg.i18n,
         "plugins": {
-            "provider": ProviderId::parse(&cfg.plugins.provider).as_str(),
-            "theme": ThemeId::parse(&cfg.plugins.theme).as_str(),
-            "layout": LayoutId::parse(&cfg.plugins.layout).as_str(),
+            "provider": resolve_provider_id(&cfg.plugins.provider),
+            "theme": resolve_theme_id(&cfg.plugins.theme),
+            "layout": resolve_layout_id(&cfg.plugins.layout),
+            "logo": LogoMode::parse(&cfg.plugins.logo).as_str(),
         }
     });
     let bootstrap = serde_json::to_string(&bootstrap)
@@ -116,7 +142,11 @@ pub fn render_app_html(cfg: &MailConfig, from_name: &str, from_email: &str) -> S
             "___APP_SUBTITLE_P___",
             &subtitle_block(&cfg.app.subtitle, ""),
         )
-        .replace("___LOGIN_TAGLINE___", &escape_html(&cfg.app.login_tagline))
+        .replace("___PLUGIN_CHIPS___", &plugin_chips_html(cfg))
+        .replace(
+            "___LOGIN_TAGLINE_P___",
+            &subtitle_block(&cfg.app.login_tagline, "login-tagline"),
+        )
         .replace("___LOGIN_HEADLINE___", &headline)
         .replace("___LOGIN_LEAD___", &login_lead)
         .replace(
@@ -238,4 +268,29 @@ pub fn render_app_html(cfg: &MailConfig, from_name: &str, from_email: &str) -> S
         .replace("___FROM_EMAIL___", &escape_html(from_email))
         .replace("___ADDRESS_BOOK___", &book)
         .replace("___BOOTSTRAP___", &bootstrap)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::config::load_config;
+
+    #[test]
+    fn plugin_chips_include_active_slots() {
+        let cfg = load_config();
+        let html = plugin_chips_html(&cfg);
+        assert!(html.contains("plugin-chip-k"), "{html}");
+        assert!(html.contains("provider"), "{html}");
+        assert!(html.contains("theme"), "{html}");
+        assert!(html.contains("layout"), "{html}");
+        assert!(html.contains("logo"), "{html}");
+    }
+
+    #[test]
+    fn render_includes_plugin_chips() {
+        let cfg = load_config();
+        let html = render_app_html(&cfg, "Desk", "a@b.test");
+        assert!(html.contains("plugin-chips"));
+        assert!(!html.contains("___PLUGIN_CHIPS___"));
+    }
 }

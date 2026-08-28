@@ -1,0 +1,10 @@
+{
+  "id": "resend",
+  "label": "Resend",
+  "aliases": [],
+  "secrets": [
+    "RESEND_API_KEY",
+    "MAIL_API_KEY"
+  ],
+  "needsDomain": false
+}

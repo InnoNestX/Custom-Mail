@@ -22,7 +22,7 @@ body:
       label: Area
       options:
         - Compose UI
-        - Send / Brevo
+        - Send / providers
         - Attachments
         - Send history
         - Mobile (H5)

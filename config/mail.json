@@ -3,7 +3,8 @@
   "plugins": {
     "provider": "brevo",
     "theme": "forest",
-    "layout": "banner"
+    "layout": "banner",
+    "logo": "image"
   },
   "features": {
     "attachments": true,

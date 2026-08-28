@@ -5,7 +5,7 @@
 - Rust **stable** (with `wasm32-unknown-unknown`) and `worker-build` 0.8.5
 - Node.js **22+** (Wrangler)
 - Cloudflare account (for production)
-- Brevo API key (for sending)
+- An API key for your chosen provider (Brevo by default; see [Plugins](./plugins) and [Configuration](./config))
 
 ## Install and run
 
@@ -21,6 +21,8 @@ Edit `.dev.vars`:
 ```bash
 ADMIN_PASSWORD=your-strong-password
 BREVO_API_KEY=your-brevo-key
+# or MAIL_PROVIDER=resend and RESEND_API_KEY=...
+# optional: MAIL_THEME=nord  MAIL_LAYOUT=compact  MAIL_LOGO=monogram
 ALLOW_ANY_HOST=1
 ```
 
@@ -31,6 +33,10 @@ npm run dev
 ```
 
 Open **http://localhost:8790** and sign in with `ADMIN_PASSWORD`.
+
+## Pick plugins
+
+Drop files under `plugins/` (themes, layouts, logos, provider metadata) and set the active ids in `config/mail.json`. Unused sections stay hidden. Details: [Plugins](./plugins).
 
 ## Docs site (optional)
 

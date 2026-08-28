@@ -1,67 +1,26 @@
+use crate::brand::email_logo_html;
 use crate::config::MailConfig;
 use crate::markdown::escape_html;
+use crate::plugins::catalog::{self, LayoutSpec};
 use crate::plugins::theme::ThemePalette;
 
-/// Built-in HTML shells for outbound mail. Operators pick one with `plugins.layout`.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum LayoutId {
-    Card,
-    Minimal,
-    Banner,
-    Digest,
-}
-
-impl LayoutId {
-    pub fn parse(raw: &str) -> Self {
-        match raw.trim().to_ascii_lowercase().as_str() {
-            "minimal" | "plain" => Self::Minimal,
-            "banner" | "hero" => Self::Banner,
-            "digest" | "newsletter" => Self::Digest,
-            _ => Self::Card,
-        }
-    }
-
-    pub fn as_str(self) -> &'static str {
-        match self {
-            Self::Card => "card",
-            Self::Minimal => "minimal",
-            Self::Banner => "banner",
-            Self::Digest => "digest",
-        }
-    }
-}
-
-fn optional_logo_img(cfg: &MailConfig) -> String {
-    match cfg.configured_logo_url() {
-        Some(url) => format!(
-            r#"<img src="{src}" alt="{alt}" width="40" height="40" style="display:block;border:0;border-radius:10px;max-width:40px;height:auto;" />"#,
-            src = escape_html(&url),
-            alt = escape_html(cfg.brand_name()),
-        ),
-        None => String::new(),
-    }
-}
-
-fn header_html(cfg: &MailConfig, pal: &ThemePalette, layout: LayoutId) -> String {
-    if !cfg.layout.show_header {
+fn header_html(cfg: &MailConfig, pal: &ThemePalette, spec: &LayoutSpec) -> String {
+    if !cfg.layout.show_header || spec.header_style.eq_ignore_ascii_case("none") {
         return String::new();
     }
     let name = escape_html(cfg.brand_name());
-    if name.is_empty() && cfg.configured_logo_url().is_none() {
+    let logo = email_logo_html(cfg, pal);
+    if name.is_empty() && logo.is_empty() {
         return String::new();
     }
-    let logo = if cfg.layout.show_logo {
-        optional_logo_img(cfg)
-    } else {
-        String::new()
-    };
     let title = if name.is_empty() {
         String::new()
     } else {
         format!(r#"<div style="font-size:15px;font-weight:700;letter-spacing:.04em;">{name}</div>"#)
     };
-    match layout {
-        LayoutId::Banner | LayoutId::Digest => format!(
+    let gradient = spec.header_style.eq_ignore_ascii_case("gradient");
+    if gradient {
+        format!(
             r#"<tr><td style="padding:22px 28px;background:{from};background:linear-gradient(135deg,{from},{to});color:{fg};">
               <table role="presentation" cellpadding="0" cellspacing="0"><tr>
                 {logo_cell}
@@ -76,29 +35,24 @@ fn header_html(cfg: &MailConfig, pal: &ThemePalette, layout: LayoutId) -> String
             } else {
                 format!(r#"<td style="padding-right:12px;vertical-align:middle;">{logo}</td>"#)
             },
-        ),
-        LayoutId::Card | LayoutId::Minimal => {
-            if logo.is_empty() && title.is_empty() {
+        )
+    } else if logo.is_empty() && title.is_empty() {
+        String::new()
+    } else {
+        format!(
+            r#"<tr><td style="padding:20px 28px 0;">
+              <table role="presentation" cellpadding="0" cellspacing="0"><tr>
+                {logo_cell}
+                <td style="vertical-align:middle;color:{ink};">{title}</td>
+              </tr></table>
+            </td></tr>"#,
+            ink = pal.ink,
+            logo_cell = if logo.is_empty() {
                 String::new()
             } else {
-                format!(
-                    r#"<tr><td style="padding:20px 28px 0;">
-                      <table role="presentation" cellpadding="0" cellspacing="0"><tr>
-                        {logo_cell}
-                        <td style="vertical-align:middle;color:{ink};">{title}</td>
-                      </tr></table>
-                    </td></tr>"#,
-                    ink = pal.ink,
-                    logo_cell = if logo.is_empty() {
-                        String::new()
-                    } else {
-                        format!(
-                            r#"<td style="padding-right:12px;vertical-align:middle;">{logo}</td>"#
-                        )
-                    },
-                )
-            }
-        }
+                format!(r#"<td style="padding-right:12px;vertical-align:middle;">{logo}</td>"#)
+            },
+        )
     }
 }
 
@@ -171,8 +125,8 @@ pub fn wrap_email_html(
     from_name: &str,
     interactive: bool,
 ) -> String {
-    let layout = LayoutId::parse(&cfg.plugins.layout);
-    let header = header_html(cfg, pal, layout);
+    let spec = catalog::resolve_layout(&cfg.plugins.layout);
+    let header = header_html(cfg, pal, &spec);
     let footer = footer_html(cfg, pal);
     let subject_html = subject_block(cfg, pal, subject);
     let from_html = from_block(cfg, pal, from_name);
@@ -186,19 +140,9 @@ pub fn wrap_email_html(
     } else {
         cfg.app.locale.trim()
     };
-    let pad = match layout {
-        LayoutId::Minimal => "16px 20px 20px",
-        LayoutId::Digest => "20px 28px 8px",
-        _ => "20px 28px 8px",
-    };
-    let card_shadow = match layout {
-        LayoutId::Minimal => "none",
-        _ => "0 18px 40px rgba(16,35,29,.12)",
-    };
-    let outer_bg = match layout {
-        LayoutId::Minimal => pal.paper.as_str(),
-        _ => pal.paper.as_str(),
-    };
+    let pad = spec.body_padding.as_str();
+    let card_shadow = spec.card_shadow.as_str();
+    let outer_bg = pal.paper.as_str();
     format!(
         r#"<!DOCTYPE html>
 <html lang="{lang}">
@@ -281,5 +225,15 @@ mod tests {
         let html = wrap_email_html(&c, &pal, "Hello", "<p>Hi</p>", "Desk", false);
         assert!(!html.contains("linear-gradient"));
         assert!(html.contains("Hello"));
+    }
+
+    #[test]
+    fn compact_layout_uses_json_padding() {
+        let mut c = load_config();
+        c.plugins.layout = "compact".into();
+        let pal = resolve_theme(&c.plugins, &c.brand);
+        let html = wrap_email_html(&c, &pal, "Hello", "<p>Hi</p>", "Desk", false);
+        assert!(html.contains("12px 16px 12px"), "{html}");
+        assert!(!html.contains("linear-gradient"));
     }
 }

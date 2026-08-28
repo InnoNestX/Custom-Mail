@@ -1,0 +1,12 @@
+{
+  "id": "smtp2go",
+  "label": "SMTP2GO",
+  "aliases": [
+    "smtp-2go"
+  ],
+  "secrets": [
+    "SMTP2GO_API_KEY",
+    "MAIL_API_KEY"
+  ],
+  "needsDomain": false
+}

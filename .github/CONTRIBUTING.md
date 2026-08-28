@@ -13,7 +13,9 @@ cp .dev.vars.example .dev.vars
 npm run dev
 ```
 
-Open <http://localhost:8790> and set `ADMIN_PASSWORD` and `BREVO_API_KEY` in `.dev.vars`. Localhost also needs `ALLOW_ANY_HOST=1`.
+Open <http://localhost:8790> and set `ADMIN_PASSWORD` plus the API key for `plugins.provider` in `.dev.vars`. Localhost also needs `ALLOW_ANY_HOST=1`.
+
+Drop-in catalogs live in `plugins/` (providers, themes, layouts, features, logos). See [plugins/README.md](../plugins/README.md).
 
 Published docs: https://innonestx.github.io/Custom-Mail/  
 Full guides: [docs/README.md](docs/README.md)
@@ -41,7 +43,7 @@ CI runs the same check on every push and pull request to `main`.
 
 ## Deploy
 
-Production Worker deploy is **manual** (local `npm run deploy` or the **Deploy to Cloudflare Workers** workflow). Do not put Cloudflare or Brevo secrets in the repository.
+Production Worker deploy is **manual** (local `npm run deploy` or the **Deploy to Cloudflare Workers** workflow). Do not put Cloudflare or mail-provider secrets in the repository.
 
 ## Code of Conduct
 

@@ -9,7 +9,7 @@ mod sessions;
 mod ui;
 
 use brand::favicon_svg;
-use config::load_config;
+use config::load_config_with_env;
 use email::{
     build_email_preview_html, decode_snippet_param, fixed_from_email, resolve_from_name, send_mail,
     snippet_page_html, EmailAttachment, SendEmailInput,
@@ -19,7 +19,11 @@ use login_guard::{
     check_login_allowed, clear_login_failures, format_lockout_message, get_client_ip,
     record_login_failure,
 };
-use plugins::{ProviderId, ProviderSecrets};
+use plugins::{
+    available_catalog, provider_needs_domain, provider_secrets as catalog_provider_secrets,
+    resolve_layout_id, resolve_provider_id, resolve_theme_id, LogoMode, ProviderId,
+    ProviderSecrets,
+};
 use sessions::{
     clear_session_cookie_header, create_session, read_session_token, revoke_session,
     session_cookie_header, validate_session,
@@ -85,15 +89,20 @@ fn secret_or_var(env: &Env, name: &str) -> String {
 
 fn provider_secrets(env: &Env, cfg: &config::MailConfig) -> ProviderSecrets {
     let id = ProviderId::parse(&cfg.plugins.provider);
+    let mut names: Vec<String> = catalog_provider_secrets(&cfg.plugins.provider);
+    if names.is_empty() {
+        names = id.secret_names().iter().map(|s| (*s).to_string()).collect();
+    }
     let mut api_key = String::new();
-    for name in id.secret_names() {
+    for name in &names {
         let v = secret_or_var(env, name);
         if !v.is_empty() {
             api_key = v;
             break;
         }
     }
-    let extra_domain = if id == ProviderId::Mailgun {
+    let extra_domain = if provider_needs_domain(&cfg.plugins.provider) || id == ProviderId::Mailgun
+    {
         let d = secret_or_var(env, "MAILGUN_DOMAIN");
         if d.is_empty() {
             cfg.mail.provider_domain.clone()
@@ -123,7 +132,7 @@ async fn require_auth(req: &Request, kv: &kv::KvStore) -> std::result::Result<()
 #[event(fetch)]
 async fn main(mut req: Request, env: Env, _ctx: Context) -> Result<Response> {
     console_error_panic_hook::set_once();
-    let cfg = load_config();
+    let cfg = load_config_with_env(|name| secret_or_var(&env, name));
 
     let allow_any = secret_or_var(&env, "ALLOW_ANY_HOST") == "1";
     if !allow_any {
@@ -188,8 +197,17 @@ async fn main(mut req: Request, env: Env, _ctx: Context) -> Result<Response> {
                 "runtime": "rust",
                 "from": format!("{from_name} <{from_email}>"),
                 "provider": provider_id.as_str(),
-                "theme": cfg.plugins.theme,
-                "layout": cfg.plugins.layout,
+                "theme": resolve_theme_id(&cfg.plugins.theme),
+                "layout": resolve_layout_id(&cfg.plugins.layout),
+                "logo": LogoMode::parse(&cfg.plugins.logo).as_str(),
+                "plugins": {
+                    "provider": resolve_provider_id(&cfg.plugins.provider),
+                    "theme": resolve_theme_id(&cfg.plugins.theme),
+                    "layout": resolve_layout_id(&cfg.plugins.layout),
+                    "logo": LogoMode::parse(&cfg.plugins.logo).as_str(),
+                },
+                "available": available_catalog(),
+                "features": cfg.features,
                 "configured": !mail_secrets.api_key.is_empty(),
                 "history": cfg.features.history
             }),

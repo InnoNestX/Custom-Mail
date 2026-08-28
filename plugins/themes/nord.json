@@ -1,0 +1,17 @@
+{
+  "id": "nord",
+  "label": "Nord",
+  "aliases": [
+    "polar"
+  ],
+  "accent": "#5e81ac",
+  "accentDeep": "#2e3440",
+  "accentSoft": "#eceff4",
+  "ink": "#2e3440",
+  "muted": "#4c566a",
+  "paper": "#eceff4",
+  "line": "#d8dee9",
+  "heroFrom": "#5e81ac",
+  "heroTo": "#3b4252",
+  "headerText": "#eceff4"
+}
