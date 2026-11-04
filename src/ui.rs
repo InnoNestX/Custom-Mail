@@ -385,4 +385,14 @@ mod tests {
         assert!(!html.contains("___ORG_EYEBROW___"));
         assert!(!html.contains("___VERSION_PILL___"));
     }
+
+    #[test]
+    fn render_follows_browser_color_scheme() {
+        let cfg = load_config();
+        let html = render_app_html(&cfg, "Desk", "a@b.test");
+        assert!(html.contains("color-scheme: light dark"));
+        assert!(html.contains("prefers-color-scheme: dark"));
+        assert!(html.contains("prefers-color-scheme: light"));
+        assert!(!html.contains("color-scheme: light;"));
+    }
 }
