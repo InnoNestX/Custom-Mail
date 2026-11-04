@@ -207,7 +207,7 @@ impl<'a> HtmlWriter<'a> {
             Tag::BlockQuote(kind) => {
                 let (label, border) = quote_style(kind);
                 self.out.push_str(&format!(
-                    "<blockquote style=\"margin:12px 0;padding:8px 12px;border-left:3px solid {border};background:#f7f8f6;color:#3f463d;\">"
+                    "<blockquote style=\"margin:12px 0;padding:8px 12px;border-left:3px solid {border};background:#f5f5f7;color:#1d1d1f;\">"
                 ));
                 if let Some(label) = label {
                     self.out.push_str(&format!(
@@ -250,7 +250,7 @@ impl<'a> HtmlWriter<'a> {
             Tag::FootnoteDefinition(label) => {
                 let l = escape_html(&label);
                 self.out.push_str(&format!(
-                    "<div id=\"fn-{l}\" style=\"margin:10px 0;padding:8px 10px;background:#f7f8f6;border-radius:8px;font-size:13px;color:#3f463d;\"><strong>[{l}]</strong> "
+                    "<div id=\"fn-{l}\" style=\"margin:10px 0;padding:8px 10px;background:#f5f5f7;border-radius:12px;font-size:13px;color:#1d1d1f;\"><strong>[{l}]</strong> "
                 ));
             }
             Tag::Table(alignments) => {
@@ -337,7 +337,7 @@ impl<'a> HtmlWriter<'a> {
             }
             Tag::DefinitionListDefinition => {
                 self.out
-                    .push_str("<dd style=\"margin:2px 0 8px 16px;color:#3f463d;\">");
+                    .push_str("<dd style=\"margin:2px 0 8px 16px;color:#6e6e73;\">");
             }
             Tag::Superscript => self.out.push_str("<sup>"),
             Tag::Subscript => self.out.push_str("<sub>"),
@@ -429,12 +429,12 @@ fn heading_style(level: HeadingLevel) -> (u8, u8) {
 
 fn quote_style(kind: Option<BlockQuoteKind>) -> (Option<&'static str>, &'static str) {
     match kind {
-        Some(BlockQuoteKind::Note) => (Some("Note"), "#2f9e7b"),
-        Some(BlockQuoteKind::Tip) => (Some("Tip"), "#1f6f5b"),
-        Some(BlockQuoteKind::Important) => (Some("Important"), "#5b5bd6"),
-        Some(BlockQuoteKind::Warning) => (Some("Warning"), "#b45309"),
-        Some(BlockQuoteKind::Caution) => (Some("Caution"), "#b42318"),
-        None => (None, "#c5cdc0"),
+        Some(BlockQuoteKind::Note) => (Some("Note"), "#007AFF"),
+        Some(BlockQuoteKind::Tip) => (Some("Tip"), "#34C759"),
+        Some(BlockQuoteKind::Important) => (Some("Important"), "#AF52DE"),
+        Some(BlockQuoteKind::Warning) => (Some("Warning"), "#FF9500"),
+        Some(BlockQuoteKind::Caution) => (Some("Caution"), "#FF3B30"),
+        None => (None, "#D2D2D7"),
     }
 }
 

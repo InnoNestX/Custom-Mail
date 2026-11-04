@@ -25,7 +25,7 @@ Drop JSON under `plugins/features/`. Each file is a toggle in `features.*` — s
 
 ## Theme
 
-Drop a palette JSON — **no Rust change**. Bundled: `forest` · `midnight` · `ocean` · `paper` · `rose` · `slate` · `aurora` · `sunset` · `nord`.
+Drop a palette JSON — **no Rust change**. Bundled: `apple` · `forest` · `midnight` · `ocean` · `paper` · `rose` · `slate` · `aurora` · `sunset` · `nord`.
 
 Unknown ids fall back to `forest`. `brand.*` color keys override individual tokens.
 

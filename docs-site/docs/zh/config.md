@@ -13,7 +13,7 @@ Custom Mail 通过仓库根目录的 **`config/mail.json`** 与 **`plugins/`** �
 | 字段 | 说明 |
 |------|------|
 | `provider` | `plugins/providers/` 的 id。内置：`brevo` `resend` `sendgrid` `mailgun` `postmark` `mailersend` `smtp2go` `sparkpost` |
-| `theme` | `plugins/themes/` 的 id。内置：`forest` `midnight` `ocean` `paper` `rose` `slate` `aurora` `sunset` `nord` |
+| `theme` | `plugins/themes/` 的 id。内置：`apple` `forest` `midnight` `ocean` `paper` `rose` `slate` `aurora` `sunset` `nord` |
 | `layout` | `plugins/layouts/` 的 id。内置：`card` `minimal` `banner` `digest` `compact` |
 | `logo` | `auto`（有图用图，否则首字母，再否则省略）· `image` · `monogram` · `none` |
 

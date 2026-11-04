@@ -2,7 +2,7 @@
   "host": "mail.xuxuclassmate.com",
   "plugins": {
     "provider": "brevo",
-    "theme": "forest",
+    "theme": "apple",
     "layout": "banner",
     "logo": "image"
   },
@@ -57,13 +57,13 @@
     "releases": "https://github.com/InnoNestX/Custom-Mail/releases"
   },
   "brand": {
-    "tile": "#15624f",
-    "tileEdge": "#1a7a62",
-    "accent": "#2f9e7b",
-    "cream": "#f7f4ee",
-    "siteBlue": "#4E89FE",
-    "heroFrom": "#15624f",
-    "heroTo": "#0d3d32",
+    "tile": "#007AFF",
+    "tileEdge": "#0071E3",
+    "accent": "#007AFF",
+    "cream": "#F5F5F7",
+    "siteBlue": "#007AFF",
+    "heroFrom": "#0071E3",
+    "heroTo": "#007AFF",
     "headerText": "#ffffff"
   },
   "i18n": {

@@ -25,7 +25,7 @@ JSON 登记 id、名称、密钥名、是否需要发信域名。**新增 HTTP �
 
 ## 主题
 
-放入调色板 JSON 即可，**不用改 Rust**。内置：`forest` · `midnight` · `ocean` · `paper` · `rose` · `slate` · `aurora` · `sunset` · `nord`。
+放入调色板 JSON 即可，**不用改 Rust**。内置：`apple` · `forest` · `midnight` · `ocean` · `paper` · `rose` · `slate` · `aurora` · `sunset` · `nord`。
 
 未知 id 回退 `forest`。`brand.*` 可覆盖单个颜色。
 
