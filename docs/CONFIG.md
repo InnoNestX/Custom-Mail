@@ -77,9 +77,9 @@ If the provider-specific secret is empty, `MAIL_API_KEY` is used as a fallback.
 
 Drop a JSON palette in `plugins/themes/` (no Rust change). Bundled ids:
 
-`forest` · `midnight` · `ocean` · `paper` · `rose` · `slate` · `aurora` · `sunset` · `nord`
+`apple` · `forest` · `midnight` · `ocean` · `paper` · `rose` · `slate` · `aurora` · `sunset` · `nord`
 
-Aliases: `dark` → midnight, `blue` → ocean, `light` → paper, `pink` → rose, `gray`/`grey`/`neutral` → slate, `polar` → nord.
+Aliases: `system`/`ios`/`macos` → apple, `dark` → midnight, `blue` → ocean, `light` → paper, `pink` → rose, `gray`/`grey`/`neutral` → slate, `polar` → nord.
 
 Unknown ids fall back to `forest`. Set any `brand.*` color to override a token. Leave a field empty to keep the theme default.
 

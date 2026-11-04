@@ -7,21 +7,23 @@
 <title>___PAGE_TITLE___</title>
 <link rel="icon" href="___FAVICON_HREF___" type="image/svg+xml">
 <link rel="apple-touch-icon" href="___APPLE_TOUCH_HREF___">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
     ___THEME_VARS___
-    --panel: rgba(255, 252, 247, .9);
-    --panel-solid: #fffbf5;
-    --chip: #eef3ea;
-    --danger: #b42318;
-    --ok: #1b7a4a;
-    --shadow: 0 24px 60px rgba(26, 28, 25, .10);
-    --radius: 18px;
-    --font: "Manrope", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif;
-    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --panel: color-mix(in srgb, var(--paper) 62%, white);
+    --panel-solid: color-mix(in srgb, var(--paper) 28%, white);
+    --chip: color-mix(in srgb, var(--accent) 12%, var(--paper));
+    --danger: #ff3b30;
+    --ok: #34c759;
+    --shadow: 0 12px 40px color-mix(in srgb, var(--ink) 8%, transparent);
+    --radius: 22px;
+    --radius-control: 12px;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Helvetica Neue", sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+    --separator: color-mix(in srgb, var(--ink) 12%, transparent);
+    --fill: color-mix(in srgb, var(--ink) 6%, white);
+    --material: color-mix(in srgb, var(--paper) 72%, transparent);
   }
   /* aliases used in rules */
   .locked, button.secondary, .chip, .book button { color: var(--ink-soft); }
@@ -35,17 +37,12 @@
   body {
     font-family: var(--font);
     color: var(--ink);
-    background:
-      radial-gradient(900px 520px at 12% -8%, var(--accent-soft) 0%, transparent 55%),
-      radial-gradient(760px 480px at 100% 0%, color-mix(in srgb, var(--paper) 80%, #f3e7d4) 0%, transparent 50%),
-      linear-gradient(180deg, var(--paper) 0%, var(--paper) 100%);
+    background: var(--paper);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
-  body::before {
-    content: "";
-    position: fixed; inset: 0; pointer-events: none; opacity: .28;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
-    mix-blend-mode: soft-light;
-  }
+  body::before { content: none; }
   .shell { position: relative; max-width: 920px; margin: 0 auto; padding: 28px 18px 72px; }
   .shell:not(.login-mode) {
     max-height: 100dvh;
@@ -1474,6 +1471,261 @@
   #historyPanel .workspace-head { flex-shrink: 0; }
   .hist-layout { align-items: stretch; }
   .app-header { position: sticky; top: 6px; z-index: 20; }
+
+  /* Apple HIG: materials, type, and press feedback. Theme tokens still tint accent. */
+  html { color-scheme: light; }
+  body {
+    letter-spacing: -0.015em;
+  }
+  button, input, textarea, .tab, .chip, .book button {
+    font-family: inherit;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button {
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    border-radius: 980px;
+    transition: transform .18s var(--ease), background .18s var(--ease), box-shadow .18s var(--ease), filter .18s var(--ease), color .18s var(--ease);
+  }
+  button:active:not(:disabled) { transform: scale(0.97); }
+  button:focus-visible, a:focus-visible, .tab:focus-visible, input:focus-visible, textarea:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 28%, transparent);
+  }
+  button.primary {
+    background: var(--accent);
+    color: var(--header-text);
+    box-shadow: none;
+  }
+  button.primary:hover { background: var(--accent-deep); filter: none; }
+  button.secondary, .book button, .app-header .ghost, .version-pill, .hist-back-btn {
+    background: var(--fill);
+    border-color: transparent;
+    color: var(--ink);
+    box-shadow: none;
+  }
+  button.secondary:hover, .book button:hover, .app-header .ghost:hover {
+    background: color-mix(in srgb, var(--ink) 10%, white);
+    border-color: transparent;
+    color: var(--ink);
+  }
+  button.ghost { border-radius: 980px; }
+  .card, .preview-panel, .result-panel, .login-form-card {
+    background: var(--panel-solid);
+    border: 0.5px solid var(--separator);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 1px color-mix(in srgb, var(--ink) 4%, transparent), var(--shadow);
+  }
+  .mark h1, .login-brand-row h1, .app-brand h1, .workspace-head h2, .login-form-title, .preview-head h3, .result-panel h3 {
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+  .login-headline {
+    font-weight: 700;
+    letter-spacing: -0.035em;
+  }
+  .login-hero {
+    background: transparent;
+  }
+  .login-points li::before {
+    width: 6px;
+    height: 6px;
+    flex-basis: 6px;
+    box-shadow: none;
+    background: var(--accent);
+  }
+  .login-panel {
+    background: transparent;
+  }
+  label, .section-label, .compose-section > label, .compose-section .section-label, .field-label {
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    text-transform: none;
+  }
+  .section-label .dot { display: none; }
+  input[type=password], input[type=text], input[type=email], textarea, .to-box, .locked {
+    background: var(--fill);
+    border: 0.5px solid transparent;
+    border-radius: var(--radius-control);
+    transition: background .18s var(--ease), box-shadow .18s var(--ease), border-color .18s var(--ease);
+  }
+  input:focus, textarea:focus, .to-box:focus-within,
+  .compose-field.is-focused input[type=text],
+  .compose-field.is-focused input[type=email],
+  .compose-field.is-focused textarea,
+  .compose-field-to.is-focused .to-box {
+    border-color: transparent;
+    background: var(--panel-solid);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 24%, transparent);
+  }
+  .app-header {
+    background: var(--material);
+    border: 0.5px solid color-mix(in srgb, var(--ink) 8%, transparent);
+    border-radius: 16px;
+    box-shadow: none;
+    backdrop-filter: saturate(180%) blur(22px);
+    -webkit-backdrop-filter: saturate(180%) blur(22px);
+  }
+  .app-tabs {
+    gap: 0;
+    padding: 2px;
+    border: 0;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--ink) 8%, transparent);
+  }
+  .tab {
+    border-radius: 8px;
+    font-weight: 600;
+    color: var(--ink);
+    transition: background .2s var(--ease), box-shadow .2s var(--ease), color .2s var(--ease);
+  }
+  .tab.active {
+    background: var(--panel-solid);
+    color: var(--ink);
+    box-shadow: 0 1px 3px color-mix(in srgb, var(--ink) 16%, transparent), 0 0 0 0.5px color-mix(in srgb, var(--ink) 6%, transparent);
+  }
+  .plugin-chip, .preview-attach-chip, .pill {
+    border-radius: 980px;
+    border-color: transparent;
+    background: color-mix(in srgb, var(--accent) 12%, var(--panel-solid));
+    color: var(--accent-deep);
+    font-weight: 600;
+  }
+  .workspace-head, .workspace-foot, .compose-col-side, .hist-layout .hist-list, .preview-head, .login-scene > .product-chrome, .hist-detail-bar {
+    background: transparent;
+    border-color: var(--separator);
+  }
+  .workspace-head {
+    background: transparent;
+  }
+  .compose-col-side {
+    background: color-mix(in srgb, var(--paper) 55%, white);
+  }
+  .compose-focus-hint {
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    border-bottom: 0.5px solid color-mix(in srgb, var(--accent) 18%, transparent);
+    font-weight: 600;
+  }
+  .compose-field.is-focused .section-label,
+  .compose-field.is-focused .field-label { color: var(--accent); }
+  .compose-field.is-focused { background: color-mix(in srgb, var(--accent) 7%, transparent); }
+  .md-syntax {
+    background: var(--fill);
+    border: 0;
+    border-radius: 14px;
+    color: var(--muted);
+  }
+  .md-syntax code {
+    font-family: var(--mono);
+    color: var(--ink);
+    background: var(--panel-solid);
+    border: 0.5px solid var(--separator);
+    border-radius: 7px;
+  }
+  .md-syntax code.md-copy:hover {
+    background: var(--panel-solid);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .chip {
+    background: color-mix(in srgb, var(--accent) 12%, var(--panel-solid));
+    border-color: transparent;
+    border-radius: 980px;
+    color: var(--ink);
+  }
+  .book button.active {
+    background: var(--accent);
+    color: var(--header-text);
+    border-color: transparent;
+  }
+  .attach-drop {
+    border: 1.5px dashed color-mix(in srgb, var(--accent) 45%, var(--line));
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--accent) 6%, var(--panel-solid));
+  }
+  .attach-drop.dragover {
+    transform: scale(1.01);
+    background: color-mix(in srgb, var(--accent) 12%, var(--panel-solid));
+  }
+  .attach-item, .hist-meta-fold {
+    border: 0.5px solid var(--separator);
+    border-radius: 14px;
+    background: var(--panel-solid);
+    box-shadow: none;
+  }
+  .hist-list { gap: 0; }
+  .hist-row {
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    box-shadow: none;
+    transform: none;
+    transition: background .18s var(--ease);
+  }
+  .hist-row:hover {
+    border-color: transparent;
+    background: color-mix(in srgb, var(--ink) 5%, transparent);
+    transform: none;
+  }
+  .hist-row:active { transform: scale(0.985); }
+  .hist-row.active {
+    background: color-mix(in srgb, var(--accent) 14%, var(--panel-solid));
+    border-color: transparent;
+    box-shadow: none;
+  }
+  .hist-detail-pane { background: color-mix(in srgb, var(--paper) 40%, white); }
+  .hist-detail-pane pre, .locked {
+    background: var(--fill);
+    border: 0;
+  }
+  .locked { border-radius: 12px; }
+  .preview-overlay {
+    background: color-mix(in srgb, var(--ink) 32%, transparent);
+    backdrop-filter: saturate(160%) blur(18px);
+    -webkit-backdrop-filter: saturate(160%) blur(18px);
+  }
+  .preview-overlay:not(.hidden) .preview-panel,
+  .preview-overlay:not(.hidden) .result-panel {
+    animation: apple-sheet .42s var(--ease);
+  }
+  .preview-frame-wrap { background: var(--paper); }
+  .result-panel.ok .result-mark {
+    background: color-mix(in srgb, var(--ok) 16%, white);
+    color: var(--ok);
+    border: 0;
+  }
+  .result-panel.err .result-mark {
+    background: color-mix(in srgb, var(--danger) 14%, white);
+    color: var(--danger);
+    border: 0;
+  }
+  .product-chrome a { font-weight: 600; }
+  .login-alert.err {
+    color: var(--danger);
+    background: color-mix(in srgb, var(--danger) 10%, white);
+    border-color: transparent;
+    border-radius: 12px;
+  }
+  @media (min-width: 900px) {
+    .login-panel {
+      background: color-mix(in srgb, var(--paper) 35%, white);
+      border-left: 0.5px solid var(--separator);
+    }
+  }
+  @media (max-width: 860px) {
+    .version-pill { display: none; }
+  }
+  @keyframes apple-sheet {
+    from { opacity: 0; transform: translateY(16px) scale(0.96); }
+    to { opacity: 1; transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
 </style>
 </head>
 <body>

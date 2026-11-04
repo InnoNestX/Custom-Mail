@@ -54,7 +54,7 @@ Public hostname users open in the browser. Must equal the custom domain in `wran
 
 ### `plugins.theme`
 
-Drop a palette JSON in `plugins/themes/`. Bundled: `forest` · `midnight` · `ocean` · `paper` · `rose` · `slate` · `aurora` · `sunset` · `nord`.
+Drop a palette JSON in `plugins/themes/`. Bundled: `apple` · `forest` · `midnight` · `ocean` · `paper` · `rose` · `slate` · `aurora` · `sunset` · `nord`.
 
 Set any `brand.*` color to override a theme token. Header / top-bar colors are `brand.heroFrom`, `brand.heroTo`, and `brand.headerText` (legacy `tile` / `tileEdge` still map onto the header gradient).
 

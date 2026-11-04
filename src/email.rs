@@ -334,16 +334,17 @@ pub fn snippet_page_html(code: &str) -> String {
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Code snippet</title>
 <style>
-  body {{ margin:0; padding:24px 16px; background:#f7f4ee; font-family:ui-sans-serif,system-ui,sans-serif; color:#1c1917; }}
+  body {{ margin:0; padding:24px 16px; background:#f5f5f7; font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Helvetica Neue",sans-serif; color:#1d1d1f; -webkit-font-smoothing:antialiased; }}
   .wrap {{ max-width:720px; margin:0 auto; }}
   .bar {{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px; }}
-  h1 {{ margin:0; font-size:15px; font-weight:800; }}
-  .hint {{ margin:0 0 12px; font-size:12px; color:#78716c; line-height:1.4; }}
-  button {{ font:inherit; cursor:pointer; border:1px solid #e7e5e4; background:#fff; border-radius:8px; padding:8px 14px; font-weight:700; font-size:13px; }}
-  button:hover {{ border-color:#8dcfb8; color:#15624f; }}
-  button.ok {{ border-color:#8dcfb8; color:#15624f; background:#eef7f3; }}
-  pre {{ margin:0; padding:16px; background:#fff; border:1px solid #e7e0d6; border-radius:12px;
-    font-family:Consolas,Courier,monospace; font-size:12px; line-height:1.55; white-space:pre-wrap; word-break:break-word; }}
+  h1 {{ margin:0; font-size:17px; font-weight:650; letter-spacing:-0.02em; }}
+  .hint {{ margin:0 0 12px; font-size:13px; color:#6e6e73; line-height:1.4; }}
+  button {{ font:inherit; cursor:pointer; border:0; background:#007aff; color:#fff; border-radius:980px; padding:8px 16px; font-weight:600; font-size:14px; }}
+  button:hover {{ background:#0071e3; }}
+  button:active {{ transform:scale(0.97); }}
+  button.ok {{ background:#34c759; color:#fff; }}
+  pre {{ margin:0; padding:16px; background:#fff; border:0.5px solid rgba(0,0,0,.08); border-radius:16px;
+    font-family:ui-monospace,"SF Mono",SFMono-Regular,Menlo,monospace; font-size:12px; line-height:1.55; white-space:pre-wrap; word-break:break-word; }}
 </style>
 </head>
 <body>
