@@ -18,6 +18,10 @@
     "test": "cargo test --lib",
     "typecheck": "cargo check --lib --target wasm32-unknown-unknown"
   },
+  "overrides": {
+    "sharp": "0.35.5",
+    "undici": "7.30.1"
+  },
   "devDependencies": {
     "wrangler": "^4.163.0"
   }
